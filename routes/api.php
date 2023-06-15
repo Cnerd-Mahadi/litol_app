@@ -38,8 +38,6 @@ Route::get('/student/request',[RequestController::class, 'requestShow'])->name('
 Route::get('/student/reqSession/{id}',[RequestController::class, 'reqSession'])->name('reqSession')->middleware('validStudent');
 
 
-
-
 Route::get('/creator/dashboard',[CreatorController::class, 'dashboard'])->name('creatorDash')->middleware('validCreator');
 Route::get('/creator/proc',[CreatorController::class, 'proc'])->name('proc')->middleware('validCreator');
 Route::post('/creator/content',[CreatorController::class, 'createContentSubmit'])->name('content')->middleware('validCreator');
