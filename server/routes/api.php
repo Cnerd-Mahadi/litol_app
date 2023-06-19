@@ -1,14 +1,10 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CreatorController;
-use App\Http\Controllers\LearnController;
-use App\Http\Controllers\RequestController;
-use App\Http\Controllers\RetainController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\RegController;
+use App\Http\Controllers\LogController;
+use App\Http\Controllers\SignUpController;
 use App\Http\Controllers\StudentController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,34 +17,39 @@ use App\Http\Controllers\StudentController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
-Route::get('/student/dashboard',[StudentController::class, 'dashboard'])->name('studentDash')->middleware('validStudent');
-Route::get('/student/pros',[StudentController::class, 'pros'])->name('pros')->middleware('validStudent');
-Route::get('/student/learnSection',[LearnController::class, 'learn'])->name('learn')->middleware('validStudent');
-Route::get('/student/subject',[LearnController::class, 'subject'])->name('subject')->middleware('validStudent');
-Route::get('/student/topic',[LearnController::class, 'topic'])->name('topic')->middleware('validStudent');
-Route::get('/student/retainSection',[RetainController::class, 'retain'])->name('retain')->middleware('validStudent');
-Route::get('/student/summary',[RetainController::class, 'summary'])->name('summary')->middleware('validStudent');
-Route::post('/student/summarySubmit',[RetainController::class, 'summarySubmit'])->name('summarySubmit')->middleware('validStudent');
-Route::get('/student/summaryDetail',[RetainController::class, 'summaryDetail'])->name('summaryDetail')->middleware('validStudent');
-Route::get('/student/request',[RequestController::class, 'requestShow'])->name('request')->middleware('validStudent');
-Route::get('/student/reqSession/{id}',[RequestController::class, 'reqSession'])->name('reqSession')->middleware('validStudent');
+Route::post('/login', [LogController::class, 'loginSubmit']);
+Route::post('/signUp', [SignUpController::class, 'signUpSubmit']);
 
 
+Route::get('/student/dashboard/{user_id}', [StudentController::class, 'dashboard'])->middleware('validStudent');
 
 
-Route::get('/creator/dashboard',[CreatorController::class, 'dashboard'])->name('creatorDash')->middleware('validCreator');
-Route::get('/creator/proc',[CreatorController::class, 'proc'])->name('proc')->middleware('validCreator');
-Route::post('/creator/content',[CreatorController::class, 'createContentSubmit'])->name('content')->middleware('validCreator');
-Route::get('/creator/contentDetail',[CreatorController::class, 'contentDetail'])->name('contentDetail')->middleware('validCreator');
+Route::get('/student/subjects', [StudentController::class, 'subjects'])->middleware('validStudent');
+Route::get('/student/subject/{subject_id}', [StudentController::class, 'contentsBySubject'])->middleware('validStudent');
+Route::get('/student/content/{content_id}', [StudentController::class, 'contentDetails'])->middleware('validStudent');
 
-Route::post('/login',[LoginController::class,'loginSubmit'])->name('login');
-Route::get('/logout',[LoginController::class,'logout'])->name('logout');
 
-Route::post('/student/signUp',[RegController::class, 'signUpSubmit'])->name('signUp');
+Route::post('/student/submitSummary', [StudentController::class, 'submitSummary'])->middleware('validStudent');
+Route::get('/student/summaries/{user_id}', [StudentController::class, 'summaries'])->middleware('validStudent');
+Route::get('/student/summary/{summary_id}', [StudentController::class, 'summaryDetails'])->middleware('validStudent');
 
-Route::post('/creator/signup',[RegController::class, 'signUpSubmitCreator'])->name('signUpCreator');
 
+Route::post('/student/submitMindMap', [StudentController::class, 'submitMindMap'])->middleware('validStudent');
+Route::get('/student/mindmaps/{user_id}', [StudentController::class, 'mindmaps'])->middleware('validStudent');
+Route::get('/student/mindmap/{mindmap_id}', [StudentController::class, 'mindmapDetails'])->middleware('validStudent');
+
+
+Route::post('/student/submitNote', [StudentController::class, 'submitNote'])->middleware('validStudent');
+Route::get('/student/notes/{user_id}', [StudentController::class, 'notes'])->middleware('validStudent');
+Route::get('/student/note/{note_id}', [StudentController::class, 'noteDetails'])->middleware('validStudent');
+
+
+Route::get('/student/feynman/request', [StudentController::class, 'requestFeynman'])->middleware('validStudent');
+Route::get('/student/feynmen', [StudentController::class, 'feynmen'])->middleware('validStudent');
+Route::get('/student/feynman/resolve', [StudentController::class, 'resolveFeynman'])->middleware('validStudent');
+
+
+Route::get('/creator/dashboard/{user_id}', [CreatorController::class, 'dashboard'])->middleware('validCreator');
+Route::post('/creator/submitContent', [CreatorController::class, 'creatorContentSubmit'])->middleware('validCreator');
+Route::get('/creator/contentDetails/{content_id}', [CreatorController::class, 'contentDetails'])->middleware('validCreator');

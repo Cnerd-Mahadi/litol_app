@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Student extends Model
+class Feynman extends Model
 {
     use HasFactory;
     public $timestamps = false;
 
-    public function userInfo()
+    public function contentInfo()
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id');
+        return $this->hasOne(Content::class, 'content_id', 'content_id');
     }
-
-
 }

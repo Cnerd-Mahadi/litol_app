@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Topic extends Model
+class MindMap extends Model
 {
     use HasFactory;
     public $timestamps = false;
 
-    public function subject()
+    public function userInfo()
     {
-        return $this->hasOne(Subject::class, 'subject_id', 'subject_id');
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 }

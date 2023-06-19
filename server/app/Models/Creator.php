@@ -10,13 +10,16 @@ class Creator extends Model
     use HasFactory;
     public $timestamps = false;
 
-    public function user()
+    public function userInfo()
     {
-        return $this->hasOne(User::class, 'user_id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
     public function contents()
     {
-        return $this->hasMany(Content::class, 'creator_id', 'creator_id');
+        return $this->hasMany(Content::class, 'user_id', 'user_id');
     }
+
+
+
 }

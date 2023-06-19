@@ -13,25 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('contents', function (Blueprint $table) {
-            $table->id('content_id');
+        Schema::create('summaries', function (Blueprint $table) {
+            $table->id('summary_id');
             $table->string('updated');
-            $table->unsignedBigInteger('subject_id');
             $table->string('title');
             $table->string('image');
             $table->string('details');
             $table->unsignedBigInteger('user_id');
 
-            $table->foreign('subject_id')
-            ->references('subject_id')->on('subjects')
-            ->cascadeOnDelete()->cascadeOnUpdate();
-
             $table->foreign('user_id')
             ->references('user_id')->on('users')
             ->cascadeOnDelete()->cascadeOnUpdate();
-
-
-
         });
     }
 
@@ -42,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contents');
+        Schema::dropIfExists('summaries');
     }
 };

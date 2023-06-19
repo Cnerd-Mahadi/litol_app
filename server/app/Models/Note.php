@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Summary extends Model
+class Note extends Model
 {
     use HasFactory;
     public $timestamps = false;
 
-    public function keywordInfo()
+    public function detailsInfo()
     {
-        return $this->hasMany(Keyword::class, 'summary_id', 'summary_id');
+        return $this->hasMany(NoteDetails::class, 'note_id', 'note_id');
     }
     public function userInfo()
     {

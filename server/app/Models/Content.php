@@ -10,8 +10,8 @@ class Content extends Model
     use HasFactory;
     public $timestamps = false;
 
-    public function topic()
+    public function subjectInfo()
     {
-        return $this->hasOne(Topic::class, 'topic_id', 'topic_id');
+        return $this->belongsTo(Subject::class, 'subject_id', 'subject_id');
     }
 }

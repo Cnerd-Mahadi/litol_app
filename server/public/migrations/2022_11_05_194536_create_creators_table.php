@@ -14,15 +14,16 @@ return new class extends Migration
     public function up()
     {
         Schema::create('creators', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->unique()->primary();
+            $table->id('creator_id');
             $table->string('age');
             $table->string('gender');
             $table->string('dob');
+            $table->string('email');
             $table->string('phone');
             $table->string("bio");
-            $table->foreign('user_id')->references('user_id')->on('users')
-            ->cascadeOnDelete()
-            ->cascadeOnUpdate();
+            $table->unsignedBigInteger('user_id')
+            ->references('user_id')->on('users')
+            ->cascadeOnDelete();;
         });
     }
 

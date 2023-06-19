@@ -2,31 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Course;
-use App\Http\Requests\StoreCourseRequest;
-use App\Http\Requests\UpdateCourseRequest;
+use App\Models\Content;
 use App\Models\Subject;
-use App\Models\Topic;
-use Symfony\Component\HttpFoundation\Request;
 
 class LearnController extends Controller
 {
 
-    public function learn()
+    public static function getSubjects()
     {
-        $subjects = Subject::all();
-        return $subjects;
+        return Subject::all();
     }
 
-    public function subject(Request $request)
+    public static function getContents($subject_id)
     {
-        $topics = Topic::where('subject_id', $request->input("subject_id"))->get();
-        return $topics;
+        return Content::where('subject_id', $subject_id)->get();
+
     }
 
-    public function topic(Request $request){
-        $topic = Topic::where('topic_id', $request->input("topic_id"))->first();
-        return $topic;
+    public static function getContent($content_id)
+    {
+        return Content::where('content_id', $content_id)->first();
     }
 
 }

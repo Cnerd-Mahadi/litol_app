@@ -14,11 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('user_id')->unique();
+            $table->id('user_id');
             $table->string('username');
             $table->string('password');
-            $table->string('email');
-            $table->unsignedBigInteger('role_id')->nullable();
+            $table->unsignedBigInteger('role_id');
             $table->foreign('role_id')->references('role_id')->on('roles')
             ->nullOnDelete()
             ->cascadeOnUpdate();
