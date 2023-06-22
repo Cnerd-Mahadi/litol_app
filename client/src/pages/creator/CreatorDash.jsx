@@ -9,28 +9,36 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import axios from "axios";
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
 import { A11y, Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FormImage } from "../../components/common/FormImage";
 import { InputField } from "../../components/common/InputField";
+import { useGetQuery } from "../../hooks/useGetQuery";
 import { ContentForm } from "../../layouts/forms/ContentForm";
-import { baseURL, getSubjects } from "../../utilities/utility";
+import { apiPostDataHandler } from "../../services/apiManager";
+import {
+	getHeader,
+	getLocalData,
+	getSubjects,
+	headerType,
+} from "../../utilities/utility";
+import { Loading } from "../Loading";
 import { ContentCard } from "./../../components/cards/ContentCard";
 
-const getContents = ({ content_id, subject, topic }) => {
+const localUserData = getLocalData("userData");
+
+const getContents = ({ content_id, subject_info, title, image }) => {
 	return (
 		<SwiperSlide key={content_id}>
 			<ContentCard
 				key={content_id}
 				id={content_id}
-				title={topic.title}
-				detail={subject.subject_name}
-				image={topic.image}
+				title={title}
+				detail={subject_info.subject_name.toUpperCase()}
+				image={image}
 			/>
 		</SwiperSlide>
 	);
@@ -41,46 +49,29 @@ const handleSubmit = (event) => {
 	const data = new FormData(event.currentTarget);
 	const resultData = {
 		title: data.get("title"),
-		subject: data.get("subject"),
-		detail: data.get("content"),
+		subject_id: parseInt(data.get("subject")),
+		details: data.get("content"),
 		image: data.get("image"),
-		creator_id: JSON.parse(localStorage.getItem("userData")).user.creator_id,
+		user_id: localUserData.userId,
 	};
 	console.log(resultData);
-
-	axios
-		.post(baseURL + "creator/content", resultData, {
-			headers: {
-				"Content-Type": "multipart/form-data",
-			},
-		})
-		.then((response) => {
-			console.log(response.data);
-		});
+	apiPostDataHandler(
+		"creator/submitContent",
+		resultData,
+		getHeader(headerType.multi, localUserData.token)
+	);
 };
 
 export const CreatorDash = () => {
-	const [dashInfo, setDashInfo] = React.useState([]);
-	const dashItemExists =
-		dashInfo && dashInfo.contents && dashInfo.contents.length;
-	const navigate = useNavigate();
+	const { isLoading, data: dashInfo } = useGetQuery(
+		"creator-dash",
+		`creator/dashboard/${localUserData.userInfo.details.user_id}`,
+		getHeader(headerType.tokenize, localUserData.token)
+	);
 
 	console.log(dashInfo);
 
-	React.useEffect(() => {
-		axios
-			.get(
-				baseURL +
-					`creator/dashboard?creator_id=${
-						JSON.parse(localStorage.getItem("userData")).user.creator_id
-					}`
-			)
-			.then((response) => {
-				setDashInfo(response.data);
-				console.log(response.data);
-				navigate("/creator");
-			});
-	}, [navigate]);
+	if (isLoading) return <Loading />;
 
 	return (
 		<>
@@ -93,7 +84,7 @@ export const CreatorDash = () => {
 					<InputField id="title" type="text" autoFocus={true} />
 				</Grid>
 
-				{dashInfo.subjects && (
+				{
 					<Grid item xs={6}>
 						<FormControl fullWidth>
 							<InputLabel id="subjectLabel">Subject</InputLabel>
@@ -106,7 +97,7 @@ export const CreatorDash = () => {
 							</Select>
 						</FormControl>
 					</Grid>
-				)}
+				}
 
 				<FormImage />
 
@@ -153,13 +144,8 @@ export const CreatorDash = () => {
 					}}>
 					Content Gallery
 				</Typography>
-				<Box
-					sx={{
-						display: "flex",
-						flexWrap: "nowrap",
-						justifyContent: "center",
-					}}>
-					{dashItemExists ? (
+				<Box>
+					{dashInfo.contents.length > 0 ? (
 						<Swiper
 							modules={[Pagination, A11y]}
 							spaceBetween={20}
@@ -180,9 +166,6 @@ export const CreatorDash = () => {
 					)}
 				</Box>
 			</Paper>
-			{/* {dashItemExists && (
-				<MuiPagination count={dashInfo.contents.length / 5} color="primary" />
-			)} */}
 		</>
 	);
 };

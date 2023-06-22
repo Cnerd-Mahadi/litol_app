@@ -13,4 +13,7 @@ export const featuresImages = {
 	summary: "/image/basic/summary.png",
 	cornell: "/image/basic/cornell.png",
 	feynman: "/image/basic/feynman.png",
+	mindmap: "/image/basic/mindmap.png",
 };
+
+export const serverImagePath = "";

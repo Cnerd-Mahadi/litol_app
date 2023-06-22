@@ -1,15 +1,16 @@
 import { Box } from "@mui/system";
-import axios from "axios";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { baseURL } from "../../utilities/utility";
+import { useGetQuery } from "../../hooks/useGetQuery";
+import { getHeader, getLocalData, headerType } from "../../utilities/utility";
+import { Loading } from "../Loading";
 import { TopicCard } from "./../../components/cards/TopicCard";
 
-const showContents = ({ topic_id, title, image, detail }) => {
+const showContents = ({ content_id, title, image, detail }) => {
 	return (
 		<TopicCard
-			key={topic_id}
-			id={topic_id}
+			key={content_id}
+			id={content_id}
 			image={image}
 			title={title}
 			detail={detail}
@@ -17,16 +18,17 @@ const showContents = ({ topic_id, title, image, detail }) => {
 	);
 };
 
+const localUserData = getLocalData("userData");
+
 export const Content = () => {
-	const [contents, setContents] = React.useState([]);
 	const { subjectId } = useParams();
-	React.useEffect(() => {
-		axios
-			.get(baseURL + `student/subject?subject_id=${subjectId}`)
-			.then((response) => {
-				setContents(response.data);
-			});
-	}, [subjectId]);
+	const { isLoading, data: contents } = useGetQuery(
+		"subject/contents",
+		`student/subject/${subjectId}`,
+		getHeader(headerType.tokenize, localUserData.token)
+	);
+
+	if (isLoading) return <Loading />;
 
 	console.log(contents);
 	return (

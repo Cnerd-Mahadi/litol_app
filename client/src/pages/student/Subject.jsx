@@ -1,31 +1,34 @@
 import { Box } from "@mui/system";
-import axios from "axios";
 import React from "react";
+import { useGetQuery } from "../../hooks/useGetQuery";
 import { subjectImages } from "../../utilities/staticImageResources";
-import { baseURL } from "../../utilities/utility";
+import { getHeader, headerType } from "../../utilities/utility";
+import { Loading } from "../Loading";
 import { SubjectCard } from "./../../components/cards/SubjectCard";
+import { getLocalData } from "./../../utilities/utility";
 
 const showSubjects = ({ subject_id, subject_name }) => {
-	console.log("../image/" + subject_name.toLowerCase() + ".jpg");
 	return (
 		<SubjectCard
 			key={subject_id}
 			id={subject_id}
-			image={subjectImages[subject_name.toLowerCase()]}
+			image={subjectImages[subject_name]}
 			subject={subject_name}
 		/>
 	);
 };
 
-export const Subject = () => {
-	const [subjects, setSubjects] = React.useState([]);
-	React.useEffect(() => {
-		axios.get(baseURL + "student/learnSection").then((response) => {
-			setSubjects(response.data);
-		});
-	}, []);
+const localUserData = getLocalData("userData");
 
-	console.log("BC");
+export const Subject = () => {
+	const { isLoading, data: subjects } = useGetQuery(
+		"subjects",
+		"student/subjects",
+		getHeader(headerType.tokenize, localUserData.token)
+	);
+
+	if (isLoading) return <Loading />;
+
 	return (
 		<Box
 			sx={{

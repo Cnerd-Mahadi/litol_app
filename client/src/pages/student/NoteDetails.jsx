@@ -3,15 +3,15 @@ import { useParams } from "react-router-dom";
 import { useGetQuery } from "../../hooks/useGetQuery";
 import { getHeader, getLocalData, headerType } from "../../utilities/utility";
 import { Loading } from "../Loading";
-import { ContentLayout } from "./../../layouts/content_layout/summary/ContentLayout";
+import { ContentLayout } from "./../../layouts/content_layout/note/ContentLayout";
 
 const localUserData = getLocalData("userData");
 
-export const SummaryDetails = () => {
-	const { summaryId } = useParams();
+export const NoteDetails = () => {
+	const { noteId } = useParams();
 	const { isLoading, data } = useGetQuery(
-		"student/summary",
-		`student/summary/${summaryId}`,
+		"student/note",
+		`student/note/${noteId}`,
 		getHeader(headerType.tokenize, localUserData.token)
 	);
 
@@ -21,7 +21,7 @@ export const SummaryDetails = () => {
 
 	return (
 		<div>
-			<ContentLayout content={data.summary} contents={data.summaries} />
+			<ContentLayout content={data.note} contents={data.notes} />
 		</div>
 	);
 };

@@ -100,7 +100,7 @@ class SignUpController extends Controller
 
     public function saveCreator($user, $request)
     {
-        $user->role_id = 1;
+        $user->role_id = 2;
         $user->save();
 
         try {

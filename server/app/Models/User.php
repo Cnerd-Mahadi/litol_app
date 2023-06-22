@@ -16,6 +16,16 @@ class User extends Model
         return $this->hasOne(Role::class, 'role_id', 'role_id');
     }
 
+    public function studentInfo()
+    {
+        return $this->hasOne(Student::class, 'user_id', 'user_id');
+    }
+
+    public function creatorInfo()
+    {
+        return $this->hasOne(Creator::class, 'user_id', 'user_id');
+    }
+
     public function generateToken($role)
     {
         $config = Configuration::forSymmetricSigner(

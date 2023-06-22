@@ -1,14 +1,20 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { App } from "./App";
+import { MindMapCanvas } from "./layouts/mindmap/MindMapCanvas";
+import { MindMapCanvasDetails } from "./layouts/mindmap/MindMapCanvasDetails";
 import { Error } from "./pages/Error";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { CreatorDash } from "./pages/creator/CreatorDash";
+import { CreatorDetails } from "./pages/creator/CreatorDetails";
 import { CreatorLayout } from "./pages/creator/CreatorLayout";
-import { CDetails } from "./pages/creator/Details";
 import { Content } from "./pages/student/Content";
-import { Details } from "./pages/student/Details";
+import { Feynman } from "./pages/student/Feynman";
+import { LearnDetails } from "./pages/student/LearnDetails";
+import { MindMap } from "./pages/student/MindMap";
+import { Note } from "./pages/student/Note";
+import { NoteDetails } from "./pages/student/NoteDetails";
 import { StudentDash } from "./pages/student/StudentDash";
 import { StudentLayout } from "./pages/student/StudentLayout";
 import { Subject } from "./pages/student/Subject";
@@ -47,7 +53,7 @@ export const Router = createBrowserRouter([
 					},
 					{
 						path: "/student/learn/topic/:topicId",
-						element: <Details />,
+						element: <LearnDetails />,
 					},
 					{
 						path: "/student/summary",
@@ -56,6 +62,30 @@ export const Router = createBrowserRouter([
 					{
 						path: "/student/summary/:summaryId",
 						element: <SummaryDetails />,
+					},
+					{
+						path: "/student/note",
+						element: <Note />,
+					},
+					{
+						path: "/student/note/:noteId",
+						element: <NoteDetails />,
+					},
+					{
+						path: "/student/mindmap",
+						element: <MindMap />,
+					},
+					{
+						path: "/student/mindmap/board/:userId",
+						element: <MindMapCanvas />,
+					},
+					{
+						path: "/student/mindmap/:mindmapId",
+						element: <MindMapCanvasDetails />,
+					},
+					{
+						path: "/student/feynman",
+						element: <Feynman />,
 					},
 				],
 			},
@@ -69,7 +99,7 @@ export const Router = createBrowserRouter([
 					},
 					{
 						path: "/creator/content/:contentId",
-						element: <CDetails />,
+						element: <CreatorDetails />,
 					},
 				],
 			},

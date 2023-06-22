@@ -29,7 +29,10 @@ export const SignUp = () => {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
+		const role = isCreator ? "CREATOR" : "STUDENT";
+
 		const resultData = {
+			role: role,
 			username: data.get("name"),
 			age: data.get("age"),
 			dob: data.get("date"),
@@ -43,9 +46,7 @@ export const SignUp = () => {
 		};
 		console.log(resultData, "FormData");
 
-		const url = isCreator ? "creator/signup" : "student/signUp";
-
-		handleSignUp(url, resultData, navigate);
+		handleSignUp("signUp", resultData, navigate);
 	};
 
 	return (

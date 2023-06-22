@@ -61,6 +61,8 @@ class SummaryController extends Controller
                     $keyword->save();
                 }
 
+                self::saveSummaryImage($summary_id, $request);
+
                 return ResponseHelper::success('Summary created successfully');
 
             } catch (\Throwable $th) {

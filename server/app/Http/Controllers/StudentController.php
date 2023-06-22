@@ -34,9 +34,9 @@ class StudentController extends Controller
         $subjects = LearnController::getSubjects();
 
         if ($subjects)
-            return ResponseHelper::success([
+            return ResponseHelper::success(
                 $subjects
-            ]);
+            );
 
         return ResponseHelper::error("Subjects not found");
     }
@@ -46,9 +46,9 @@ class StudentController extends Controller
         $contents = LearnController::getContents($subject_id);
 
         if ($contents)
-            return ResponseHelper::success([
+            return ResponseHelper::success(
                 $contents
-            ]);
+            );
 
         return ResponseHelper::error("Contents not found");
     }
@@ -76,9 +76,9 @@ class StudentController extends Controller
         $summaries = SummaryController::getSummariesByUserId($user_id);
 
         if ($summaries)
-            return ResponseHelper::success([
+            return ResponseHelper::success(
                 SummaryController::getSummariesByUserId($user_id)
-            ]);
+            );
 
         return ResponseHelper::error("Summaries not found");
     }
@@ -109,9 +109,9 @@ class StudentController extends Controller
         $mindmaps = MindMapController::getMindMapsByUserId($user_id);
 
         if ($mindmaps)
-            return ResponseHelper::success([
+            return ResponseHelper::success(
                 MindMapController::getMindMapsByUserId($user_id)
-            ]);
+            );
 
         return ResponseHelper::error("MindMaps not found");
     }
@@ -129,6 +129,11 @@ class StudentController extends Controller
         return ResponseHelper::error("MindMap not found");
     }
 
+    public function updateMindMap(Request $request)
+    {
+        return MindMapController::updateMindMap($request);
+    }
+
     public function submitNote(Request $request)
     {
         return NoteController::saveNote($request);
@@ -139,9 +144,9 @@ class StudentController extends Controller
         $notes = NoteController::getNotesByUserId($user_id);
 
         if ($notes)
-            return ResponseHelper::success([
+            return ResponseHelper::success(
                 NoteController::getNotesByUserId($user_id)
-            ]);
+            );
 
         return ResponseHelper::error("Notes not found");
     }
@@ -173,19 +178,25 @@ class StudentController extends Controller
 
         $feynmen = $feynAll->map(function ($feynman) {
             $fticketUsers = FeynTicket::where('feynman_id', $feynman->feynman_id)->first();
+            $content = ContentController::getContent($feynman->content_id);
+            $subject = $content->subjectInfo;
             return [
                 'slotA' => $fticketUsers->userSlotA,
                 'slotB' => $fticketUsers->userSlotB,
                 'slotC' => $fticketUsers->userSlotC,
                 'slotD' => $fticketUsers->userSlotD,
-                'details' => $feynman
+                'details' => [
+                    'feynman_id' => $feynman->feynman_id,
+                    'subject' => $subject,
+                    'content' => $content
+                ]
             ];
         });
 
         if ($feynmen)
-            return ResponseHelper::success([
-                'feynmen' => $feynmen
-            ]);
+            return ResponseHelper::success(
+                $feynmen
+            );
 
         return ResponseHelper::error("Feynmen not found");
     }

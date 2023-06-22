@@ -36,6 +36,7 @@ Route::get('/student/summary/{summary_id}', [StudentController::class, 'summaryD
 
 
 Route::post('/student/submitMindMap', [StudentController::class, 'submitMindMap'])->middleware('validStudent');
+Route::post('/student/updateMindMap', [StudentController::class, 'updateMindMap'])->middleware('validStudent');
 Route::get('/student/mindmaps/{user_id}', [StudentController::class, 'mindmaps'])->middleware('validStudent');
 Route::get('/student/mindmap/{mindmap_id}', [StudentController::class, 'mindmapDetails'])->middleware('validStudent');
 

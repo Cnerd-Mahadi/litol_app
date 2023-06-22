@@ -19,6 +19,14 @@ class CreatorController extends Controller
         $subjects = LearnController::getSubjects();
         $contents = ContentController::getContentsByUserId($user_id);
 
+        if ($contents)
+            $contents->map(function ($content) {
+                return [
+                    'subjectInfo' => $content->subjectInfo,
+                    'content' => $content
+                ];
+            });
+
         if ($creator)
             return ResponseHelper::success([
                 'name' => $creator->userInfo->username,
@@ -37,14 +45,14 @@ class CreatorController extends Controller
         return ContentController::saveContent($request);
     }
 
-    public function contentDetails($content_id, $user_id)
+    public function contentDetails($content_id, Request $request)
     {
         $content = ContentController::getContent($content_id);
 
         if ($content)
             return ResponseHelper::success([
                 'content' => $content,
-                'contents' => ContentController::getContentsByUserId($user_id)
+                'contents' => ContentController::getContentsByUserId($request->user_id)
             ]);
 
         return ResponseHelper::error("Content not found");

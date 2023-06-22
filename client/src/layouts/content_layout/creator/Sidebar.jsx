@@ -6,9 +6,9 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 
 function Sidebar(props) {
-	const { description, social, title } = props;
+	const { description, social, title, contents } = props;
 
-	console.log(props.contents);
+	console.log(contents);
 
 	return (
 		<Grid item xs={12}>
@@ -19,24 +19,19 @@ function Sidebar(props) {
 				<Typography>{description}</Typography>
 			</Paper>
 			<Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-				{props.role === "STUDENT" ? "Your Summary Gallery" : "Browse Contents"}
+				Browse Contents
 			</Typography>
-			{props.contents.map((content) => (
-				<Link
-					href={`${
-						props.role === "CREATOR"
-							? "/creator/content/" + content.content_id
-							: "/student/summary/" + content.summary_id
-					}`}
-					underline="none"
-					display="block"
-					variant="body1"
-					key={
-						props.role === "CREATOR" ? content.content_id : content.summary_id
-					}>
-					{props.role === "CREATOR" ? content.topic.title : content.title}
-				</Link>
-			))}
+			{contents.length > 0 &&
+				contents.map((content) => (
+					<Link
+						href={`/creator/content/${content.content_id}`}
+						underline="none"
+						display="block"
+						variant="body1"
+						key={content.content_id}>
+						{content.title}
+					</Link>
+				))}
 
 			<Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
 				Social

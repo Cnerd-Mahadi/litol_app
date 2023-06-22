@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 
 export const SubjectCard = ({ image, subject, id }) => {
-	console.log(image);
 	return (
 		<Link href={"/student/learn/subject/" + id} underline="none">
 			<Card sx={{ width: 280, margin: "20px" }}>

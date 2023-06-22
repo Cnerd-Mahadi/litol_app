@@ -29,13 +29,24 @@ class LogController extends Controller
                 ->first(
                 );
 
+            if ($user) {
+                $details = null;
+                if ($user->roleInfo->role_name === "STUDENT")
+                    $details = $user->studentInfo;
+                else
+                    $details = $user->creatorInfo;
 
-            if ($user)
                 return ResponseHelper::success([
                     'token' => $user->generateToken($user->roleInfo->role_name),
-                    'message' => "User logged in successfully",
-                ]);
+                    'userInfo' => [
+                        'name' => $user->username,
+                        'email' => $user->email,
+                        'details' => $details
+                    ],
+                    'role' => $user->roleInfo->role_name
 
+                ]);
+            }
             return ResponseHelper::error("Invalid username or password");
 
         } catch (\Throwable $th) {

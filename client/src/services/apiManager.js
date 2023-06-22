@@ -1,12 +1,22 @@
 import axios from "axios";
 import { baseURL } from "../utilities/utility";
 
-export const apiPostDataHandler = async (url, data) => {
-	return await axios.post(baseURL + url, data);
+export const apiPostDataHandler = async (url, data, header) => {
+	return await axios
+		.post(baseURL + url, data, {
+			headers: header,
+		})
+		.then((response) => {
+			return response.data;
+		});
 };
 
-export const apiGetDataHandler = (url, data) => {
-	axios.get(baseURL + url, data).then((response) => {
-		return response;
-	});
+export const apiGetDataHandler = async (url, header) => {
+	return await axios
+		.get(baseURL + url, {
+			headers: header,
+		})
+		.then((response) => {
+			return response.data;
+		});
 };
