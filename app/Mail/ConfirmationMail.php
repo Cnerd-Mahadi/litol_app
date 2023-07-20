@@ -34,9 +34,9 @@ class ConfirmationMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            from: new Address('litol@app.bd', 'LITOL_APP'),
+            from: new Address('litol@app', 'LITOL_APP'),
             replyTo: [
-                new Address('litol@app.bd', 'LITOL_APP'),
+                new Address('litol@app', 'LITOL_APP'),
             ],
             subject: 'Acceptance Mail For Feynman Request!',
         );
