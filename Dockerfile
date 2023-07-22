@@ -1,6 +1,6 @@
 FROM richarvey/nginx-php-fpm:2.1.2
 
-RUN apt-get install libsodium-dev -y
+RUN pecl install libsodium
 RUN docker-php-ext-install sodium
 
 RUN pecl install grpc
