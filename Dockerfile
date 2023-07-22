@@ -1,7 +1,5 @@
 FROM richarvey/nginx-php-fpm:2.1.2
 
-RUN docker-php-ext-install sodium
-
 RUN pecl install grpc
 RUN docker-php-ext-enable grpc
 
