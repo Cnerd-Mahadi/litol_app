@@ -1,10 +1,8 @@
-FROM php:8.2-cli
+FROM php:7.2-cli
 
-RUN pecl install libsodium
-RUN docker-php-ext-enable sodium
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-RUN pecl install grpc
-RUN docker-php-ext-enable grpc
+RUN install-php-extensions gd grpc
 
 RUN php -r "echo extension_loaded('grpc') ? 'yes' : 'no';"
 
