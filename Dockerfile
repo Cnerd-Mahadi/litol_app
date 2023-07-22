@@ -1,5 +1,9 @@
 FROM richarvey/nginx-php-fpm:2.1.2
 
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
+  && pecl install grpc \
+  && echo "extension=grpc.so" > /usr/local/etc/php/conf.d/pecl-grpc.ini \
+
 COPY . .
 
 # Image config
