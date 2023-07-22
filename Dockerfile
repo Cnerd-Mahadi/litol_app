@@ -4,6 +4,8 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 
 RUN install-php-extensions gd grpc
 
+RUN docker-php-ext-enable grpc
+
 RUN php -r "echo extension_loaded('grpc') ? 'yes' : 'no';"
 
 COPY . .
