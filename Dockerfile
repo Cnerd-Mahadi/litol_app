@@ -4,15 +4,7 @@ RUN pecl install libsodium
 RUN docker-php-ext-install sodium
 
 RUN pecl install grpc
-#install protoc
-RUN mkdir -p /tmp/protoc && \
-    curl -L https://github.com/google/protobuf/releases/download/v3.2.0/protoc-3.2.0-linux-x86_64.zip > /tmp/protoc/protoc.zip && \
-    cd /tmp/protoc && \
-    unzip protoc.zip && \
-    cp /tmp/protoc/bin/protoc /usr/local/bin && \
-    cd /tmp && \
-    rm -r /tmp/protoc && \
-    docker-php-ext-enable grpc
+RUN docker-php-ext-enable grpc
 
 RUN php -r "echo extension_loaded('grpc') ? 'yes' : 'no';"
 
