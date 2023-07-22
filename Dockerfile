@@ -1,5 +1,8 @@
 FROM richarvey/nginx-php-fpm:2.1.2
 
+RUN apt-get install libsodium-dev -y
+RUN docker-php-ext-install sodium
+
 RUN pecl install grpc
 #install protoc
 RUN mkdir -p /tmp/protoc && \
