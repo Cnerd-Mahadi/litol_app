@@ -25,6 +25,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [LogController::class, 'loginSubmit']);
 Route::post('/signUp', [SignUpController::class, 'signUpSubmit']);
+Route::get('/welcome', function () {
+    return view('email');
+});
 
 
 Route::get('/student/subjects', [StudentController::class, 'subjects'])->middleware('validStudent');
