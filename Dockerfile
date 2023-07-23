@@ -1,9 +1,12 @@
-FROM php:8.2-cli
+FROM php:8.1-cli-alpine
 
-RUN apk --no-cache add $PHPIZE_DEPS zip unzip git zlib-dev
-
-RUN pecl install grpc
-RUN docker-php-ext-enable grpc
+RUN apk add --no-cache --virtual .build-deps g++ linux-headers zlib-dev $PHPIZE_DEPS \
+  && apk add --no-cache libstdc++ \
+  && date \
+  && export MAKEFLAGS="-j $(nproc)" \
+  && time pecl install grpc \
+  && date \
+  && ls -lh /usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 
 
 COPY . .
