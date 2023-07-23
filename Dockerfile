@@ -1,8 +1,10 @@
 FROM php:8.2-cli
 
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN apk --no-cache add $PHPIZE_DEPS zip unzip git zlib-dev
 
-RUN install-php-extensions grpc
+RUN pecl install grpc
+RUN docker-php-ext-enable grpc
+
 
 COPY . .
 
