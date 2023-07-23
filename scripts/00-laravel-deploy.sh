@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-echo "Running yourn bullshit"
-
-/usr/local/bin/docker-php-ext-configure grpc
-/usr/local/bin/docker-php-ext-install grpc
-
-supervisorctl restart php-fpm
-
 echo "Running composer"
 composer global require hirak/prestissimo
 composer self-update --2
