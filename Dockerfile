@@ -1,20 +1,8 @@
-FROM php:7.2-cli
+FROM php:8.2-fpm
 
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN pecl install grpc
+RUN docker-php-ext-enable grpc
 
-RUN install-php-extensions gd grpc
-
-#install protoc
-RUN mkdir -p /tmp/protoc && \
-    curl -L https://github.com/google/protobuf/releases/download/v3.2.0/protoc-3.2.0-linux-x86_64.zip > /tmp/protoc/protoc.zip && \
-    cd /tmp/protoc && \
-    unzip protoc.zip && \
-    cp /tmp/protoc/bin/protoc /usr/local/bin && \
-    cd /tmp && \
-    rm -r /tmp/protoc && \
-    docker-php-ext-enable grpc
-
-RUN php -r "echo extension_loaded('grpc') ? 'yes' : 'no';"
 
 COPY . .
 
