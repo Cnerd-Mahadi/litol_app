@@ -1,7 +1,7 @@
 FROM richarvey/nginx-php-fpm:2.1.2
 
-COPY --from=grpc/php:latest
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s \
+      grpc
 
 RUN docker-php-ext-enable grpc
 
