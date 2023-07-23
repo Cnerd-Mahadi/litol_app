@@ -1,8 +1,6 @@
 FROM richarvey/nginx-php-fpm:2.1.2
-FROM grpc/php:latest
 
-CMD ["apache2ctl", "-DFOREGROUND"]
-
+COPY --from=grpc/php:latest
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
 RUN docker-php-ext-enable grpc
