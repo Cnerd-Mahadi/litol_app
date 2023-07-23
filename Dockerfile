@@ -1,8 +1,4 @@
-FROM php:8.2-cli
-
-RUN apt-get update && apt-get install -y zlib1g-dev
-RUN pecl install grpc && docker-php-ext-enable grpc
-
+FROM richarvey/nginx-php-fpm:2.1.2
 
 COPY . .
 
