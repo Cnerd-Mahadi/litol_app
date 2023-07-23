@@ -1,5 +1,10 @@
 FROM richarvey/nginx-php-fpm:2.1.2
 
+RUN docker exec -t -i nginx /bin/bash
+
+RUN /usr/local/bin/docker-php-ext-configure grpc
+RUN /usr/local/bin/docker-php-ext-install grpc
+
 COPY . .
 
 # Image config
