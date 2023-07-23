@@ -1,14 +1,5 @@
 FROM richarvey/nginx-php-fpm:2.1.2
 
-# Use the official Nginx base image
-FROM nginx
-
-# Update package lists and install bash (optional but useful for an interactive shell)
-RUN apt-get update && apt-get install -y bash
-
-# Set the default command to start an interactive bash shell
-CMD ["/bin/bash"]
-
 COPY . .
 
 # Image config
