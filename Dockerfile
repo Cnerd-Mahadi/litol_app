@@ -1,9 +1,13 @@
 FROM richarvey/nginx-php-fpm:2.1.2
 
-docker exec -t -i nginx /bin/bash
+# Use the official Nginx base image
+FROM nginx
 
-/usr/local/bin/docker-php-ext-configure grpc
-/usr/local/bin/docker-php-ext-install grpc
+# Update package lists and install bash (optional but useful for an interactive shell)
+RUN apt-get update && apt-get install -y bash
+
+# Set the default command to start an interactive bash shell
+CMD ["/bin/bash"]
 
 COPY . .
 
