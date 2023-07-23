@@ -1,6 +1,8 @@
-FROM php:8.2-fpm
+FROM richarvey/nginx-php-fpm:2.1.2
 
-RUN pecl install grpc
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
+RUN install-php-extensions grpc
 RUN docker-php-ext-enable grpc
 
 
