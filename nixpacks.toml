@@ -1,2 +1,5 @@
 [phases.setup]
-nixPkgs = ['grpc']
+nixPkgs = ['php81Extensions.grpc']
+
+[phases.build]
+cmds = ["mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx", "composer install", "npm i", "cp .env.example .env", "php artisan optimize:clear"]
