@@ -1,4 +1,4 @@
-[phase.name]
+[phase.setup]
   aptPkgs = ['grpc']
 
 [phases.install]
