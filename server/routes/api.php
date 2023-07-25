@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\ContentController;
-use App\Http\Controllers\CreatorController;
 use App\Http\Controllers\FeynmanController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MindMapController;
@@ -60,6 +58,6 @@ Route::get('/student/feynmen', [FeynmanController::class, 'feynmen'])->middlewar
 Route::get('/student/feynman/resolve', [FeynmanController::class, 'resolveFeynman'])->middleware('validStudent');
 
 
-Route::get('/creator/dashboard/{user_id}', [CreatorController::class, 'dashboard'])->middleware('validCreator');
-Route::post('/creator/submitContent', [ContentController::class, 'saveContent'])->middleware('validCreator');
-Route::get('/creator/contentDetails/{content_id}', [ContentController::class, 'contentDetails'])->middleware('validCreator');
+// Route::get('/creator/dashboard/{user_id}', [CreatorController::class, 'dashboard'])->middleware('validCreator');
+// Route::post('/creator/submitContent', [ContentController::class, 'saveContent'])->middleware('validCreator');
+// Route::get('/creator/contentDetails/{content_id}', [ContentController::class, 'contentDetails'])->middleware('validCreator');

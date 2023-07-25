@@ -14,16 +14,18 @@ class ConfirmationMail extends Mailable
 {
     use Queueable, SerializesModels, MailerSendTrait;
 
-    public $data;
+    public $username;
+    public $meetingData;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($username, $meetingData)
     {
-        $this->data = $data;
+        $this->username = $username;
+        $this->meetingData = $meetingData;
     }
 
     /**
@@ -38,7 +40,7 @@ class ConfirmationMail extends Mailable
             replyTo: [
                 new Address('litol@app', 'LITOL_APP'),
             ],
-            subject: 'Acceptance Mail For Feynman Request!',
+            subject: 'Acceptance Mail For Your Feynman Request!',
         );
     }
 

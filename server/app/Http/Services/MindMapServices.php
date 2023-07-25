@@ -29,7 +29,7 @@ class MindMapServices
     public function saveMindMap(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => ['required', 'string', 'max:255', new BeUniqueTitle('notes')],
+            'title' => ['required', 'string', 'max:255', new BeUniqueTitle('mindmaps')],
             'nodes' => ['required', new CheckJson()],
             'edges' => ['required', new CheckJson()],
         ]);

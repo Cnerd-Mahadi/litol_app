@@ -32,7 +32,6 @@ class LogController extends Controller
 
         try {
             $user = $this->logService->checkUser($request->username, $request->password);
-            dd($user);
         } catch (\Throwable $th) {
             return ResponseHelper::error([
                 'message' => 'User could not be checked',

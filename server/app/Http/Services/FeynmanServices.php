@@ -6,6 +6,7 @@ use App\Helpers\ResponseHelper;
 use App\Mail\ConfirmationMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use stdClass;
 
 class FeynmanServices
 {
@@ -109,11 +110,23 @@ class FeynmanServices
 
     public function resolveFeynman(Request $request)
     {
-        try {
-            // $this->firebaseService->getCollection('feynmen')->document($request->feynman_id)->delete();
+        $meetingData = new stdClass();
+        $meetingData->id = $request->feynman_id;
+        $meetingData->resolverName = $request->resolver;
+        $meetingData->topic = $request->topic;
+        $meetingData->subject = $request->subject;
+        $meetingData->link = $request->link;
+        $meetingData->time = $request->time;
 
-            Mail::to(['mahadidroid@gmail.com'])
-                ->queue(new ConfirmationMail($this->firebaseService->getDocument($request->user_id, 'users')));
+        try {
+            $feynmanRequest = $this->firebaseService->getDocument($request->feynman_id, 'feynmen');
+            $emailList = $this->createEmailList($feynmanRequest->data->slots);
+            foreach ($emailList as $recipient) {
+                Mail::to($recipient->email)
+                    ->queue(new ConfirmationMail($recipient->username, $meetingData));
+            }
+            $this->firebaseService->getCollection('feynmen')->document($request->feynman_id)->delete();
+
             return ResponseHelper::success("Feynman request resolved successfully");
 
         } catch (\Throwable $th) {
@@ -122,5 +135,25 @@ class FeynmanServices
                 'error' => $th->getMessage()
             ]);
         }
+    }
+
+    public function createEmailList($feynmanSlots)
+    {
+        $emailList = array();
+
+        if (isset($feynmanSlots->A)) {
+            $emailList[] = $feynmanSlots->A;
+        }
+        if (isset($feynmanSlots->B)) {
+            $emailList[] = $feynmanSlots->B;
+        }
+        if (isset($feynmanSlots->C)) {
+            $emailList[] = $feynmanSlots->C;
+        }
+        if (isset($feynmanSlots->D)) {
+            $emailList[] = $feynmanSlots->D;
+        }
+
+        return $emailList;
     }
 }
