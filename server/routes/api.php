@@ -22,12 +22,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// This is just the working or not test
+
+Route::get('/welcome', function () {
+    return "Well Hello, There!";
+});
+
+// API starts from here
 
 Route::post('/login', [LogController::class, 'loginSubmit']);
 Route::post('/signUp', [SignUpController::class, 'signUpSubmit']);
-Route::get('/welcome', function () {
-    return view('email');
-});
 
 
 Route::get('/student/subjects', [StudentController::class, 'subjects'])->middleware('validStudent');
