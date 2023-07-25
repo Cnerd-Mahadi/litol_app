@@ -22,8 +22,8 @@ use Illuminate\Support\Facades\Route;
 
 // This is just the working or not test
 
-Route::get('/welcome', function () {
-    return "Well Hello, There!";
+Route::get('/test', function () {
+    return "<h1>Well Hello There, API IN TESTED</h1>";
 });
 
 // API starts from here

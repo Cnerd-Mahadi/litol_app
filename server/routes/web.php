@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('email');
+    return '<h1>Bingo You In Bruv</h1>';
 });
