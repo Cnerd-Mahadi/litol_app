@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b3b72f29012d641b20b1a69b323baba",
+    "content-hash": "326fa810c1a8f81aef90c8d256443186",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -5635,6 +5635,48 @@
                 }
             ],
             "time": "2022-10-12T17:22:51+00:00"
+        },
+        {
+            "name": "svk/yc-grpc-injector",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.com/svk/yc-grpc-injector.git",
+                "reference": "727b71c551aaacc23b22e00e9f7caf82b00e626a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://gitlab.com/api/v4/projects/svk%2Fyc-grpc-injector/repository/archive.zip?sha=727b71c551aaacc23b22e00e9f7caf82b00e626a",
+                "reference": "727b71c551aaacc23b22e00e9f7caf82b00e626a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "provide": {
+                "ext-grpc": "1.32.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "svk\\GRPCInjector\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "svk",
+                    "email": "svk@svk.su"
+                }
+            ],
+            "description": "Интеграция драйвера grpc для php 7.4.4 в Cloud Functions Яндекс.Облака",
+            "support": {
+                "issues": "https://gitlab.com/api/v4/projects/21838721/issues"
+            },
+            "time": "2020-10-17T10:01:49+00:00"
         },
         {
             "name": "symfony/cache",
@@ -11378,8 +11420,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1.6",
-        "ext-grpc": "*"
+        "php": "^8.1.6"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
