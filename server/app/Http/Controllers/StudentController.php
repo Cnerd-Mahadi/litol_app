@@ -5,17 +5,31 @@ namespace App\Http\Controllers;
 use App\Helpers\ResponseHelper;
 use App\Http\Services\CommonServices;
 use App\Http\Services\StudentServices;
+use App\Http\Services\UserServices;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
     private $commonService;
     private $studentService;
-    public function __construct(CommonServices $commonService, StudentServices $studentService)
+    private $userService;
+    public function __construct(CommonServices $commonService, StudentServices $studentService, UserServices $userService)
     {
         $this->commonService = $commonService;
         $this->studentService = $studentService;
+        $this->userService = $userService;
     }
+
+    public function usernameCheck(Request $request)
+    {
+        return $this->userService->checkUniqueUser($request->username);
+    }
+
+    public function emailCheck(Request $request)
+    {
+        return $this->userService->checkUniqueEmail($request->email);
+    }
+
     public function subjects()
     {
         try {

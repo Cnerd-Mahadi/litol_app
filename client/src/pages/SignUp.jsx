@@ -5,49 +5,53 @@ import {
 	InputLabel,
 	MenuItem,
 	Select,
-	Switch,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { InputField } from "../components/common/InputField";
 import { InputFieldPassword } from "../components/common/InputFieldPassword";
-import { handleSignUp } from "../services/userManager";
 import { SignUpContainerStyle } from "../styles/mui-styles/containers";
 
 export const SignUp = () => {
 	const navigate = useNavigate();
-	const [isCreator, setIsCreator] = useState(false);
-	const handleSubmit = (event) => {
-		event.preventDefault();
-		const data = new FormData(event.currentTarget);
-		const role = isCreator ? "CREATOR" : "STUDENT";
+	const {
+		register,
+		handleSubmit,
+		watch,
+		formState: { errors },
+	} = useForm();
 
-		const resultData = {
-			role: role,
-			username: data.get("name"),
-			age: data.get("age"),
-			dob: data.get("date"),
-			gender: data.get("gender"),
-			email: data.get("email"),
-			password: data.get("password"),
-			address: data.get("address"),
-			bio: data.get("bio"),
-			phone: data.get("phone"),
-			emailCheck: data.get("emailCheck"),
-		};
-		console.log(resultData, "FormData");
+	const onSubmit = (data) => console.log(data);
+	// const handleSubmit = (event) => {
+	// 	event.preventDefault();
+	// 	const data = new FormsData(event.currentTarget);
+	// 	const role = isCreator ? "CREATOR" : "STUDENT";
 
-		handleSignUp("signUp", resultData, navigate);
-	};
+	// 	const resultData = {
+	// 		role: role,
+	// 		username: data.get("name"),
+	// 		age: data.get("age"),
+	// 		dob: data.get("date"),
+	// 		gender: data.get("gender"),
+	// 		email: data.get("email"),
+	// 		password: data.get("password"),
+	// 		address: data.get("address"),
+	// 		bio: data.get("bio"),
+	// 		phone: data.get("phone"),
+	// 		emailCheck: data.get("emailCheck"),
+	// 	};
+	// 	console.log(resultData, "FormData");
+
+	// 	handleSignUp("signUp", resultData, navigate);
+	// };
 
 	return (
 		<Container component="div" maxWidth="xs">
@@ -62,18 +66,6 @@ export const SignUp = () => {
 
 				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
 					<Grid container spacing={2} sx={{ justifyContent: "center" }}>
-						<Grid item xs={12}>
-							<FormControlLabel
-								control={
-									<Switch
-										checked={isCreator}
-										onChange={() => setIsCreator(!isCreator)}
-									/>
-								}
-								label="As a Creator"
-							/>
-						</Grid>
-
 						<Grid item xs={12} sm={6}>
 							<InputField id="name" type={"text"} autoFocus={true} />
 						</Grid>

@@ -13,13 +13,13 @@ class UserServices
 
     public function checkUniqueEmail($email)
     {
-        $uniqueValue = $this->firebaseService->getCollection('users')->where('email', 'in', $email)->documents();
+        $uniqueValue = $this->firebaseService->getCollection('users')->where('email', '=', $email)->documents();
         return $this->firebaseService->getData($uniqueValue) === null ? true : false;
     }
 
     public function checkUniqueUser($username)
     {
-        $uniqueValue = $this->firebaseService->getCollection('users')->where('username', 'in', $username)->documents();
+        $uniqueValue = $this->firebaseService->getCollection('users')->where('username', '=', $username)->documents();
         return $this->firebaseService->getData($uniqueValue) === null ? true : false;
     }
 

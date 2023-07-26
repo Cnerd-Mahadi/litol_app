@@ -1,7 +1,7 @@
 import { MenuItem } from "@mui/material";
 import { featuresImages } from "./staticImageResources";
 
-export const baseURL = "http://127.0.0.1:8000/api/";
+export const baseURL = "https://litolapi-production.up.railway.app/api/";
 
 export const setLocalData = (key, data) => {
 	localStorage.setItem(key, JSON.stringify(data));

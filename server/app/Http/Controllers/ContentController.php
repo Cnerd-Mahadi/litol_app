@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseHelper;
+use App\Http\Services\CommonServices;
 use App\Http\Services\ContentServices;
 use App\Http\Services\CreatorServices;
 use App\Rules\BeUniqueTitle;
@@ -13,12 +14,20 @@ class ContentController extends Controller
 {
     private $contentService;
     private $creatorService;
+    private $commonService;
 
-    public function __construct(CreatorServices $creatorService, ContentServices $contentService)
+    public function __construct(CreatorServices $creatorService, ContentServices $contentService, CommonServices $commonService)
     {
         $this->contentService = $contentService;
         $this->creatorService = $creatorService;
+        $this->commonService = $commonService;
     }
+
+    public function titleCheck(Request $request)
+    {
+        return $this->commonService->checkUniqueTitle($request->title, $request->collection);
+    }
+
     public function saveContent(Request $request)
     {
         $validator = Validator::make($request->all(), [
