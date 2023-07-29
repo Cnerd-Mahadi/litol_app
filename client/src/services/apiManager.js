@@ -11,9 +11,10 @@ export const apiPostDataHandler = async (url, data, header) => {
 		});
 };
 
-export const apiGetDataHandler = async (url, header) => {
+export const apiGetDataHandler = async (url, header, params) => {
 	return await axios
 		.get(baseURL + url, {
+			params: params,
 			headers: header,
 		})
 		.then((response) => {

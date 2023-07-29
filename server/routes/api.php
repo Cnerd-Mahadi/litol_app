@@ -36,8 +36,8 @@ Route::post('/signUp', [SignUpController::class, 'signUpSubmit']);
 // Route::get('/student/subjects', [StudentController::class, 'subjects'])->middleware('validStudent');
 // Route::get('/student/subject/{subject_id}', [StudentController::class, 'contentsBySubject'])->middleware('validStudent');
 // Route::get('/student/content/{content_id}', [StudentController::class, 'contentDetails'])->middleware('validStudent');
-Route::get('/student/usernameCheck', [StudentController::class, 'usernameCheck'])->middleware('validStudent');
-Route::get('/student/emailCheck', [StudentController::class, 'emailCheck'])->middleware('validStudent');
+Route::get('/student/usernameCheck', [StudentController::class, 'usernameCheck']);
+Route::get('/student/emailCheck', [StudentController::class, 'emailCheck']);
 Route::get('/student/titleCheck', [ContentController::class, 'titleCheck'])->middleware('validStudent');
 
 

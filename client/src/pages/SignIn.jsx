@@ -12,8 +12,8 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { CopyRight } from "../components/common/CopyRight";
-import { InputField } from "../components/common/InputField";
-import { InputFieldPassword } from "../components/common/InputFieldPassword";
+import { InputField } from "../components/input-fields/InputField";
+import { InputFieldPassword } from "../components/input-fields/InputFieldPassword";
 import { handleSignIn } from "../services/userManager";
 import {
 	SignInContainerStyle,

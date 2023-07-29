@@ -1,57 +1,20 @@
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import {
-	Container,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
-} from "@mui/material";
+import { Button, Container } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { InputField } from "../components/common/InputField";
-import { InputFieldPassword } from "../components/common/InputFieldPassword";
+import { InputField } from "../components/input-fields/InputField";
+import { InputFieldPassword } from "../components/input-fields/InputFieldPassword";
+import { SelectField } from "../components/input-fields/SelectField";
+import { SignUpServices } from "../services/SignUpServices";
 import { SignUpContainerStyle } from "../styles/mui-styles/containers";
+import { genderOptions } from "../utilities/utility";
 
 export const SignUp = () => {
-	const navigate = useNavigate();
-	const {
-		register,
-		handleSubmit,
-		watch,
-		formState: { errors },
-	} = useForm();
-
-	const onSubmit = (data) => console.log(data);
-	// const handleSubmit = (event) => {
-	// 	event.preventDefault();
-	// 	const data = new FormsData(event.currentTarget);
-	// 	const role = isCreator ? "CREATOR" : "STUDENT";
-
-	// 	const resultData = {
-	// 		role: role,
-	// 		username: data.get("name"),
-	// 		age: data.get("age"),
-	// 		dob: data.get("date"),
-	// 		gender: data.get("gender"),
-	// 		email: data.get("email"),
-	// 		password: data.get("password"),
-	// 		address: data.get("address"),
-	// 		bio: data.get("bio"),
-	// 		phone: data.get("phone"),
-	// 		emailCheck: data.get("emailCheck"),
-	// 	};
-	// 	console.log(resultData, "FormData");
-
-	// 	handleSignUp("signUp", resultData, navigate);
-	// };
+	const { control, handleSubmit, onSubmit } = SignUpServices();
 
 	return (
 		<Container component="div" maxWidth="xs">
@@ -64,61 +27,72 @@ export const SignUp = () => {
 					Sign up
 				</Typography>
 
-				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+				<Box
+					component="form"
+					noValidate
+					onSubmit={handleSubmit(onSubmit)}
+					sx={{ mt: 3 }}>
 					<Grid container spacing={2} sx={{ justifyContent: "center" }}>
 						<Grid item xs={12} sm={6}>
-							<InputField id="name" type={"text"} autoFocus={true} />
+							<InputField
+								type="text"
+								id="username"
+								label={"Username"}
+								control={control}
+							/>
 						</Grid>
 
 						<Grid item xs={12} sm={6}>
-							<InputField type={"number"} id="age" />
+							<InputFieldPassword
+								id="password"
+								label={"Password"}
+								control={control}
+							/>
 						</Grid>
 
-						<Grid item xs={6}>
-							<FormControl fullWidth>
-								<InputLabel id="genderLabel">Gender</InputLabel>
-								<Select
-									id="gender"
-									defaultValue="male"
-									label="Gender"
-									name="gender">
-									<MenuItem value={"male"}>Male</MenuItem>
-									<MenuItem value={"female"}>Female</MenuItem>
-								</Select>
-							</FormControl>
+						<Grid item xs={12} sm={6}>
+							<SelectField
+								id="gender"
+								label={"Gender"}
+								control={control}
+								menu={genderOptions}
+							/>
 						</Grid>
 
-						<Grid item xs={6}>
-							<TextField
-								id="date"
-								label="Birthday"
+						<Grid item xs={12} sm={6}>
+							<InputField
 								type="date"
-								defaultValue="2017-05-24"
-								fullWidth
-								name="date"
+								id="dob"
+								label={"Date of Birth"}
+								control={control}
 							/>
 						</Grid>
 
 						<Grid item xs={12}>
-							<InputField type={"email"} id="email" />
+							<InputField
+								type="email"
+								id="email"
+								label={"Email address"}
+								control={control}
+							/>
 						</Grid>
 
 						<Grid item xs={12}>
-							<InputFieldPassword id="password" />
+							<InputField
+								type="text"
+								id="phone"
+								label={"Phone number"}
+								control={control}
+							/>
 						</Grid>
 
-						{!isCreator ? (
-							<Grid item xs={12}>
-								<InputField type={"address"} id="address" />
-							</Grid>
-						) : (
-							<Grid item xs={12}>
-								<InputField type={"text"} id="bio" />
-							</Grid>
-						)}
-
 						<Grid item xs={12}>
-							<InputField type={"phone"} id="phone" />
+							<InputField
+								type="text"
+								id="address"
+								label={"Address"}
+								control={control}
+							/>
 						</Grid>
 
 						<Grid item xs={12} sm={6}>

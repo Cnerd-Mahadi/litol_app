@@ -97,6 +97,21 @@ export const getSubjects = ({ subject_id, subject_name }) => {
 	);
 };
 
+export const genderOptions = [
+	{
+		value: "male",
+		label: "Male",
+	},
+	{
+		value: "female",
+		label: "Female",
+	},
+	{
+		value: "other",
+		label: "Other",
+	},
+];
+
 export const colorCode = {
 	navyBlue: "#083344",
 	red: "#ef4444",
