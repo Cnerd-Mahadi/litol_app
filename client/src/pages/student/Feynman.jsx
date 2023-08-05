@@ -1,83 +1,11 @@
-import { Button, Chip, Paper, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import "swiper/css";
 import "swiper/css/pagination";
+import { FeynmanCard } from "../../components/cards/FeynmanCard";
 import { useGetQuery } from "../../hooks/useGetQuery";
 import { getHeader, getLocalData, headerType } from "../../utilities/utility";
 import { Loading } from "../Loading";
-
-const getContents = (item) => {
-	return (
-		<Paper
-			key={item.details.feynman_id}
-			elevation={3}
-			sx={{
-				display: "flex",
-				flexDirection: "column",
-				alignItems: "start",
-				gap: 2,
-				px: 4,
-				py: 2,
-				my: 3,
-				width: "100%",
-				backgroundColor: "#fafafa",
-				borderRadius: "24px",
-			}}>
-			<Typography
-				variant="h6"
-				sx={{
-					textAlign: "center",
-					alignSelf: "center",
-					fontWeight: 700,
-				}}>
-				{item.details.content.title}
-			</Typography>
-			<Typography variant="h5" sx={{ fontSize: "16px", fontWeight: 500 }}>
-				Subject: {item.details.subject.subject_name.toUpperCase()}
-			</Typography>
-			<Typography variant="h5" sx={{ fontSize: "16px", fontWeight: 500 }}>
-				Requested by:
-				{item.slotA && (
-					<Chip
-						sx={{
-							mx: 1,
-						}}
-						label={item.slotA.username}
-						color="primary"
-						variant="outlined"></Chip>
-				)}
-				{item.slotB && (
-					<Chip
-						sx={{
-							mr: 1,
-						}}
-						label={item.slotB.username}
-						color="primary"
-						variant="outlined"></Chip>
-				)}
-				{item.slotC && (
-					<Chip
-						sx={{
-							mr: 1,
-						}}
-						label={item.slotC.username}
-						color="primary"
-						variant="outlined"></Chip>
-				)}
-				{item.slotD && (
-					<Chip
-						sx={{
-							mr: 1,
-						}}
-						label={item.slotD.username}
-						color="primary"
-						variant="outlined"></Chip>
-				)}
-			</Typography>
-			<Button variant="contained">Resolve</Button>
-		</Paper>
-	);
-};
 
 const localUserData = getLocalData("userData");
 
@@ -118,7 +46,13 @@ export const Feynman = () => {
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
-					{data.map((item) => getContents(item))}
+					{data.length
+						? data.map((item) => {
+								return (
+									<FeynmanCard key={item.id} id={item.id} data={item.data} />
+								);
+						  })
+						: "Sorry There is no feynman request available currently"}
 				</Grid>
 			</Grid>
 		</>

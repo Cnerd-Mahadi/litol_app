@@ -8,7 +8,7 @@ export const Cue = () => {
 		<Box sx={CueBoxStyle}>
 			{features.map((feature) => {
 				return (
-					<Link href={feature.route} underline="none">
+					<Link key={feature.name} href={feature.route} underline="none">
 						<CueCard image={feature.image} text={feature.name} />
 					</Link>
 				);

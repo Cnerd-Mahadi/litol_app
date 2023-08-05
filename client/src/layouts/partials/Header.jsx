@@ -1,4 +1,4 @@
-import { Avatar, Container, IconButton, Toolbar } from "@mui/material";
+import { Avatar, Container, IconButton, Link, Toolbar } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -6,11 +6,13 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { colorCode, pages, userSettings } from "../../utilities/utility";
 
 export const Header = () => {
-	const userRole = JSON.parse(localStorage.getItem("userData")).role;
+	const userRole = JSON.parse(localStorage.getItem("userData"))?.userInfo?.role;
 	const [userMenu, setUserMenu] = React.useState(null);
+	const navigate = useNavigate();
 
 	const toggleUserMenu = (event) => {
 		setUserMenu((userMenu) => (userMenu === null ? event.currentTarget : null));
@@ -30,20 +32,11 @@ export const Header = () => {
 						justifyContent: "space-between",
 						alignItems: "center",
 					}}>
-					<Typography
-						variant="h5"
-						component="a"
-						href="/"
-						sx={{
-							fontFamily: "'Bagel Fat One', cursive",
-							letterSpacing: ".5rem",
-							color: colorCode.white,
-							textDecoration: "none",
-						}}>
-						LITOL
-					</Typography>
+					<Link href="/">
+						<img alt="logo" src="/image/basic/logo.png" height={"65px"} />
+					</Link>
 					<Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
-						{userRole === "STUDENT" &&
+						{userRole === "student" &&
 							pages.map((page) => (
 								<Button
 									key={page.name}
@@ -61,7 +54,11 @@ export const Header = () => {
 
 						<Box>
 							<IconButton onClick={toggleUserMenu}>
-								<Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+								<Avatar
+									alt="U"
+									src="/image/basic/user.png"
+									sx={{ width: 28, height: 28 }}
+								/>
 							</IconButton>
 							<Menu
 								sx={{ mt: "45px" }}
@@ -79,7 +76,13 @@ export const Header = () => {
 								open={Boolean(userMenu)}
 								onClose={toggleUserMenu}>
 								{userSettings.map((setting) => (
-									<MenuItem key={setting} onClick={toggleUserMenu}>
+									<MenuItem
+										key={setting}
+										onClick={() => {
+											toggleUserMenu();
+											navigate("/");
+											localStorage.removeItem("userData");
+										}}>
 										<Typography textAlign="center">{setting}</Typography>
 									</MenuItem>
 								))}

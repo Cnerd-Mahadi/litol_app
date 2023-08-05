@@ -58,6 +58,7 @@ Route::get('/student/note/{note_id}', [NoteController::class, 'noteDetails'])->m
 
 
 Route::get('/student/feynman/request', [FeynmanController::class, 'requestFeynman'])->middleware('validStudent');
+Route::get('/student/feynman/requestCheck', [FeynmanController::class, 'checkRequested'])->middleware('validStudent');
 Route::get('/student/feynmen', [FeynmanController::class, 'feynmen'])->middleware('validStudent');
 Route::get('/student/feynman/resolve', [FeynmanController::class, 'resolveFeynman'])->middleware('validStudent');
 

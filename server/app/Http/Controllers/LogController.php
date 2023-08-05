@@ -41,6 +41,7 @@ class LogController extends Controller
 
         if (!$user) {
             return ResponseHelper::success([
+                'login' => false,
                 'message' => 'Invalid username or password',
             ]);
         }
@@ -53,7 +54,7 @@ class LogController extends Controller
                     'name' => $user->data->username,
                     'email' => $user->data->email,
                     'role' => $user->data->role,
-                    'details' => $user->data->basic
+                    'dob' => $user->data->dob
                 ],
             ]);
 

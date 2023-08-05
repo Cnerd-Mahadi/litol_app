@@ -21,23 +21,36 @@ function Main({ content }) {
 			sx={{
 				mt: 4,
 			}}>
-			<Typography variant="h3" gutterBottom>
-				{content.details.title}
+			<Typography variant="h4" marginBottom={1}>
+				{content.data.title}
 			</Typography>
-			{content.cue.map((data) => {
+			<Typography
+				variant="body2"
+				sx={{
+					ml: 0.5,
+					mb: 4,
+				}}>
+				<b>Created at</b> {content.data.updated}
+			</Typography>
+			<Typography
+				variant="body1"
+				sx={{
+					ml: 0.75,
+					mb: 8,
+				}}>
+				{content.data.details}
+			</Typography>
+			{content.data.cues.map((data) => {
 				return (
-					<Box marginBottom={2} key={data.note_details_id}>
+					<Box marginBottom={2} key={data.key}>
 						<Accordion
-							key={data.note_details_id}
-							expanded={expanded === `panel${data.note_details_id}`}
-							onChange={handleChange(`panel${data.note_details_id}`)}>
+							key={data.key}
+							expanded={expanded === `panel${data.key}`}
+							onChange={handleChange(`panel${data.key}`)}>
 							<AccordionSummary
 								expandIcon={<ExpandMoreIcon />}
-								aria-controls={`panel${data.note_details_id}bh-content`}
-								id={`panel${data.note_details_id}bh-header`}>
-								<Typography sx={{ width: "33%", flexShrink: 0 }}>
-									Cue
-								</Typography>
+								aria-controls={`panel${data.key}bh-content`}
+								id={`panel${data.key}bh-header`}>
 								<Typography sx={{ color: "text.secondary" }}>
 									{data.key}
 								</Typography>

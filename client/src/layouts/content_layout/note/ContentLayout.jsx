@@ -9,7 +9,8 @@ import Sidebar from "./Sidebar";
 
 const sidebar = {
 	title: "Cue Notes",
-	description: "Use Cue Notes for faster note taking",
+	description:
+		"Cornell section is inspired by cornell note taking method where the lesson can be remembered or structured using key and details",
 	social: [
 		{ name: "GitHub", icon: GitHubIcon },
 		{ name: "Twitter", icon: TwitterIcon },

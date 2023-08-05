@@ -15,11 +15,13 @@ class BeUniqueTitle implements Rule
 
     private $commonService;
     private $collection;
+    private $user_id;
 
-    public function __construct($collection)
+    public function __construct($collection, $user_id)
     {
         $this->commonService = app()->make(CommonServices::class);
         $this->collection = $collection;
+        $this->user_id = $user_id;
     }
 
     /**
@@ -31,7 +33,7 @@ class BeUniqueTitle implements Rule
      */
     public function passes($attribute, $value)
     {
-        return $this->commonService->checkUniqueTitle($value, $this->collection);
+        return $this->commonService->checkUniqueTitle($value, $this->collection, $this->user_id);
     }
 
     /**

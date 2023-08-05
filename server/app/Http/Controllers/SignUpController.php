@@ -38,7 +38,7 @@ class SignUpController extends Controller
                     'name' => $request->username,
                     'email' => $request->email,
                     'role' => $request->role,
-                    'details' => $this->userService->getUserbyId($savedUser->id())->data->basic
+                    'dob' => $request->dob
                 ],
             ]);
 

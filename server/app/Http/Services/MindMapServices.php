@@ -29,7 +29,7 @@ class MindMapServices
     public function saveMindMap(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => ['required', 'string', 'max:255', new BeUniqueTitle('mindmaps')],
+            'title' => ['required', 'string', 'max:255', new BeUniqueTitle('mindmaps', $request->user_id)],
             'nodes' => ['required', new CheckJson()],
             'edges' => ['required', new CheckJson()],
         ]);
@@ -61,9 +61,9 @@ class MindMapServices
     public function updateMindMap(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => ['required', 'string', 'max:255', new BeUniqueTitle('notes')],
-            'nodes' => 'required|array',
-            'edges' => 'required|array',
+            'title' => ['required', 'string', 'max:255'],
+            'nodes' => ['required', new CheckJson()],
+            'edges' => ['required', new CheckJson()],
         ]);
 
         if ($validator->fails()) {

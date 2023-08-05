@@ -3,25 +3,16 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import * as React from "react";
-import { A11y, Pagination } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { MindMapCard } from "../../components/cards/MindMapCard";
 import { useGetQuery } from "../../hooks/useGetQuery";
 import { getHeader, getLocalData, headerType } from "../../utilities/utility";
 import { Loading } from "../Loading";
 
-const getContents = ({ mindmap_id, title, updated }) => {
+const getContents = ({ id, data }) => {
 	return (
-		<SwiperSlide key={mindmap_id}>
-			<MindMapCard
-				key={mindmap_id}
-				id={mindmap_id}
-				title={title}
-				updated={updated}
-			/>
-		</SwiperSlide>
+		<MindMapCard key={id} id={id} title={data.title} updated={data.updated} />
 	);
 };
 
@@ -30,7 +21,7 @@ const localUserData = getLocalData("userData");
 export const MindMap = () => {
 	const { isLoading, data } = useGetQuery(
 		"student/mindmaps",
-		`student/mindmaps/${localUserData.userInfo.details.user_id}`,
+		`student/mindmaps/${localUserData.userInfo.id}`,
 		getHeader(headerType.tokenize, localUserData.token)
 	);
 
@@ -58,10 +49,7 @@ export const MindMap = () => {
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
-					<Link
-						href={
-							"/student/mindmap/board/" + localUserData.userInfo.details.user_id
-						}>
+					<Link href={"/student/mindmap/board/" + localUserData.userInfo.id}>
 						<Button
 							type="submit"
 							fullWidth
@@ -93,22 +81,17 @@ export const MindMap = () => {
 					Map Gallery
 				</Typography>
 				<Box>
-					{data.length ? (
-						<Swiper
-							modules={[Pagination, A11y]}
-							spaceBetween={20}
-							slidesPerView={5}
-							pagination={{ clickable: true }}
-							onSwiper={(swiper) => console.log(swiper)}
-							onSlideChange={() => console.log("slide change")}>
-							<Box
-								component={"div"}
-								sx={{
-									py: 3,
-								}}>
-								{data.map(getContents)}
-							</Box>
-						</Swiper>
+					{data.mindmaps.length ? (
+						<Box
+							component={"div"}
+							sx={{
+								display: "flex",
+								flexWrap: "wrap",
+								justifyContent: "center",
+								py: 3,
+							}}>
+							{data.mindmaps.map(getContents)}
+						</Box>
 					) : (
 						"Sorry There is no content available currently"
 					)}

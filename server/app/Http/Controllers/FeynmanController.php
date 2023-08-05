@@ -20,6 +20,11 @@ class FeynmanController extends Controller
         return $this->feynmanService->requestFeynman($request);
     }
 
+    public function checkRequested(Request $request)
+    {
+        return ResponseHelper::success($this->feynmanService->checkRequested($request));
+    }
+
     public function feynmen()
     {
         try {

@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@mui/material";
-import React from "react";
+import React, { createContext } from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RouterProvider } from "react-router-dom";
@@ -11,6 +11,7 @@ import "./styles/styles.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const queryClient = new QueryClient();
+export const SnackContext = createContext(null);
 
 root.render(
 	<ThemeProvider theme={theme}>

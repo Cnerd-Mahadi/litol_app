@@ -20,10 +20,9 @@ export const InputFieldPassword = ({ id, label, control }) => {
 			name="password"
 			control={control}
 			render={({ field, fieldState }) => (
-				<FormControl margin="none">
+				<FormControl margin="none" fullWidth>
 					<InputLabel>Password</InputLabel>
 					<OutlinedInput
-						fullWidth
 						id={id}
 						label={label}
 						type={showPassword ? "text" : "password"}

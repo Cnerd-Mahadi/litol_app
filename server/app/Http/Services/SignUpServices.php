@@ -26,13 +26,7 @@ class SignUpServices
             'password' => Hash::make($request->password, ['rounds' => 5]),
             'email' => $request->email,
             'role' => $request->role,
-            'basic' => [
-                'address' => $request->address,
-                'age' => $request->age,
-                'dob' => $request->dob,
-                'gender' => $request->gender,
-                'phone' => $request->phone
-            ]
+            'dob' => $request->dob,
         ];
         return $this->userServices->saveUser($user);
     }
@@ -62,12 +56,8 @@ class SignUpServices
             return Validator::make($request->all(), [
                 "username" => ['required', 'string', 'max:255', new BeUniqueUser],
                 "password" => 'required|string',
-                'gender' => 'required|string',
-                "age" => 'required|integer',
                 "dob" => 'required|string',
                 "email" => ['required', 'email', new BeUniqueEmail],
-                "phone" => 'required|string',
-                "address" => 'required|string',
             ]);
 
         } else if ($role === "creator") {

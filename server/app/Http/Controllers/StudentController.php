@@ -22,12 +22,13 @@ class StudentController extends Controller
 
     public function usernameCheck(Request $request)
     {
-        return $this->userService->checkUniqueUser($request->username);
+        return ResponseHelper::success($this->userService->checkUniqueUser($request->username));
+
     }
 
     public function emailCheck(Request $request)
     {
-        return $this->userService->checkUniqueEmail($request->email);
+        return ResponseHelper::success($this->userService->checkUniqueEmail($request->email));
     }
 
     public function subjects()

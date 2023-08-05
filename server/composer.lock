@@ -1345,16 +1345,16 @@
         },
         {
             "name": "google/cloud-firestore",
-            "version": "v1.36.0",
+            "version": "v1.36.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-firestore.git",
-                "reference": "cc1a91838c8c5f9ef479fae4333b585e355055ed"
+                "reference": "5ef61dcf09461e5399f0daccc5f87ed5e862b407"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-firestore/zipball/cc1a91838c8c5f9ef479fae4333b585e355055ed",
-                "reference": "cc1a91838c8c5f9ef479fae4333b585e355055ed",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-firestore/zipball/5ef61dcf09461e5399f0daccc5f87ed5e862b407",
+                "reference": "5ef61dcf09461e5399f0daccc5f87ed5e862b407",
                 "shasum": ""
             },
             "require": {
@@ -1395,9 +1395,9 @@
             ],
             "description": "Cloud Firestore Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-firestore/tree/v1.36.0"
+                "source": "https://github.com/googleapis/google-cloud-php-firestore/tree/v1.36.1"
             },
-            "time": "2023-07-07T20:46:38+00:00"
+            "time": "2023-07-28T20:05:21+00:00"
         },
         {
             "name": "google/cloud-storage",
@@ -1458,16 +1458,16 @@
         },
         {
             "name": "google/common-protos",
-            "version": "v4.1.0",
+            "version": "v4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/common-protos-php.git",
-                "reference": "4c74dd56310b835115b939a561f7c1f0e3b36364"
+                "reference": "5d9e21141d94329d69d45a8c7a0cdeafd1a143f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/4c74dd56310b835115b939a561f7c1f0e3b36364",
-                "reference": "4c74dd56310b835115b939a561f7c1f0e3b36364",
+                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/5d9e21141d94329d69d45a8c7a0cdeafd1a143f3",
+                "reference": "5d9e21141d94329d69d45a8c7a0cdeafd1a143f3",
                 "shasum": ""
             },
             "require": {
@@ -1504,9 +1504,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/common-protos-php/issues",
-                "source": "https://github.com/googleapis/common-protos-php/tree/v4.1.0"
+                "source": "https://github.com/googleapis/common-protos-php/tree/v4.2.0"
             },
-            "time": "2023-05-09T17:34:00+00:00"
+            "time": "2023-07-25T21:51:55+00:00"
         },
         {
             "name": "google/crc32",
@@ -2513,16 +2513,16 @@
         },
         {
             "name": "kreait/laravel-firebase",
-            "version": "5.2.0",
+            "version": "5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kreait/laravel-firebase.git",
-                "reference": "210bc5488963462265c90fa2df8494a009089500"
+                "reference": "34ded0e81fd11f51c574a0c4c3a603555a796989"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kreait/laravel-firebase/zipball/210bc5488963462265c90fa2df8494a009089500",
-                "reference": "210bc5488963462265c90fa2df8494a009089500",
+                "url": "https://api.github.com/repos/kreait/laravel-firebase/zipball/34ded0e81fd11f51c574a0c4c3a603555a796989",
+                "reference": "34ded0e81fd11f51c574a0c4c3a603555a796989",
                 "shasum": ""
             },
             "require": {
@@ -2575,7 +2575,7 @@
             ],
             "support": {
                 "issues": "https://github.com/kreait/laravel-firebase/issues",
-                "source": "https://github.com/kreait/laravel-firebase/tree/5.2.0"
+                "source": "https://github.com/kreait/laravel-firebase/tree/5.3.0"
             },
             "funding": [
                 {
@@ -2583,20 +2583,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-30T11:24:10+00:00"
+            "time": "2023-07-26T12:25:45+00:00"
         },
         {
             "name": "laravel/framework",
-            "version": "v9.52.10",
+            "version": "v9.52.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "858add225ce88a76c43aec0e7866288321ee0ee9"
+                "reference": "8bfd22be79f437fa335e70692e4e91ff40ce561d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/858add225ce88a76c43aec0e7866288321ee0ee9",
-                "reference": "858add225ce88a76c43aec0e7866288321ee0ee9",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/8bfd22be79f437fa335e70692e4e91ff40ce561d",
+                "reference": "8bfd22be79f437fa335e70692e4e91ff40ce561d",
                 "shasum": ""
             },
             "require": {
@@ -2781,20 +2781,20 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2023-06-27T13:25:54+00:00"
+            "time": "2023-07-26T13:20:55+00:00"
         },
         {
             "name": "laravel/serializable-closure",
-            "version": "v1.3.0",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/serializable-closure.git",
-                "reference": "f23fe9d4e95255dacee1bf3525e0810d1a1b0f37"
+                "reference": "e5a3057a5591e1cfe8183034b0203921abe2c902"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/f23fe9d4e95255dacee1bf3525e0810d1a1b0f37",
-                "reference": "f23fe9d4e95255dacee1bf3525e0810d1a1b0f37",
+                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/e5a3057a5591e1cfe8183034b0203921abe2c902",
+                "reference": "e5a3057a5591e1cfe8183034b0203921abe2c902",
                 "shasum": ""
             },
             "require": {
@@ -2841,7 +2841,7 @@
                 "issues": "https://github.com/laravel/serializable-closure/issues",
                 "source": "https://github.com/laravel/serializable-closure"
             },
-            "time": "2023-01-30T18:31:20+00:00"
+            "time": "2023-07-14T13:56:28+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -9562,16 +9562,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "9.2.26",
+            "version": "9.2.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "443bc6912c9bd5b409254a40f4b0f4ced7c80ea1"
+                "reference": "b0a88255cb70d52653d80c890bd7f38740ea50d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/443bc6912c9bd5b409254a40f4b0f4ced7c80ea1",
-                "reference": "443bc6912c9bd5b409254a40f4b0f4ced7c80ea1",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/b0a88255cb70d52653d80c890bd7f38740ea50d1",
+                "reference": "b0a88255cb70d52653d80c890bd7f38740ea50d1",
                 "shasum": ""
             },
             "require": {
@@ -9627,7 +9627,8 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.26"
+                "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.27"
             },
             "funding": [
                 {
@@ -9635,7 +9636,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-06T12:58:08+00:00"
+            "time": "2023-07-26T13:44:30+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -11009,16 +11010,16 @@
         },
         {
             "name": "spatie/flare-client-php",
-            "version": "1.4.1",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/flare-client-php.git",
-                "reference": "943894c6a6b00501365ac0b91ae0dce56f2226fa"
+                "reference": "5f2c6a7a0d2c1d90c12559dc7828fd942911a544"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/flare-client-php/zipball/943894c6a6b00501365ac0b91ae0dce56f2226fa",
-                "reference": "943894c6a6b00501365ac0b91ae0dce56f2226fa",
+                "url": "https://api.github.com/repos/spatie/flare-client-php/zipball/5f2c6a7a0d2c1d90c12559dc7828fd942911a544",
+                "reference": "5f2c6a7a0d2c1d90c12559dc7828fd942911a544",
                 "shasum": ""
             },
             "require": {
@@ -11067,7 +11068,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/flare-client-php/issues",
-                "source": "https://github.com/spatie/flare-client-php/tree/1.4.1"
+                "source": "https://github.com/spatie/flare-client-php/tree/1.4.2"
             },
             "funding": [
                 {
@@ -11075,7 +11076,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-07-06T09:29:49+00:00"
+            "time": "2023-07-28T08:07:24+00:00"
         },
         {
             "name": "spatie/ignition",

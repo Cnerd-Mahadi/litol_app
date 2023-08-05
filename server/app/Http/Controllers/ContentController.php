@@ -25,7 +25,7 @@ class ContentController extends Controller
 
     public function titleCheck(Request $request)
     {
-        return $this->commonService->checkUniqueTitle($request->title, $request->collection);
+        return ResponseHelper::success($this->commonService->checkUniqueTitle($request->title, $request->collection, $request->user_id));
     }
 
     public function saveContent(Request $request)

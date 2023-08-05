@@ -6,6 +6,7 @@ export const ContentForm = ({
 	headerImage,
 	headerTitle,
 	submitHandler,
+	onSubmit,
 	children,
 }) => {
 	return (
@@ -33,7 +34,7 @@ export const ContentForm = ({
 				<Box
 					component="form"
 					noValidate
-					onSubmit={submitHandler}
+					onSubmit={submitHandler(onSubmit)}
 					sx={{
 						mt: 3,
 					}}>

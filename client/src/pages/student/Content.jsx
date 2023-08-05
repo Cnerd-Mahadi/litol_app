@@ -1,32 +1,31 @@
 import { Box } from "@mui/system";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useGetQuery } from "../../hooks/useGetQuery";
-import { getHeader, getLocalData, headerType } from "../../utilities/utility";
+import { useGraphQuery } from "../../hooks/useGraphQuery";
+import { contentsQuery } from "../../utilities/graphqlQueries";
 import { Loading } from "../Loading";
 import { TopicCard } from "./../../components/cards/TopicCard";
 
-const showContents = ({ content_id, title, image, detail }) => {
+const showContents = ({ title, subjectRef, image, sys }) => {
 	return (
 		<TopicCard
-			key={content_id}
-			id={content_id}
-			image={image}
+			key={sys.id}
+			id={sys.id}
+			image={image.url}
 			title={title}
-			detail={detail}
+			subject={subjectRef.name}
 		/>
 	);
 };
 
-const localUserData = getLocalData("userData");
-
 export const Content = () => {
 	const { subjectId } = useParams();
-	const { isLoading, data: contents } = useGetQuery(
-		"subject/contents",
-		`student/subject/${subjectId}`,
-		getHeader(headerType.tokenize, localUserData.token)
+	const { isLoading, data } = useGraphQuery(
+		"contents",
+		contentsQuery(subjectId)
 	);
+
+	const contents = data ? data.data.contentCollection.items : null;
 
 	if (isLoading) return <Loading />;
 

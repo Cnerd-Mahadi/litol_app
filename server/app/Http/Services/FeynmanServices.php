@@ -28,40 +28,79 @@ class FeynmanServices
 
     public function requestFeynman($request)
     {
+        $feynman = $this->checkRequested($request);
+        $user = $this->firebaseService->getDocument($request->user_id, 'users');
+
+        if ($feynman->found)
+            return ResponseHelper::success([
+                'accepted' => false,
+                'message' => 'Sorry already requested from this user',
+            ]);
+        else {
+            if (!$feynman->status || $feynman->status === 0)
+                return $this->addFeynman($request, $user);
+            else {
+                if ($feynman->status === 1)
+                    return $this->updateFeynman($user, $feynman->feynmanId, 2, 'B');
+                else if ($feynman->status === 2)
+                    return $this->updateFeynman($user, $feynman->feynmanId, 3, 'C');
+                else if ($feynman->status === 3)
+                    return $this->updateFeynman($user, $feynman->feynmanId, false, 'D');
+            }
+        }
+    }
+
+    public function checkRequested($request)
+    {
         $feynmanSnap = $this->firebaseService->getCollection('feynmen')
             ->where('contentId', '==', $request->content_id)
             ->documents();
         $feynman = $this->firebaseService->getData($feynmanSnap);
 
-        if (!$feynman) {
-            $user = $this->firebaseService->getDocument($request->user_id, 'users');
-            $subject = $this->firebaseService->getDocument($request->content_id, 'contents')->data->subject;
-            return $this->addFeynman($request, $user, $subject);
+        if (sizeof($feynman) === 0) {
+            return $this->firebaseService->snapToObject([
+                'found' => false,
+                'status' => 0
+            ]);
 
         } else {
-            $user = $this->firebaseService->getDocument($request->user_id, 'users');
+            $status = true;
+            $feynmanId = -1;
+            foreach ($feynman as $feynmanItem) {
+                $slots = $feynmanItem->data->slots;
+                $feynmanId = $feynmanItem->id;
+                $status = $feynmanItem->data->status;
 
-            if ($feynman->data->status == false)
-                return ResponseHelper::success('Sorry already requested from this user');
-
-            if ($feynman->data->status == 1 && $feynman->data->slots->A->userId != $request->user_id)
-                return $this->updateFeynman($user, $feynman->id, 2, 'B');
-            else if ($feynman->data->status == 2 && $feynman->data->slots->A->userId != $request->user_id && $feynman->data->slots->B->userId != $request->user_id)
-                return $this->updateFeynman($user, $feynman->id, 3, 'C');
-            else if ($feynman->data->status == 3 && $feynman->data->slots->A->userId != $request->user_id && $feynman->data->slots->B->userId != $request->user_id && $feynman->data->slots->C->userId != $request->user_id)
-                return $this->updateFeynman($user, $feynman->id, false, 'D');
-            else {
-                return ResponseHelper::success('Sorry already requested from this user');
+                if (isset($slots->A) && ($slots->A->userId === $request->user_id))
+                    return $this->firebaseService->snapToObject([
+                        'found' => true,
+                    ]);
+                else if (isset($slots->B) && ($slots->B->userId === $request->user_id))
+                    return $this->firebaseService->snapToObject([
+                        'found' => true,
+                    ]);
+                else if (isset($slots->C) && ($slots->C->userId === $request->user_id))
+                    return $this->firebaseService->snapToObject([
+                        'found' => true,
+                    ]);
+                else if (isset($slots->D) && ($slots->D->userId === $request->user_id))
+                    return $this->firebaseService->snapToObject([
+                        'found' => true,
+                    ]);
             }
+            return $this->firebaseService->snapToObject([
+                'found' => false,
+                'status' => $status,
+                'feynmanId' => $feynmanId
+            ]);
         }
     }
 
-    public function addFeynman($request, $user, $subject)
+    public function addFeynman($request, $user)
     {
         $feynman = [
             'updated' => date("F j, Y, g:i a"),
             'contentId' => $request->content_id,
-            'subject' => $subject,
             'status' => 1,
             'slots' => [
                 'A' => [
@@ -73,7 +112,10 @@ class FeynmanServices
         ];
         try {
             $this->firebaseService->getCollection('feynmen')->add($feynman);
-            return ResponseHelper::success('Feynman created successfully');
+            return ResponseHelper::success([
+                'accepted' => true,
+                'message' => 'Feynman session requested successfully',
+            ]);
 
         } catch (\Throwable $th) {
             return ResponseHelper::error([
@@ -98,7 +140,10 @@ class FeynmanServices
                     ]
                 ]
             ]);
-            return ResponseHelper::success('Feynman updated at slot ' . $slotPoint . ' successfully');
+            return ResponseHelper::success([
+                'accepted' => true,
+                'message' => 'Feynman updated at slot ' . $slotPoint . ' successfully',
+            ]);
 
         } catch (\Throwable $th) {
             return ResponseHelper::error([

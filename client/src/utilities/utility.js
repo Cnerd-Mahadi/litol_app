@@ -1,7 +1,10 @@
 import { MenuItem } from "@mui/material";
+import axios from "axios";
+import { throttle } from "lodash";
 import { featuresImages } from "./staticImageResources";
 
-export const baseURL = "https://litolapi-production.up.railway.app/api/";
+export const baseURL = "http://127.0.0.1:8000/api/";
+// "https://litolapi-production.up.railway.app/api/";
 
 export const setLocalData = (key, data) => {
 	localStorage.setItem(key, JSON.stringify(data));
@@ -83,11 +86,21 @@ export const pages = [
 	},
 ];
 
-export const userSettings = ["Profile", "Logout"];
+export const userSettings = ["Logout"];
 
 export const toCapFirst = (string) => {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 };
+
+export const checkUniqueness = async (url, header, params) => {
+	const response = await axios.get(baseURL + url, {
+		params: params,
+		headers: header,
+	});
+	return response.data.data;
+};
+
+export const debouncedCheckUniqueness = throttle(checkUniqueness, 500);
 
 export const getSubjects = ({ subject_id, subject_name }) => {
 	return (
@@ -117,3 +130,19 @@ export const colorCode = {
 	red: "#ef4444",
 	white: "#f3f4f6",
 };
+
+export const MAX_FILE_SIZE = 102400; //100KB
+
+export const initSnackContext = {
+	open: false,
+	severity: "success",
+	message: "",
+};
+
+export function isValidFileType(value) {
+	return (
+		(value && value[0] && value[0].type === "image/jpeg") ||
+		(value[0] && value[0].type === "image/png") ||
+		(value[0] && value[0].type === "image/webp")
+	);
+}

@@ -1,184 +1,45 @@
 import { Add, Clear } from "@mui/icons-material";
 import { IconButton, Paper, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import * as React from "react";
-import { useState } from "react";
-import { A11y, Pagination } from "swiper";
-import "swiper/css";
-import "swiper/css/pagination";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Controller, useFieldArray } from "react-hook-form";
 import { NoteCard } from "../../components/cards/NoteCard";
-import { InputField } from "../../components/common/InputField";
+import { ProgressButton } from "../../components/common/ProgressButton";
+import { SnackAlert } from "../../components/common/SnackAlert";
+import { InputField } from "../../components/input-fields/InputField";
 import { useGetQuery } from "../../hooks/useGetQuery";
 import { ContentForm } from "../../layouts/forms/ContentForm";
-import { apiPostDataHandler } from "../../services/apiManager";
+import { NoteServices } from "../../services/NoteServices";
 import { getHeader, getLocalData, headerType } from "../../utilities/utility";
 import { Loading } from "../Loading";
 
-const getContents = ({ note_id, title, updated }) => {
+const getContents = ({ data, id }) => {
 	return (
-		<SwiperSlide key={note_id}>
-			<NoteCard key={note_id} id={note_id} title={title} updated={updated} />
-		</SwiperSlide>
+		<NoteCard key={id} id={id} title={data.title} updated={data.updated} />
 	);
 };
 
 const localUserData = getLocalData("userData");
 
 export const Note = () => {
-	const { isLoading, data: notes } = useGetQuery(
+	const { isLoading, data } = useGetQuery(
 		"student/notes",
-		`student/notes/${localUserData.userInfo.details.user_id}`,
+		`student/notes/${localUserData.userInfo.id}`,
 		getHeader(headerType.tokenize, localUserData.token)
 	);
-	const [cueFieldData, setCueFieldData] = useState([
-		{
-			id: 0,
-			key: "",
-			details: "",
-			active: true,
-		},
-	]);
-
-	const handleSubmit = (event) => {
-		event.preventDefault();
-		const data = new FormData(event.currentTarget);
-		const cue = {
-			value: cueFieldData,
-		};
-		const resultData = {
-			title: data.get("title"),
-			note_details: JSON.stringify(cue),
-			user_id: localUserData.userInfo.details.user_id,
-		};
-
-		console.log(resultData);
-
-		apiPostDataHandler(
-			"student/submitNote",
-			resultData,
-			getHeader(headerType.tokenize, localUserData.token)
-		);
-	};
-
-	const handleCueChange = (event) => {
-		const { id, value } = event.target;
-
-		const dotIndex = id.indexOf(".");
-		const cueField = id.substring(0, dotIndex);
-		const cueId = parseInt(id.substring(dotIndex + 1));
-
-		if (cueField === "key") {
-			const updatedCue = cueFieldData.map((cue) => {
-				if (cue.id === cueId) {
-					return { ...cue, key: value };
-				}
-				return cue;
-			});
-			setCueFieldData(updatedCue);
-		} else {
-			const updatedCue = cueFieldData.map((cue) => {
-				if (cue.id === cueId) {
-					return { ...cue, details: value };
-				}
-				return cue;
-			});
-			setCueFieldData(updatedCue);
-		}
-	};
-
-	const cueInputFields = ({ id, active, key, details }) => {
-		// console.log(id, active, key, details);
-		return (
-			<Grid
-				key={id}
-				width={"100%"}
-				container
-				spacing={2}
-				marginTop={1}
-				marginLeft={0}>
-				<Grid item xs={4}>
-					<TextField
-						required
-						fullWidth
-						id={`key.${id}`}
-						label="Key"
-						name={`key.${id}`}
-						autoComplete="true"
-						autoFocus
-						value={key}
-						onChange={handleCueChange}
-					/>
-				</Grid>
-				<Grid item xs={7}>
-					<TextField
-						required
-						fullWidth
-						id={`details.${id}`}
-						label="Details"
-						name={`details.${id}`}
-						autoComplete="true"
-						autoFocus
-						value={details}
-						onChange={handleCueChange}
-					/>
-				</Grid>
-				<Grid item xs={1}>
-					<IconButton
-						sx={{
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							mt: 1,
-						}}
-						id={`btn.${id}`}
-						aria-label="add"
-						color="primary"
-						onClick={(event) => {
-							const btnId = event.currentTarget.id;
-							const cueId = parseInt(btnId.substring(btnId.indexOf(".") + 1));
-							const cue = cueFieldData.find((cue) => cue.id === cueId);
-
-							const isSelectedActive = cue.active;
-
-							if (!isSelectedActive) {
-								const updateCue = cueFieldData.filter(
-									(cue) => cue.id !== cueId
-								);
-								setCueFieldData([...updateCue]);
-							} else {
-								const updateCue = cueFieldData.map((cue) => {
-									if (cue.id === cueId) return { ...cue, active: false };
-									return cue;
-								});
-
-								setCueFieldData([
-									...updateCue,
-									{
-										id: cueFieldData[cueFieldData.length - 1].id + 1,
-										key: "",
-										details: "",
-										active: true,
-									},
-								]);
-							}
-						}}>
-						{active ? (
-							<Add />
-						) : (
-							<Clear
-								sx={{
-									color: "#FF6D60",
-								}}
-							/>
-						)}
-					</IconButton>
-				</Grid>
-			</Grid>
-		);
-	};
+	const {
+		handleSubmit,
+		control,
+		onSubmit,
+		loading,
+		snack: { open, message, severity },
+		setSnack,
+	} = NoteServices();
+	const { fields, append, remove } = useFieldArray({
+		control,
+		name: "cues",
+	});
 
 	if (isLoading) return <Loading />;
 
@@ -188,19 +49,128 @@ export const Note = () => {
 				maxWidth="sm"
 				headerImage="/image/basic/cornell.png"
 				headerTitle="Create New Note"
-				submitHandler={handleSubmit}>
+				submitHandler={handleSubmit}
+				onSubmit={onSubmit}>
 				<Grid item xs={12}>
-					<InputField id="title" type="text" autoFocus={true} />
+					<InputField id="title" type="text" label="Title" control={control} />
 				</Grid>
-				{cueFieldData.map(cueInputFields)}
-				<Grid item sm={6} xs={12}>
-					<Button
-						type="submit"
-						fullWidth
-						variant="contained"
-						sx={{ mt: 3, mb: 2 }}>
-						Create New Note
-					</Button>
+
+				<Grid item xs={12}>
+					<Controller
+						name={"details"}
+						control={control}
+						render={({ field, fieldState }) => (
+							<TextField
+								required
+								label="Details"
+								fullWidth
+								multiline
+								rows={2}
+								onChange={field.onChange}
+								onBlur={field.onBlur}
+								value={field.value}
+								error={fieldState.error ? true : false}
+								helperText={fieldState.error?.message}
+							/>
+						)}
+					/>
+				</Grid>
+
+				{fields.map((item, index) => (
+					<Grid
+						key={item.id}
+						width={"100%"}
+						container
+						spacing={2}
+						marginTop={1}
+						marginLeft={0}>
+						<Grid item xs={3}>
+							<Controller
+								name={`cues[${index}].key`}
+								control={control}
+								render={({ field, fieldState }) => (
+									<TextField
+										required
+										fullWidth
+										label="Key"
+										value={field.value}
+										onChange={field.onChange}
+										onBlur={field.onBlur}
+										error={fieldState.error ? true : false}
+										helperText={fieldState.error?.message}
+									/>
+								)}
+							/>
+						</Grid>
+						<Grid item xs={7}>
+							<Controller
+								name={`cues[${index}].details`}
+								control={control}
+								render={({ field, fieldState }) => (
+									<TextField
+										required
+										fullWidth
+										label="Details"
+										multiline
+										rows={1}
+										value={field.value}
+										onChange={field.onChange}
+										onBlur={field.onBlur}
+										error={fieldState.error ? true : false}
+										helperText={fieldState.error?.message}
+									/>
+								)}
+							/>
+						</Grid>
+						<Grid item xs={1}>
+							<IconButton
+								sx={{
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
+									mt: 1,
+								}}
+								aria-label="add"
+								color="primary"
+								onClick={() => {
+									console.log(index, "INFD", fields.length);
+									append({
+										key: "",
+										details: "",
+									});
+								}}>
+								<Add />
+							</IconButton>
+						</Grid>
+						<Grid item xs={1}>
+							<IconButton
+								sx={{
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "center",
+									mt: 1,
+								}}
+								aria-label="delete"
+								color="primary"
+								disabled={fields.length === 1}
+								onClick={() => {
+									remove(index);
+								}}>
+								<Clear color={fields.length === 1 ? "inherit" : "error"} />
+							</IconButton>
+						</Grid>
+					</Grid>
+				))}
+
+				<Grid
+					item
+					xs={12}
+					sx={{
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+					}}>
+					<ProgressButton loading={loading} text={"Create New Note"} />
 				</Grid>
 			</ContentForm>
 
@@ -224,27 +194,28 @@ export const Note = () => {
 					Note Gallery
 				</Typography>
 				<Box>
-					{notes.length ? (
-						<Swiper
-							modules={[Pagination, A11y]}
-							spaceBetween={20}
-							slidesPerView={5}
-							pagination={{ clickable: true }}
-							onSwiper={(swiper) => console.log(swiper)}
-							onSlideChange={() => console.log("slide change")}>
-							<Box
-								component={"div"}
-								sx={{
-									py: 3,
-								}}>
-								{notes.map(getContents)}
-							</Box>
-						</Swiper>
+					{data.notes.length ? (
+						<Box
+							component={"div"}
+							sx={{
+								display: "flex",
+								flexWrap: "wrap",
+								justifyContent: "center",
+								py: 3,
+							}}>
+							{data.notes.map(getContents)}
+						</Box>
 					) : (
 						"Sorry There is no content available currently"
 					)}
 				</Box>
 			</Paper>
+			<SnackAlert
+				open={open}
+				severity={severity}
+				message={message}
+				handleSnack={setSnack}
+			/>
 		</>
 	);
 };

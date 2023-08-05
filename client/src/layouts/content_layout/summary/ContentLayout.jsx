@@ -9,7 +9,8 @@ import Sidebar from "./Sidebar";
 
 const sidebar = {
 	title: "Summary Section",
-	description: "Helps you retain better using keyword - summary technique",
+	description:
+		"Summary section helps you retain a lesson using your own summary where the summary would be based on keywords. Here the keywords are the hints of the lesson which helps you remember the lesson.",
 	social: [
 		{ name: "GitHub", icon: GitHubIcon },
 		{ name: "Twitter", icon: TwitterIcon },
@@ -32,7 +33,7 @@ export const ContentLayout = ({ content, contents }) => {
 						<Grid item xs={8} px={2}>
 							<img
 								className="image--rounded image--fit"
-								src={require(`../../../../../server/storage/app/public/summary/${content.details.image}`)}
+								src={content.imageUrl}
 								alt="my foot"
 								width="100%"
 								height="520px"

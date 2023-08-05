@@ -1,11 +1,11 @@
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { MARKS } from "@contentful/rich-text-types";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 
 function Main({ content }) {
-	console.log(content);
-
 	return (
 		<Grid
 			item
@@ -17,9 +17,31 @@ function Main({ content }) {
 				{content.title}
 			</Typography>
 			<Divider />
-			<Typography variant="body1" marginTop={2}>
-				{content.details}
-			</Typography>
+			<article className="prose prose-stone">
+				<Typography gutterBottom>
+					{documentToReactComponents(content.details.json, {
+						renderMark: {
+							[MARKS.CODE]: (text) => (
+								<pre>
+									<code>{text}</code>
+								</pre>
+							),
+						},
+					})}
+				</Typography>
+
+				<Typography gutterBottom>
+					{documentToReactComponents(content.usefulLinks.json, {
+						renderMark: {
+							[MARKS.CODE]: (text) => (
+								<pre>
+									<code>{text}</code>
+								</pre>
+							),
+						},
+					})}
+				</Typography>
+			</article>
 		</Grid>
 	);
 }

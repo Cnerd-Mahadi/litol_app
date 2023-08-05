@@ -4,8 +4,8 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 
-export const SummaryCard = ({ id, title, detail, image }) => {
-	console.log(title, detail, id);
+export const SummaryCard = ({ id, title, details, image }) => {
+	console.log(title, details, id);
 	return (
 		<Link href={"/student/summary/" + id} underline="none">
 			<Card sx={{ width: 240, margin: "20px" }}>
@@ -13,8 +13,7 @@ export const SummaryCard = ({ id, title, detail, image }) => {
 					<CardMedia
 						component="img"
 						height="140"
-						image={require("../../../../server/storage/app/public/summary/" +
-							image)}
+						image={image}
 						alt="green iguana"
 					/>
 					<CardContent>
@@ -31,7 +30,7 @@ export const SummaryCard = ({ id, title, detail, image }) => {
 								WebkitLineClamp: "1",
 								WebkitBoxOrient: "vertical",
 							}}>
-							{detail}
+							{details}
 						</Typography>
 					</CardContent>
 				</CardActionArea>

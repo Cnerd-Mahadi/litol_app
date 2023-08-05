@@ -12,10 +12,12 @@ import "reactflow/dist/style.css";
 
 import "./MindMap.css";
 
-import { Button, TextField } from "@mui/material";
+import { Button, CircularProgress, TextField } from "@mui/material";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { SnackAlert } from "../../components/common/SnackAlert";
+import { useStatus } from "../../hooks/useStatus";
 import { apiPostDataHandler } from "../../services/apiManager";
 import {
 	baseURL,
@@ -41,6 +43,12 @@ export const MindMapCanvasDetails = () => {
 	const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 	const [nodeId, setNodeId] = useState(null);
 	const [title, setTitle] = useState("");
+	const {
+		snack: { open, message, severity },
+		setSnack,
+		setLoading,
+		loading,
+	} = useStatus();
 
 	const { isLoading } = useQuery(["student/mindmapContent"], () =>
 		axios
@@ -49,12 +57,12 @@ export const MindMapCanvasDetails = () => {
 			})
 			.then((res) => {
 				const data = res.data.data.mindmap;
-				const nodes = JSON.parse(data.nodes);
-				const edges = JSON.parse(data.edges);
+				const nodes = JSON.parse(data.data.nodes);
+				const edges = JSON.parse(data.data.edges);
 				const nodeId = nodes[nodes.length - 1].id;
 				setEdges(edges);
 				setNodes(nodes);
-				setTitle(data.title);
+				setTitle(data.data.title);
 				setNodeId(nodeId + 1);
 			})
 	);
@@ -73,19 +81,41 @@ export const MindMapCanvasDetails = () => {
 			title: title,
 			nodes: JSON.stringify(nodes),
 			edges: JSON.stringify(edges),
-			user_id: localUserData.userInfo.details.user_id,
+			user_id: localUserData.userInfo.id,
 			mindmap_id: mindmapId,
 		};
+		setLoading(true);
 
-		if (nodes.length > 0) {
+		if (title === "") {
+			setLoading(false);
+			setSnack({
+				open: true,
+				message: "Title is empty",
+				severity: "error",
+			});
+		} else if (nodes.length > 0) {
 			apiPostDataHandler(
 				"student/updateMindMap",
 				resultData,
 				getHeader(headerType.tokenize, localUserData.token)
-			);
-			navigate("/student/mindmap");
+			).then((res) => {
+				setLoading(false);
+				setSnack({
+					open: true,
+					severity: "success",
+					message: "Mindmap updated successfully!",
+				});
+				setTimeout(() => {
+					navigate("/student/mindmap");
+				}, 2100);
+			});
 		} else {
-			console.log("Nodes empty");
+			setLoading(false);
+			setSnack({
+				open: true,
+				message: "Nodes are empty",
+				severity: "error",
+			});
 		}
 	};
 
@@ -138,70 +168,82 @@ export const MindMapCanvasDetails = () => {
 	if (isLoading) return <Loading />;
 
 	return (
-		<div
-			style={{ width: "100vw", height: "100vh", position: "relative" }}
-			className="wrapper"
-			ref={reactFlowWrapper}>
-			<TextField
-				id="title"
-				label="Title"
-				variant="outlined"
-				placeholder="Title.."
-				sx={{
-					position: "absolute",
-					top: "2%",
-					left: "2%",
-					zIndex: 10,
-					boxShadow: 1,
-				}}
-				value={title}
-				onChange={(event) => setTitle(event.target.value)}
-			/>
-			<ReactFlow
-				nodes={nodes}
-				edges={edges}
-				onNodesChange={onNodesChange}
-				onEdgesChange={onEdgesChange}
-				onConnect={onConnect}
-				onConnectStart={onConnectStart}
-				onConnectEnd={onConnectEnd}
-				fitView
-				fitViewOptions={fitViewOptions}
-				nodeTypes={nodeTypes}>
-				<Background color="#000" variant="dots" gap={16} />
-				<MiniMap
-					nodeColor={(n) => {
-						if (n.type === "textUpdater") return "blue";
-
-						return "#FFCC00";
+		<>
+			<div
+				style={{ width: "100vw", height: "100vh", position: "relative" }}
+				className="wrapper"
+				ref={reactFlowWrapper}>
+				<TextField
+					id="title"
+					label="Title"
+					variant="outlined"
+					placeholder="Title.."
+					sx={{
+						position: "absolute",
+						top: "2%",
+						left: "2%",
+						zIndex: 10,
+						boxShadow: 1,
 					}}
+					value={title}
+					onChange={(event) => setTitle(event.target.value)}
 				/>
-				<Controls />
-			</ReactFlow>
-			<Button
-				variant="contained"
-				sx={{
-					position: "absolute",
-					bottom: "0%",
-					left: "10%",
-					transform: "translate(-50%, -50%)",
-				}}
-				onClick={handleClick}>
-				ADD NODE
-			</Button>
+				<ReactFlow
+					nodes={nodes}
+					edges={edges}
+					onNodesChange={onNodesChange}
+					onEdgesChange={onEdgesChange}
+					onConnect={onConnect}
+					onConnectStart={onConnectStart}
+					onConnectEnd={onConnectEnd}
+					fitView
+					fitViewOptions={fitViewOptions}
+					nodeTypes={nodeTypes}>
+					<Background color="#000" variant="dots" gap={16} />
+					<MiniMap
+						nodeColor={(n) => {
+							if (n.type === "textUpdater") return "blue";
 
-			<Button
-				variant="contained"
-				color="success"
-				sx={{
-					position: "absolute",
-					bottom: "0%",
-					left: "50%",
-					transform: "translate(-50%, -50%)",
-				}}
-				onClick={handleSave}>
-				Save
-			</Button>
-		</div>
+							return "#FFCC00";
+						}}
+					/>
+					<Controls />
+				</ReactFlow>
+				<Button
+					variant="contained"
+					sx={{
+						position: "absolute",
+						bottom: "0%",
+						left: "10%",
+						transform: "translate(-50%, -50%)",
+					}}
+					onClick={handleClick}>
+					ADD NODE
+				</Button>
+
+				<Button
+					variant="contained"
+					color="success"
+					disabled={loading}
+					sx={{
+						position: "absolute",
+						bottom: "0%",
+						left: "50%",
+						transform: "translate(-50%, -50%)",
+					}}
+					onClick={handleSave}>
+					Update
+					{loading && (
+						<CircularProgress size={"1rem"} sx={{ ml: 1 }} color="inherit" />
+					)}
+				</Button>
+			</div>
+			<SnackAlert
+				open={open}
+				severity={severity}
+				message={message}
+				handleSnack={setSnack}
+			/>
+		</>
 	);
 };

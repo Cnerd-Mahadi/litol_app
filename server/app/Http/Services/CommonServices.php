@@ -15,10 +15,11 @@ class CommonServices
         $this->firebaseService = app()->make(FirebaseServices::class);
     }
 
-    public function checkUniqueTitle($title, $collection)
+    public function checkUniqueTitle($title, $collection, $userId)
     {
-        $uniqueValue = $this->firebaseService->getCollection($collection)->where('title', 'in', $title)->documents();
-        return $this->firebaseService->getData($uniqueValue) === null ? true : false;
+        $uniqueValue = $this->firebaseService->getCollection($collection)->where('title', '=', $title)
+            ->where('authorId', '=', $userId)->documents();
+        return sizeof($this->firebaseService->getData($uniqueValue)) > 0 ? false : true;
     }
 
     public function saveImageWithData($content, $request, $contentType, $collection)
@@ -64,6 +65,6 @@ class CommonServices
     {
         $contentsSnap = $this->firebaseService->getCollection($collection)->where('authorId', '==', $authorId)
             ->documents();
-        return $this->firebaseService->getDataWithImage($contentsSnap);
+        return $this->firebaseService->getDataWithImage($contentsSnap, $collection);
     }
 }

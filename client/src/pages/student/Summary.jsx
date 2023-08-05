@@ -1,83 +1,52 @@
-import { Paper, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import { Box, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import { MuiChipsInput } from "mui-chips-input";
 import * as React from "react";
-import { A11y, Pagination } from "swiper";
+import { Controller } from "react-hook-form";
 import "swiper/css";
 import "swiper/css/pagination";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { FormImage } from "../../components/common/FormImage";
-import { InputField } from "../../components/common/InputField";
-import { useGetQuery } from "../../hooks/useGetQuery";
+import { ProgressButton } from "../../components/common/ProgressButton";
+import { SnackAlert } from "../../components/common/SnackAlert";
+import { InputField } from "../../components/input-fields/InputField";
 import { ContentForm } from "../../layouts/forms/ContentForm";
-import { apiPostDataHandler } from "../../services/apiManager";
+import { SummaryServices } from "../../services/SummaryServices";
 import "../../styles/styles.css";
 import { getHeader, getLocalData, headerType } from "../../utilities/utility";
 import { Loading } from "../Loading";
 import { SummaryCard } from "./../../components/cards/SummaryCard";
+import { FormImage } from "./../../components/input-fields/FormImage";
+import { useGetQuery } from "./../../hooks/useGetQuery";
 
-const getContents = ({ summary_id, title, details, image }) => {
+const getContents = ({ data, id, imageUrl }) => {
 	return (
-		<SwiperSlide key={summary_id}>
-			<SummaryCard
-				key={summary_id}
-				id={summary_id}
-				title={title}
-				detail={details}
-				image={image}
-			/>
-		</SwiperSlide>
+		<SummaryCard
+			key={id}
+			id={id}
+			title={data.title}
+			details={data.details}
+			image={imageUrl}
+		/>
 	);
 };
 
 const localUserData = getLocalData("userData");
 
 export const Summary = () => {
-	const { isLoading, data: summary } = useGetQuery(
-		"student/summary",
-		`student/summaries/${localUserData.userInfo.details.user_id}`,
+	const {
+		handleSubmit,
+		control,
+		onSubmit,
+		register,
+		loading,
+		snack: { open, message, severity },
+		setSnack,
+	} = SummaryServices();
+	const { isLoading, data } = useGetQuery(
+		"student/summaries",
+		`student/summaries/${localUserData.userInfo.id}`,
 		getHeader(headerType.tokenize, localUserData.token)
 	);
-
-	const [chips, setChips] = React.useState([]);
-
-	const handleSubmit = (event) => {
-		event.preventDefault();
-		const data = new FormData(event.currentTarget);
-		const resultData = {
-			title: data.get("title"),
-			details: data.get("content"),
-			image: data.get("image"),
-			keywords: JSON.stringify({
-				keys: chips,
-			}),
-			user_id: localUserData.userInfo.details.user_id,
-		};
-		console.log(resultData);
-
-		apiPostDataHandler(
-			"student/submitSummary",
-			resultData,
-			getHeader(headerType.multi, localUserData.token)
-		);
-
-		// axios
-		// 	.post(baseURL + "student/summarySubmit", resultData, {
-		// 		headers: {
-		// 			"Content-Type": "multipart/form-data",
-		// 		},
-		// 	})
-		// 	.then((response) => {
-		// 		console.log(response.data);
-		// 	});
-	};
-
-	const handleChange = (newChips) => {
-		setChips(newChips);
-	};
 
 	if (isLoading) return <Loading />;
 
@@ -87,54 +56,79 @@ export const Summary = () => {
 				maxWidth="sm"
 				headerImage="/image/general/summary.png"
 				headerTitle="Create New Summary"
-				submitHandler={handleSubmit}>
+				submitHandler={handleSubmit}
+				onSubmit={onSubmit}>
 				<Grid item xs={12} sm={12}>
-					<InputField id="title" type="text" autoFocus={true} />
-				</Grid>
-
-				<Grid item xs={12}>
-					<Paper
-						sx={{
-							display: "flex",
-							justifyContent: "flex-start",
-							flexWrap: "wrap",
-							listStyle: "none",
-							p: 0.5,
-							m: 0,
-						}}>
-						<MuiChipsInput
-							size="small"
-							value={chips}
-							onChange={handleChange}
-							hideClearAll={false}
-							placeholder="Add Keywords"
-						/>
-					</Paper>
-				</Grid>
-
-				<FormImage />
-
-				<Grid item xs={12}>
-					<TextField
-						required
-						fullWidth
-						multiline
-						rows={4}
-						maxRows={6}
-						name="content"
-						label="Write Something..."
-						type="content"
-						id="content"
+					<InputField
+						type="text"
+						id="title"
+						label={"Title"}
+						control={control}
 					/>
 				</Grid>
-				<Grid item sm={6} xs={12}>
-					<Button
-						type="submit"
-						fullWidth
-						variant="contained"
-						sx={{ mt: 3, mb: 2 }}>
-						Create New Summary
-					</Button>
+
+				<Grid item xs={12}>
+					<Controller
+						name={"keywords"}
+						control={control}
+						render={({ field, fieldState }) => (
+							<Paper
+								sx={{
+									display: "flex",
+									justifyContent: "flex-start",
+									flexWrap: "wrap",
+									listStyle: "none",
+									p: 0.5,
+									m: 0,
+								}}>
+								<MuiChipsInput
+									size="small"
+									value={field.value}
+									onChange={field.onChange}
+									onBlur={field.onBlur}
+									error={fieldState.error ? true : false}
+									helperText={fieldState.error?.message}
+									hideClearAll={false}
+									placeholder="Add Keywords"
+								/>
+							</Paper>
+						)}
+					/>
+				</Grid>
+
+				<FormImage id={"image"} control={control} register={register} />
+
+				<Grid item xs={12}>
+					<Controller
+						name={"details"}
+						control={control}
+						render={({ field, fieldState }) => (
+							<TextField
+								required
+								label="Write Something..."
+								id="content"
+								fullWidth
+								multiline
+								minRows={4}
+								maxRows={6}
+								onChange={field.onChange}
+								onBlur={field.onBlur}
+								value={field.value}
+								error={fieldState.error ? true : false}
+								helperText={fieldState.error?.message}
+							/>
+						)}
+					/>
+				</Grid>
+				<Grid
+					item
+					xs={12}
+					sx={{
+						display: "flex",
+						justifyContent: "center",
+						alignItems: "center",
+					}}>
+					<ProgressButton loading={loading} text={"Create New Summary"} />
 				</Grid>
 			</ContentForm>
 
@@ -158,27 +152,27 @@ export const Summary = () => {
 					Summary Gallery
 				</Typography>
 				<Box>
-					{summary.length ? (
-						<Swiper
-							modules={[Pagination, A11y]}
-							spaceBetween={20}
-							slidesPerView={5}
-							pagination={{ clickable: true }}
-							onSwiper={(swiper) => console.log(swiper)}
-							onSlideChange={() => console.log("slide change")}>
-							<Box
-								component={"div"}
-								sx={{
-									py: 3,
-								}}>
-								{summary.map(getContents)}
-							</Box>
-						</Swiper>
+					{data.summaries.length ? (
+						<Box
+							sx={{
+								display: "flex",
+								flexWrap: "wrap",
+								justifyContent: "center",
+								py: 3,
+							}}>
+							{data.summaries.map(getContents)}
+						</Box>
 					) : (
 						"Sorry There is no content available currently"
 					)}
 				</Box>
 			</Paper>
+			<SnackAlert
+				open={open}
+				severity={severity}
+				message={message}
+				handleSnack={setSnack}
+			/>
 		</>
 	);
 };

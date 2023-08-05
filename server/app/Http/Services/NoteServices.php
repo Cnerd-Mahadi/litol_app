@@ -22,7 +22,7 @@ class NoteServices
     public function saveNote(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => ['required', 'string', 'max:255', new BeUniqueTitle('notes')],
+            'title' => ['required', 'string', 'max:255', new BeUniqueTitle('notes', $request->user_id)],
             'details' => 'required|string',
             'cues' => 'required|array',
             'cues.*.key' => 'required|string|max:255',

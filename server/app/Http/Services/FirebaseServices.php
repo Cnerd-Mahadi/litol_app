@@ -26,17 +26,13 @@ class FirebaseServices
     {
         $data = [];
         foreach ($documents as $document) {
-            $data[] = [
+            $data[] = json_decode(json_encode([
                 'id' => $document->id(),
-                'data' => json_decode(json_encode($document->data()))
-            ];
+                'data' => $document->data()
+            ]));
         }
 
-        if (count($data) === 0) {
-            return null;
-        }
-
-        return count($data) === 1 ? json_decode(json_encode($data[0])) : $data;
+        return $data;
     }
 
     public function getDocument($documentId, $collection)
@@ -52,9 +48,10 @@ class FirebaseServices
 
     public function getDocumentWithImage($documentId, $collection)
     {
+        $collectionName = $collection;
         $collection = $this->getCollection($collection);
         $document = json_decode(json_encode($collection->document($documentId)->snapshot()->data()));
-        $imageObject = $this->getObject($document->image, 'contents');
+        $imageObject = $this->getObject($document->image, $collectionName);
 
         $object = new stdClass();
         $object->id = $documentId;
@@ -70,6 +67,12 @@ class FirebaseServices
             $data[] = $this->getDocument($documentId, $collection);
         }
         return $data;
+    }
+
+    public function snapToObject($data)
+    {
+        $object = json_decode(json_encode($data));
+        return $object;
     }
 
     public function saveFile($folder, $file, $fileName)
@@ -96,11 +99,11 @@ class FirebaseServices
         );
     }
 
-    public function getDataWithImage($documents)
+    public function getDataWithImage($documents, $collection)
     {
         $data = [];
         foreach ($documents as $document) {
-            $imageObject = $this->getObject($document->data()['image'], 'contents');
+            $imageObject = $this->getObject($document->data()['image'], $collection);
 
             $data[] = [
                 'id' => $document->id(),
@@ -108,10 +111,6 @@ class FirebaseServices
                 'imageUrl' => $this->generateResourceAccessURL($imageObject)
             ];
         }
-        if (count($data) === 0) {
-            return null;
-        }
-
-        return count($data) === 1 ? json_decode(json_encode($data[0])) : $data;
+        return $data;
     }
 }

@@ -1,12 +1,11 @@
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 
 function Sidebar(props) {
-	const { description, social, title, contents } = props;
+	const { social, title, contents } = props;
 
 	console.log(contents);
 
@@ -14,9 +13,14 @@ function Sidebar(props) {
 		<Grid item xs={12}>
 			<Paper elevation={0} sx={{ p: 2, bgcolor: "grey.200" }}>
 				<Typography variant="h6" gutterBottom>
-					{title}
+					Tip Corner
 				</Typography>
-				<Typography>{description}</Typography>
+				<Typography>
+					To find mentoring online from other user on this topic try the request
+					feyman button below the topic. Feyman request helps you to start a
+					request for following topic where other user can mentor you on this
+					topic over a feyman session when they accept it.
+				</Typography>
 			</Paper>
 			<Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
 				Browse Contents
@@ -24,31 +28,14 @@ function Sidebar(props) {
 			{contents.length > 0 &&
 				contents.map((content) => (
 					<Link
-						href={`/student/learn/topic/${content.content_id}`}
+						href={`/student/learn/topic/${content.sys.id}`}
 						underline="none"
 						display="block"
 						variant="body1"
-						key={content.content_id}>
+						key={content.sys.id}>
 						{content.title}
 					</Link>
 				))}
-
-			<Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-				Social
-			</Typography>
-			{social.map((network) => (
-				<Link
-					display="block"
-					variant="body1"
-					href="#"
-					key={network.name}
-					sx={{ mb: 0.5 }}>
-					<Stack direction="row" spacing={1} alignItems="center">
-						<network.icon />
-						<span>{network.name}</span>
-					</Stack>
-				</Link>
-			))}
 		</Grid>
 	);
 }

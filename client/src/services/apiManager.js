@@ -2,7 +2,7 @@ import axios from "axios";
 import { baseURL } from "../utilities/utility";
 
 export const apiPostDataHandler = async (url, data, header) => {
-	return await axios
+	return axios
 		.post(baseURL + url, data, {
 			headers: header,
 		})
@@ -12,12 +12,10 @@ export const apiPostDataHandler = async (url, data, header) => {
 };
 
 export const apiGetDataHandler = async (url, header, params) => {
-	return await axios
-		.get(baseURL + url, {
-			params: params,
-			headers: header,
-		})
-		.then((response) => {
-			return response.data;
-		});
+	const response = await axios.get(baseURL + url, {
+		params: params,
+		headers: header,
+	});
+	console.log(response.data);
+	return response.data;
 };

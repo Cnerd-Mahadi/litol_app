@@ -9,6 +9,13 @@
 	color: white;
 }
 
+pre code {
+	background-color: #eee;
+	border: 1px solid #999;
+	display: block;
+	padding: 20px;
+}
+
 html,
 body,
 #root {
@@ -25,4 +32,12 @@ body,
 
 .image--fit {
 	object-fit: cover;
+}
+
+.image--full {
+	object-fit: contain;
+}
+
+.min-h-screen {
+	min-height: 100vh;
 }

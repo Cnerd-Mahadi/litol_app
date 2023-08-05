@@ -1,33 +1,23 @@
 import { Box } from "@mui/system";
 import React from "react";
-import { useGetQuery } from "../../hooks/useGetQuery";
-import { subjectImages } from "../../utilities/staticImageResources";
-import { getHeader, headerType } from "../../utilities/utility";
-import { Loading } from "../Loading";
+import { useGraphQuery } from "../../hooks/useGraphQuery";
+import { subjectsQuery } from "../../utilities/graphqlQueries";
 import { SubjectCard } from "./../../components/cards/SubjectCard";
-import { getLocalData } from "./../../utilities/utility";
+import { Loading } from "./../Loading";
 
-const showSubjects = ({ subject_id, subject_name }) => {
+const showSubjects = ({ name, image, sys }) => {
 	return (
-		<SubjectCard
-			key={subject_id}
-			id={subject_id}
-			image={subjectImages[subject_name]}
-			subject={subject_name}
-		/>
+		<SubjectCard key={sys.id} id={sys.id} image={image.url} subject={name} />
 	);
 };
 
-const localUserData = getLocalData("userData");
-
 export const Subject = () => {
-	const { isLoading, data: subjects } = useGetQuery(
-		"subjects",
-		"student/subjects",
-		getHeader(headerType.tokenize, localUserData.token)
-	);
+	const { isLoading, data } = useGraphQuery("subjects", subjectsQuery);
+	const subjects = data ? data.data.subjectCollection.items : null;
 
 	if (isLoading) return <Loading />;
+
+	console.log(subjects);
 
 	return (
 		<Box

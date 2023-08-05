@@ -14,13 +14,13 @@ class UserServices
     public function checkUniqueEmail($email)
     {
         $uniqueValue = $this->firebaseService->getCollection('users')->where('email', '=', $email)->documents();
-        return $this->firebaseService->getData($uniqueValue) === null ? true : false;
+        return sizeof($this->firebaseService->getData($uniqueValue)) > 0 ? false : true;
     }
 
     public function checkUniqueUser($username)
     {
         $uniqueValue = $this->firebaseService->getCollection('users')->where('username', '=', $username)->documents();
-        return $this->firebaseService->getData($uniqueValue) === null ? true : false;
+        return sizeof($this->firebaseService->getData($uniqueValue)) > 0 ? false : true;
     }
 
     public function saveUser($user)
@@ -37,7 +37,7 @@ class UserServices
     {
         $userSnap = $this->firebaseService->getCollection('users')
             ->where('username', '===', $username)->documents();
-
-        return $this->firebaseService->getData($userSnap);
+        $value = $this->firebaseService->getData($userSnap);
+        return sizeof($value) > 0 ? $value[0] : false;
     }
 }

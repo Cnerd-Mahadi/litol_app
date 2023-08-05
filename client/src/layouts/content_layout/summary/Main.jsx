@@ -15,8 +15,11 @@ function Main({ content }) {
 			sx={{
 				mt: 4,
 			}}>
-			<Typography variant="h3" gutterBottom>
-				{content.details.title}
+			<Typography variant="h4" gutterBottom>
+				{content.data.title}
+			</Typography>
+			<Typography variant="body2" gutterBottom>
+				<b>Created at</b> {content.data.updated}
 			</Typography>
 			<Divider />
 			<Paper
@@ -26,13 +29,22 @@ function Main({ content }) {
 					justifyContent: "space-between",
 					flexWrap: "wrap",
 					listStyle: "none",
-					p: 1,
-					mt: 1,
+					px: 2,
+					py: 1,
+					my: 2,
 				}}>
-				{content.keywords.map((data) => {
+				{content.data.keywords.map((data) => {
 					return (
-						<Box key={data.keyword_id}>
-							<Chip color="primary" label={data.keyword} />
+						<Box key={data}>
+							<Chip
+								color="primary"
+								label={data}
+								sx={{
+									mx: 2,
+									my: 1,
+									borderRadius: "8px",
+								}}
+							/>
 						</Box>
 					);
 				})}
@@ -41,7 +53,7 @@ function Main({ content }) {
 				sx={{ display: showDetails ? "block" : "none", mt: 2 }}
 				variant="body1"
 				marginTop={2}>
-				{content.details.details}
+				{content.data.details}
 			</Typography>
 			<Button
 				variant="contained"

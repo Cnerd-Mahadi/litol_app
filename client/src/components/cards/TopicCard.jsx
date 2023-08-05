@@ -5,8 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 
-export const TopicCard = ({ id, title, image, detail }) => {
-	console.log(title, id);
+export const TopicCard = ({ id, title, image, subject }) => {
 	return (
 		<Link href={"/student/learn/topic/" + id} underline="none">
 			<Card sx={{ width: 240, margin: "20px" }}>
@@ -14,8 +13,7 @@ export const TopicCard = ({ id, title, image, detail }) => {
 					<CardMedia
 						component="img"
 						height="140"
-						image={require("../../../../server/storage/app/public/content/" +
-							image)}
+						image={image}
 						alt="green iguana"
 					/>
 					<CardContent>
@@ -32,7 +30,7 @@ export const TopicCard = ({ id, title, image, detail }) => {
 								WebkitLineClamp: "1",
 								WebkitBoxOrient: "vertical",
 							}}>
-							{detail}
+							{subject}
 						</Typography>
 					</CardContent>
 				</CardActionArea>
