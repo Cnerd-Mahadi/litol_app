@@ -29,13 +29,9 @@ class FeynmanController extends Controller
     {
         try {
             $feynmen = $this->feynmanService->getFeynmen();
-            if ($feynmen)
-                return ResponseHelper::success(
-                    $feynmen
-                );
-            else {
-                return ResponseHelper::success("Request empty");
-            }
+            return ResponseHelper::success(
+                $feynmen
+            );
 
         } catch (\Throwable $th) {
             return ResponseHelper::error([
