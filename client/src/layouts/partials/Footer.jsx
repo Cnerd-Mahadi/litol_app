@@ -19,7 +19,7 @@ export const Footer = () => {
 				<Link
 					underline="none"
 					color="inherit"
-					href="#"
+					href="https://github.com/Cnerd-Mahadi"
 					sx={{
 						":hover": {
 							color: "primary.main",
@@ -30,14 +30,17 @@ export const Footer = () => {
 			</Typography>
 			<Box sx={{ display: "flex", alignItems: "center", gap: "5px" }}>
 				<IconButton
+					href="https://www.facebook.com/cnerdmahadi"
 					sx={{ color: colorCode.white, "&:hover": { color: "primary.main" } }}>
 					<FacebookOutlined fontSize="medium" />
 				</IconButton>
 				<IconButton
+					href="https://www.instagram.com/c_n.e.r.d/"
 					sx={{ color: colorCode.white, "&:hover": { color: "primary.main" } }}>
 					<Instagram fontSize="medium" />
 				</IconButton>
 				<IconButton
+					href="https://www.linkedin.com/in/cnerd-mahadi/"
 					sx={{ color: colorCode.white, "&:hover": { color: "primary.main" } }}>
 					<LinkedIn fontSize="medium" />
 				</IconButton>
