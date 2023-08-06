@@ -6,6 +6,7 @@ import * as React from "react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { MindMapCard } from "../../components/cards/MindMapCard";
+import { NotAvailable } from "../../components/common/NotAvailable";
 import { useGetQuery } from "../../hooks/useGetQuery";
 import { getHeader, getLocalData, headerType } from "../../utilities/utility";
 import { Loading } from "../Loading";
@@ -93,7 +94,7 @@ export const MindMap = () => {
 							{data.mindmaps.map(getContents)}
 						</Box>
 					) : (
-						"Sorry There is no content available currently"
+						<NotAvailable contentType="mindmap content" />
 					)}
 				</Box>
 			</Paper>

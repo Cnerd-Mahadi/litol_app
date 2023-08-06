@@ -5,6 +5,7 @@ import Grid from "@mui/material/Grid";
 import * as React from "react";
 import { Controller, useFieldArray } from "react-hook-form";
 import { NoteCard } from "../../components/cards/NoteCard";
+import { NotAvailable } from "../../components/common/NotAvailable";
 import { ProgressButton } from "../../components/common/ProgressButton";
 import { SnackAlert } from "../../components/common/SnackAlert";
 import { InputField } from "../../components/input-fields/InputField";
@@ -206,7 +207,7 @@ export const Note = () => {
 							{data.notes.map(getContents)}
 						</Box>
 					) : (
-						"Sorry There is no content available currently"
+						<NotAvailable contentType="note" />
 					)}
 				</Box>
 			</Paper>

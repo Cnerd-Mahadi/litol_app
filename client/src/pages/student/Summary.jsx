@@ -6,6 +6,7 @@ import * as React from "react";
 import { Controller } from "react-hook-form";
 import "swiper/css";
 import "swiper/css/pagination";
+import { NotAvailable } from "../../components/common/NotAvailable";
 import { ProgressButton } from "../../components/common/ProgressButton";
 import { SnackAlert } from "../../components/common/SnackAlert";
 import { InputField } from "../../components/input-fields/InputField";
@@ -163,7 +164,7 @@ export const Summary = () => {
 							{data.summaries.map(getContents)}
 						</Box>
 					) : (
-						"Sorry There is no content available currently"
+						<NotAvailable contentType="summary content" />
 					)}
 				</Box>
 			</Paper>

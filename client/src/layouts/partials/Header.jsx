@@ -26,7 +26,7 @@ export const Header = () => {
 			}}>
 			<Toolbar>
 				<Container
-					maxWidth="xl"
+					maxWidth="2xl"
 					sx={{
 						display: "flex",
 						justifyContent: "space-between",

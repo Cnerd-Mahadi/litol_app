@@ -3,6 +3,7 @@ import Grid from "@mui/material/Grid";
 import "swiper/css";
 import "swiper/css/pagination";
 import { FeynmanCard } from "../../components/cards/FeynmanCard";
+import { NotAvailable } from "../../components/common/NotAvailable";
 import { useGetQuery } from "../../hooks/useGetQuery";
 import { getHeader, getLocalData, headerType } from "../../utilities/utility";
 import { Loading } from "../Loading";
@@ -46,13 +47,15 @@ export const Feynman = () => {
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
-					{data.length
-						? data.map((item) => {
-								return (
-									<FeynmanCard key={item.id} id={item.id} data={item.data} />
-								);
-						  })
-						: "Sorry There is no feynman request available currently"}
+					{data.length ? (
+						data.map((item) => {
+							return (
+								<FeynmanCard key={item.id} id={item.id} data={item.data} />
+							);
+						})
+					) : (
+						<NotAvailable contentType="feynman request" />
+					)}
 				</Grid>
 			</Grid>
 		</>

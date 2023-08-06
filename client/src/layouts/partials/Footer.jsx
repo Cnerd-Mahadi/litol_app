@@ -6,7 +6,7 @@ import { colorCode } from "../../utilities/utility";
 export const Footer = () => {
 	return (
 		<Container
-			maxWidth="xl"
+			maxWidth="2xl"
 			sx={{
 				display: "flex",
 				justifyContent: "space-between",

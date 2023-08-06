@@ -20,7 +20,7 @@ class SummaryServices
     public function saveSummary(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => ['required', 'string', 'max:255', new BeUniqueTitle('summaries')],
+            'title' => ['required', 'string', 'max:255', new BeUniqueTitle('summaries', $request->user_id)],
             'image' => 'required|image',
             'details' => 'required|string',
             'keywords' => 'required|array',
