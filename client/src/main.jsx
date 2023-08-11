@@ -3,22 +3,22 @@ import React, { createContext } from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RouterProvider } from "react-router-dom";
-import { ReactFlowProvider } from "reactflow/dist/esm";
-import { App } from "./App";
-import { Router } from "./Router";
+import { ReactFlowProvider } from "reactflow";
+import App from "./App.jsx";
+import { Router } from "./Router.jsx";
 import { theme } from "./styles/mui-styles/theme";
-import "./styles/styles.css";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
 const queryClient = new QueryClient();
 export const SnackContext = createContext(null);
 
-root.render(
+ReactDOM.createRoot(document.getElementById("root")).render(
 	<ThemeProvider theme={theme}>
 		<QueryClientProvider client={queryClient}>
 			<ReactFlowProvider>
 				<RouterProvider router={Router}>
-					<App />
+					<React.StrictMode>
+						<App />
+					</React.StrictMode>
 				</RouterProvider>
 			</ReactFlowProvider>
 		</QueryClientProvider>

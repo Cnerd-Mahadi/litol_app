@@ -1,6 +1,5 @@
 import { FacebookOutlined, Instagram, LinkedIn } from "@mui/icons-material";
 import { Box, Container, IconButton, Link, Typography } from "@mui/material";
-import React from "react";
 import { colorCode } from "../../utilities/utility";
 
 export const Footer = () => {

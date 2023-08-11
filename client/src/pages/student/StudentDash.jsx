@@ -1,4 +1,3 @@
-import React from "react";
 import { Cue } from "./../../layouts/Cue";
 import { ImageHeader } from "./../../layouts/ImageHeader";
 

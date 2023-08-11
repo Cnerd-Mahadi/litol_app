@@ -7,7 +7,7 @@ import {
 	InputLabel,
 	OutlinedInput,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Controller } from "react-hook-form";
 
 export const InputFieldPassword = ({ id, label, control }) => {

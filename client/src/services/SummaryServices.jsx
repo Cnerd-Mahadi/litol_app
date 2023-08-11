@@ -51,7 +51,7 @@ export const SummaryServices = () => {
 				.test("required", "You need to provide a file", (value) => {
 					return value && value.length;
 				})
-				.test("fileSize", "The file is too large", (value, context) => {
+				.test("fileSize", "The file is too large", (value) => {
 					return value && value[0] && value[0].size <= 400000;
 				})
 				.test("type", "We only support jpeg, png, webp type", function (value) {

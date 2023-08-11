@@ -1,11 +1,7 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Paper, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 import { MuiChipsInput } from "mui-chips-input";
-import * as React from "react";
 import { Controller } from "react-hook-form";
-import "swiper/css";
-import "swiper/css/pagination";
 import { NotAvailable } from "../../components/common/NotAvailable";
 import { ProgressButton } from "../../components/common/ProgressButton";
 import { SnackAlert } from "../../components/common/SnackAlert";

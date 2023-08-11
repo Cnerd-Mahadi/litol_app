@@ -1,5 +1,4 @@
 import { Box } from "@mui/system";
-import React from "react";
 import { useGraphQuery } from "../../hooks/useGraphQuery";
 import { subjectsQuery } from "../../utilities/graphqlQueries";
 import { SubjectCard } from "./../../components/cards/SubjectCard";

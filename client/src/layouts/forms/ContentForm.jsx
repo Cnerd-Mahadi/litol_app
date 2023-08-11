@@ -1,5 +1,4 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
-import React from "react";
 
 export const ContentForm = ({
 	maxWidth,

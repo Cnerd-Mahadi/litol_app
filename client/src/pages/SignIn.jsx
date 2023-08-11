@@ -8,9 +8,6 @@ import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { InputField } from "../components/input-fields/InputField";
 import { InputFieldPassword } from "../components/input-fields/InputFieldPassword";
 import { SignInServices } from "../services/SignInServices";
@@ -21,11 +18,6 @@ import {
 
 export const SignIn = () => {
 	const { control, handleSubmit, onSubmit, loginErr } = SignInServices();
-	const auth = localStorage.getItem("userData");
-	const nav = useNavigate();
-	useEffect(() => {
-		if (auth) nav("/student");
-	}, [auth, nav]);
 
 	return (
 		<Grid container component="main" sx={{ height: "100vh" }}>

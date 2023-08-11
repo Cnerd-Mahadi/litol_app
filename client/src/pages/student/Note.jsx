@@ -2,7 +2,6 @@ import { Add, Clear } from "@mui/icons-material";
 import { IconButton, Paper, TextField, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import * as React from "react";
 import { Controller, useFieldArray } from "react-hook-form";
 import { NoteCard } from "../../components/cards/NoteCard";
 import { NotAvailable } from "../../components/common/NotAvailable";

@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import * as React from "react";
 
 export const ImageHeader = ({ height, width }) => {
 	return (

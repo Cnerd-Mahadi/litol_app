@@ -3,7 +3,6 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import * as React from "react";
 import Main from "./Main";
 import Sidebar from "./Sidebar";
 

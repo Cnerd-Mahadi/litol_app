@@ -1,6 +1,5 @@
 import { FileUploadOutlined } from "@mui/icons-material";
 import { Button, FormHelperText, Grid } from "@mui/material";
-import React from "react";
 import { Controller, useController } from "react-hook-form";
 
 export const FormImage = ({ control, id, register }) => {

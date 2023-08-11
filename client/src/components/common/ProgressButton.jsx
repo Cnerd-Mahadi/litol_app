@@ -1,5 +1,4 @@
 import { Button, CircularProgress } from "@mui/material";
-import React from "react";
 
 export const ProgressButton = ({ loading, text }) => {
 	return (

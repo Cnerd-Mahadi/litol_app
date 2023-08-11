@@ -1,5 +1,4 @@
 import { Box, Button, Typography } from "@mui/material";
-import React from "react";
 import { ErrorStyle } from "../styles/mui-styles/containers";
 
 export const Error = () => {

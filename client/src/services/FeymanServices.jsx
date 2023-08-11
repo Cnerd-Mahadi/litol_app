@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import { createContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "react-query";
-import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { useStatus } from "../hooks/useStatus";
 import { getHeader, getLocalData, headerType } from "../utilities/utility";
@@ -12,7 +11,6 @@ import { apiGetDataHandler } from "./apiManager";
 export const FeynmanContext = createContext({});
 
 export const FeynmanServices = () => {
-	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const [contentInfo, setContentInfo] = useState(null);
 	const [overlay, setOverlay] = useState(false);
@@ -65,7 +63,7 @@ export const FeynmanServices = () => {
 			"student/feynman/resolve",
 			getHeader(headerType.tokenize, getLocalData("userData").token),
 			formData
-		).then((response) => {
+		).then(() => {
 			setLoading(false);
 			setOverlay(false);
 			setSnack({

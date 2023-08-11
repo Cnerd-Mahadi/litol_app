@@ -1,6 +1,5 @@
-import React from "react";
 import { createBrowserRouter, redirect } from "react-router-dom";
-import { App } from "./App";
+import App from "./App";
 import { MindMapCanvas } from "./layouts/mindmap/MindMapCanvas";
 import { MindMapCanvasDetails } from "./layouts/mindmap/MindMapCanvasDetails";
 import { Error } from "./pages/Error";
@@ -28,6 +27,9 @@ export const Router = createBrowserRouter([
 			{
 				index: true,
 				element: <SignIn />,
+				loader: () => {
+					return getLocalData("userData") ? redirect("/student") : null;
+				},
 			},
 			{
 				path: "/signup",

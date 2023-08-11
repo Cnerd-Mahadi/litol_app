@@ -1,4 +1,3 @@
-import { MenuItem } from "@mui/material";
 import axios from "axios";
 import { throttle } from "lodash";
 import { featuresImages } from "./staticImageResources";
@@ -101,14 +100,6 @@ export const checkUniqueness = async (url, header, params) => {
 };
 
 export const debouncedCheckUniqueness = throttle(checkUniqueness, 500);
-
-export const getSubjects = ({ subject_id, subject_name }) => {
-	return (
-		<MenuItem key={subject_id} value={subject_id}>
-			{subject_name.toUpperCase()}
-		</MenuItem>
-	);
-};
 
 export const genderOptions = [
 	{
