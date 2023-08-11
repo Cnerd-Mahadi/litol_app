@@ -1,5 +1,4 @@
 import { Box } from "@mui/system";
-import React from "react";
 import { useParams } from "react-router-dom";
 import { useGraphQuery } from "../../hooks/useGraphQuery";
 import { contentsQuery } from "../../utilities/graphqlQueries";

@@ -8,7 +8,6 @@ import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { InputField } from "../components/input-fields/InputField";

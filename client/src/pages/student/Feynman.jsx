@@ -1,7 +1,5 @@
 import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import "swiper/css";
-import "swiper/css/pagination";
 import { FeynmanCard } from "../../components/cards/FeynmanCard";
 import { NotAvailable } from "../../components/common/NotAvailable";
 import { useGetQuery } from "../../hooks/useGetQuery";

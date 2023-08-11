@@ -5,13 +5,13 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { colorCode, pages, userSettings } from "../../utilities/utility";
 
 export const Header = () => {
 	const userRole = JSON.parse(localStorage.getItem("userData"))?.userInfo?.role;
-	const [userMenu, setUserMenu] = React.useState(null);
+	const [userMenu, setUserMenu] = useState(null);
 	const navigate = useNavigate();
 
 	const toggleUserMenu = (event) => {

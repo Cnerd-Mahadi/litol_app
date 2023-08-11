@@ -4,7 +4,6 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import { Button, CircularProgress, Paper } from "@mui/material";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import * as React from "react";
 import { useQueryClient } from "react-query";
 import { useGetQuery } from "../../../hooks/useGetQuery";
 import { useGraphQuery } from "../../../hooks/useGraphQuery";

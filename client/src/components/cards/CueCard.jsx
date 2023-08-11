@@ -1,5 +1,4 @@
 import { Button, Paper, Typography } from "@mui/material";
-import React from "react";
 import { CueButtonStyle } from "../../styles/mui-styles/buttons";
 
 export const CueCard = ({ image, text }) => {

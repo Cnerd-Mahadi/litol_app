@@ -3,7 +3,6 @@ import { MARKS } from "@contentful/rich-text-types";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
 
 function Main({ content }) {
 	return (

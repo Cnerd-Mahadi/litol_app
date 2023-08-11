@@ -1,4 +1,3 @@
-import React from "react";
 import { useParams } from "react-router-dom";
 import { useGetQuery } from "../../hooks/useGetQuery";
 import { getHeader, getLocalData, headerType } from "../../utilities/utility";

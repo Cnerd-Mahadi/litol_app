@@ -2,7 +2,6 @@ import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
 
 function Sidebar(props) {
 	const { social, title, contents } = props;

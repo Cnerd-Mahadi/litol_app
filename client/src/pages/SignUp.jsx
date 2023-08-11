@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
 import { Controller } from "react-hook-form";
 import { ProgressButton } from "../components/common/ProgressButton";
 import { SnackAlert } from "../components/common/SnackAlert";
