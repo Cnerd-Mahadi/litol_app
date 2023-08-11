@@ -1,6 +1,5 @@
 import { Box, Paper, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { MuiChipsInput } from "mui-chips-input";
 import { Controller } from "react-hook-form";
 import { NotAvailable } from "../../components/common/NotAvailable";
 import { ProgressButton } from "../../components/common/ProgressButton";
@@ -78,7 +77,7 @@ export const Summary = () => {
 									p: 0.5,
 									m: 0,
 								}}>
-								<MuiChipsInput
+								{/* <MuiChipsInput
 									size="small"
 									value={field.value}
 									onChange={field.onChange}
@@ -87,7 +86,7 @@ export const Summary = () => {
 									helperText={fieldState.error?.message}
 									hideClearAll={false}
 									placeholder="Add Keywords"
-								/>
+								/> */}
 							</Paper>
 						)}
 					/>
