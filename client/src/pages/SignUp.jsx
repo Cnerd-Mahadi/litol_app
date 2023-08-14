@@ -6,12 +6,19 @@ import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { Controller } from "react-hook-form";
+import { InputField } from "../components/InputField";
 import { ProgressButton } from "../components/common/ProgressButton";
 import { SnackAlert } from "../components/common/SnackAlert";
-import { InputField } from "../components/input-fields/InputField";
 import { InputFieldPassword } from "../components/input-fields/InputFieldPassword";
 import { SignUpServices } from "../services/SignUpServices";
-import { SignUpContainerStyle } from "../styles/mui-styles/containers";
+
+export const SignUpContainerStyle = {
+	marginTop: 8,
+	marginBottom: 4,
+	display: "flex",
+	flexDirection: "column",
+	alignItems: "center",
+};
 
 export const SignUp = () => {
 	const {

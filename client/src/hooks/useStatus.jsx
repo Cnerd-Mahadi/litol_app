@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { initSnackContext } from "../utilities/utility";
+
+const initSnackContext = {
+	open: false,
+	severity: "success",
+	message: "",
+};
 
 export const useStatus = () => {
 	const [loading, setLoading] = useState(false);

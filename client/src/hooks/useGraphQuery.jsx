@@ -1,9 +1,9 @@
 import { useQuery } from "react-query";
-import { requestUrl } from "../utilities/graphqlQueries";
+import { requestUrl } from "src/utils/graphqlQueries";
 
 export const useGraphQuery = (key, query) => {
-	const { isLoading, data } = useQuery([key], async () => {
-		return fetch(requestUrl, {
+	return useQuery([key], async () => {
+		return await fetch(requestUrl, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -14,8 +14,4 @@ export const useGraphQuery = (key, query) => {
 			}),
 		}).then((res) => res.json());
 	});
-
-	console.log(data, "Query");
-
-	return { isLoading, data };
 };

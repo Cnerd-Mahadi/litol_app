@@ -1,7 +1,16 @@
 import { Box, Link } from "@mui/material";
 import { CueCard } from "../components/cards/CueCard";
-import { CueBoxStyle } from "../styles/mui-styles/containers";
-import { features } from "../utilities/utility";
+import { features } from "../utils";
+
+export const CueBoxStyle = {
+	display: "flex",
+	flexWrap: "wrap",
+	justifyContent: "center",
+	alignItems: "center",
+	gap: "100px",
+	marginTop: "60px",
+	marginBottom: "200px",
+};
 
 export const Cue = () => {
 	return (

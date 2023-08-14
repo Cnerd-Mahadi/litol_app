@@ -7,24 +7,24 @@ import {
 	InputLabel,
 	OutlinedInput,
 } from "@mui/material";
+import { PropTypes } from "prop-types";
 import { useState } from "react";
 import { Controller } from "react-hook-form";
 
-export const InputFieldPassword = ({ id, label, control }) => {
+export const InputFieldPassword = ({ id, control, ...props }) => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const togglePassword = () => setShowPassword((show) => !show);
 
 	return (
 		<Controller
-			name="password"
+			name={id}
 			control={control}
 			render={({ field, fieldState }) => (
 				<FormControl margin="none" fullWidth>
 					<InputLabel>Password</InputLabel>
 					<OutlinedInput
-						id={id}
-						label={label}
+						{...props}
 						type={showPassword ? "text" : "password"}
 						onChange={field.onChange}
 						onBlur={field.onBlur}
@@ -45,4 +45,9 @@ export const InputFieldPassword = ({ id, label, control }) => {
 			)}
 		/>
 	);
+};
+
+InputFieldPassword.propTypes = {
+	id: PropTypes.string.isRequired,
+	control: PropTypes.object.isRequired,
 };

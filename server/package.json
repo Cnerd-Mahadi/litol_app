@@ -3,6 +3,9 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
+        "start": "npm run init && npm run serve",
+        "init": "composer project-init",
+        "serve": "php artisan serve",
         "build": "vite build"
     },
     "devDependencies": {

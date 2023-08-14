@@ -1,17 +1,15 @@
 import { TextField } from "@mui/material";
+import { PropTypes } from "prop-types";
 import { Controller } from "react-hook-form";
 
-export const InputField = ({ id, type, label, control }) => {
+export const InputField = ({ id, control, ...props }) => {
 	return (
 		<Controller
 			name={id}
 			control={control}
 			render={({ field, fieldState }) => (
 				<TextField
-					fullWidth
-					id={id}
-					type={type}
-					label={label}
+					{...props}
 					onChange={field.onChange}
 					onBlur={field.onBlur}
 					value={field.value}
@@ -21,4 +19,9 @@ export const InputField = ({ id, type, label, control }) => {
 			)}
 		/>
 	);
+};
+
+InputField.propTypes = {
+	id: PropTypes.string.isRequired,
+	control: PropTypes.object.isRequired,
 };

@@ -1,5 +1,20 @@
 import { Button, Paper, Typography } from "@mui/material";
-import { CueButtonStyle } from "../../styles/mui-styles/buttons";
+import { PropTypes } from "prop-types";
+
+export const CueButtonStyle = {
+	display: "flex",
+	gap: "25px",
+	backgroundColor: "#F9FCFB",
+	color: "#2C3333",
+	padding: "40px",
+	height: "200px",
+	width: "500px",
+	borderRadius: "20px",
+	"&:hover": {
+		backgroundColor: "#04293A",
+		color: "white",
+	},
+};
 
 export const CueCard = ({ image, text }) => {
 	return (
@@ -10,4 +25,9 @@ export const CueCard = ({ image, text }) => {
 			</Button>
 		</Paper>
 	);
+};
+
+CueCard.propTypes = {
+	image: PropTypes.string.isRequired,
+	text: PropTypes.string.isRequired,
 };

@@ -1,6 +1,5 @@
 import axios from "axios";
 import { throttle } from "lodash";
-import { featuresImages } from "./staticImageResources";
 
 export const baseURL = "https://litolapi-production.up.railway.app/api/";
 // "http://127.0.0.1:8000/api/";
@@ -13,51 +12,38 @@ export const getLocalData = (key) => {
 	return JSON.parse(localStorage.getItem(key));
 };
 
-export const headerType = {
-	nodata: "No Data",
-	tokenize: "Tokenize",
-	multi: "Tokenize Multipart",
+export const multipartHeader = {
+	"Content-Type": "multipart/form-data",
 };
 
-export const getHeader = (type, token) => {
-	if (type === headerType.nodata) {
-		return {};
-	} else if (type === headerType.tokenize) {
-		return {
-			Authorization: `Bearer ${token}`,
-		};
-	} else if (type === headerType.multi) {
-		return {
-			Authorization: `Bearer ${token}`,
-			"Content-Type": "multipart/form-data",
-		};
-	}
-};
+export const studentDashImage = "/image/basic/class.jpg";
+
+export const signInImage = "/image/general/SI.png";
 
 export const features = [
 	{
 		name: "Learn A Topic",
-		image: featuresImages.learn,
+		image: "",
 		route: "/student/learn",
 	},
 	{
 		name: "Summarize The Topic",
-		image: featuresImages.summary,
+		// image: featuresImages.summary,
 		route: "/student/summary",
 	},
 	{
 		name: "Use Cornell Method",
-		image: featuresImages.cornell,
+		// image: featuresImages.cornell,
 		route: "/student/note",
 	},
 	{
 		name: "Mind Map",
-		image: featuresImages.mindmap,
+		// image: featuresImages.mindmap,
 		route: "/student/mindmap",
 	},
 	{
 		name: "Feynman Section",
-		image: featuresImages.feynman,
+		// image: featuresImages.feynman,
 		route: "/student/feynman",
 	},
 ];
@@ -121,19 +107,3 @@ export const colorCode = {
 	red: "#ef4444",
 	white: "#f3f4f6",
 };
-
-export const MAX_FILE_SIZE = 102400; //100KB
-
-export const initSnackContext = {
-	open: false,
-	severity: "success",
-	message: "",
-};
-
-export function isValidFileType(value) {
-	return (
-		(value && value[0] && value[0].type === "image/jpeg") ||
-		(value[0] && value[0].type === "image/png") ||
-		(value[0] && value[0].type === "image/webp")
-	);
-}

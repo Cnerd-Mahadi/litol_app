@@ -5,18 +5,19 @@ import {
 	MenuItem,
 	Select,
 } from "@mui/material";
+import { PropTypes } from "prop-types";
 import { Controller } from "react-hook-form";
 
-export const SelectField = ({ id, label, control, menu }) => {
+export const SelectField = ({ id, control, menu, ...props }) => {
 	return (
 		<Controller
 			name={id}
 			control={control}
 			render={({ field, fieldState }) => (
 				<FormControl fullWidth margin="none">
-					<InputLabel>{label}</InputLabel>
+					<InputLabel>{props.label}</InputLabel>
 					<Select
-						label={label}
+						{...props}
 						value={field.value}
 						onChange={field.onChange}
 						onBlur={field.onBlur}
@@ -36,4 +37,11 @@ export const SelectField = ({ id, label, control, menu }) => {
 			)}
 		/>
 	);
+};
+
+SelectField.propTypes = {
+	id: PropTypes.string.isRequired,
+	control: PropTypes.object.isRequired,
+	menu: PropTypes.array.isRequired,
+	label: PropTypes.string.isRequired,
 };

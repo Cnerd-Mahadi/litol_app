@@ -2,14 +2,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "react-query";
 import * as yup from "yup";
-import { useStatus } from "../hooks/useStatus";
+
+import { useStatus } from "src/hooks/useStatus";
 import {
 	checkUniqueness,
 	getHeader,
 	getLocalData,
 	headerType,
 	isValidFileType,
-} from "../utilities/utility";
+} from "src/utils";
 import { apiPostDataHandler } from "./apiManager";
 
 export const SummaryServices = () => {

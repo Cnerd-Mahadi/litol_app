@@ -1,22 +1,14 @@
-import axios from "axios";
 import { useQuery } from "react-query";
-import { baseURL } from "../utilities/utility";
+import { useAxios } from "./useAxios";
 
-export const useGetQuery = (key, url, header, payload) => {
-	const { isLoading, error, isError, data } = useQuery([key], async () =>
-		axios
-			.get(baseURL + url, {
+export const useGetQuery = (key, url, payload) => {
+	const axios = useAxios();
+
+	return useQuery(
+		[key],
+		async () =>
+			await axios.get(url, {
 				params: payload,
-				headers: header,
-			})
-			.then((response) => {
-				return response.data.data;
 			})
 	);
-	return {
-		isLoading,
-		data,
-		error,
-		isError,
-	};
 };

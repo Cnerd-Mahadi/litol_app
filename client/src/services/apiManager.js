@@ -1,5 +1,5 @@
 import axios from "axios";
-import { baseURL } from "../utilities/utility";
+import { baseURL } from "src/utils";
 
 export const apiPostDataHandler = async (url, data, header) => {
 	return axios

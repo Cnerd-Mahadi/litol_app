@@ -15,8 +15,8 @@ import {
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Controller } from "react-hook-form";
+import { InputField } from "../../components/InputField";
 import { SnackAlert } from "../../components/common/SnackAlert";
-import { InputField } from "../../components/input-fields/InputField";
 import { SignUpContainerStyle } from "../../styles/mui-styles/containers";
 import {
 	FeynmanContext,
