@@ -47,12 +47,11 @@ class LogController extends Controller
 
         try {
             return ResponseHelper::success([
-                'token' => $this->authService->generateAuthToken($user->id, $user->data->role),
+                'token' => $this->authService->generateAuthToken($user->id),
                 'userInfo' => [
                     'id' => $user->id,
                     'name' => $user->data->username,
                     'email' => $user->data->email,
-                    'role' => $user->data->role,
                     'dob' => $user->data->dob
                 ],
             ]);

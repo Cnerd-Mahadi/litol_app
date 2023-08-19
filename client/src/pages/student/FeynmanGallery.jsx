@@ -14,8 +14,6 @@ export const FeynmanGallery = () => {
 
 	console.log(response);
 
-	if (isLoading) return <Loading />;
-
 	return (
 		<>
 			<Grid
@@ -47,7 +45,9 @@ export const FeynmanGallery = () => {
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
-					{response.data.length ? (
+					{isLoading ? (
+						<Loading />
+					) : response.data.length ? (
 						response.data.map((item) => {
 							return (
 								<FeynmanCard key={item.id} id={item.id} data={item.data} />

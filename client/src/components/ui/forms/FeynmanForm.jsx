@@ -60,7 +60,7 @@ export const FeynmanForm = () => {
 	const onSubmit = (data) => {
 		const formData = {
 			feynman_id: feynmanContext.invitation.info.id,
-			resolverName: localUserData.userInfo.name,
+			resolverName: localUserData().userInfo.name,
 			topic: feynmanContext.invitation.info.contentData.title,
 			subject: feynmanContext.invitation.info.contentData.subjectRef.name,
 			link: data.meeting_link,
@@ -80,7 +80,7 @@ export const FeynmanForm = () => {
 					...feynmanContext.invitation,
 					open: false,
 				});
-				queryClient.invalidateQueries("student/feynman");
+				queryClient.invalidateQueries("student/feynmen");
 			},
 			onError: (error) => {
 				console.log(error);

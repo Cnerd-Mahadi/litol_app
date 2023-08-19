@@ -38,7 +38,7 @@ export const MindMapCanvas = () => {
 			title: data.title,
 			nodes: JSON.stringify(nodes),
 			edges: JSON.stringify(edges),
-			user_id: localUserData.userInfo.id,
+			user_id: localUserData().userInfo.id,
 		};
 		if (nodes.length > 0) {
 			mutate(resultData, {

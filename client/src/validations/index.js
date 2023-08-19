@@ -66,7 +66,7 @@ export const summarySchema = yup
 				return await checkUniqueValue("student/titleCheck", {
 					title: value,
 					collection: "summaries",
-					user_id: localUserData.userInfo.id,
+					user_id: localUserData().userInfo.id,
 				});
 			}),
 		details: yup.string().required().max(350),
@@ -104,7 +104,7 @@ export const noteSchema = yup.object().shape({
 			return await checkUniqueValue("student/titleCheck", {
 				title: value,
 				collection: "notes",
-				user_id: localUserData.userInfo.id,
+				user_id: localUserData().userInfo.id,
 			});
 		}),
 	cues: yup.array().of(
@@ -133,7 +133,7 @@ export const mindmapTitleSchema = yup.object().shape({
 			return await checkUniqueValue("student/titleCheck", {
 				title: value,
 				collection: "mindmaps",
-				user_id: localUserData.userInfo.id,
+				user_id: localUserData().userInfo.id,
 			});
 		}),
 });
@@ -150,7 +150,7 @@ export const mindmapTitleUpdatedSchema = (mindmapId) =>
 					title: value,
 					id: mindmapId,
 					collection: "mindmaps",
-					user_id: localUserData.userInfo.id,
+					user_id: localUserData().userInfo.id,
 				});
 			}),
 	});

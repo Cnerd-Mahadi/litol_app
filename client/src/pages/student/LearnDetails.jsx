@@ -60,7 +60,7 @@ export const LearnDetails = () => {
 		"student/feynman/requestCheck",
 		{
 			content_id: topicId,
-			user_id: localUserData.userInfo.id,
+			user_id: localUserData().userInfo.id,
 		}
 	);
 
@@ -94,7 +94,7 @@ export const LearnDetails = () => {
 							mutate(
 								{
 									content_id: topicId,
-									user_id: localUserData.userInfo.id,
+									user_id: localUserData().userInfo.id,
 								},
 								{
 									onSuccess: () => {

@@ -30,7 +30,6 @@ class StudentValidation
                 $token = $request->bearerToken();
                 $parser = new Parser(new JoseEncoder());
                 $parsedToken = $parser->parse($token);
-                $role = $parsedToken->claims()->get('role');
 
             } catch (\Throwable $th) {
                 return response()->json([
@@ -39,7 +38,7 @@ class StudentValidation
                 ], 403);
             }
 
-            if ($role == "student") {
+            if ($parsedToken) {
                 return $next($request);
             } else {
                 return response()->json(['message' => 'Unauthorized'], 403);

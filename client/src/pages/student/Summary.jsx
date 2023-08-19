@@ -39,14 +39,12 @@ const getContents = ({ data, id, imageUrl }) => {
 export const Summary = () => {
 	const { isLoading, data: response } = useGetQuery(
 		"student/summaries",
-		`student/summaries/${localUserData.userInfo.id}`
+		`student/summaries/${localUserData().userInfo.id}`
 	);
 
 	const summaries = response ? response.data.summaries : [];
 
 	console.log(summaries);
-
-	if (isLoading) return <Loading />;
 
 	return (
 		<>
@@ -65,7 +63,9 @@ export const Summary = () => {
 					Summary Gallery
 				</Typography>
 				<Box>
-					{summaries.length ? (
+					{isLoading ? (
+						<Loading />
+					) : summaries.length ? (
 						<Box sx={gallery}>{summaries.map(getContents)}</Box>
 					) : (
 						<NotAvailable contentType="summary content" />

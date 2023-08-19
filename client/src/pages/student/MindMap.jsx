@@ -28,12 +28,10 @@ const paper = {
 export const MindMap = () => {
 	const { isLoading, data: response } = useGetQuery(
 		"student/mindmaps",
-		`student/mindmaps/${localUserData.userInfo.id}`
+		`student/mindmaps/${localUserData().userInfo.id}`
 	);
 
 	const mindmaps = response ? response.data.mindmaps : [];
-
-	if (isLoading) return <Loading />;
 
 	return (
 		<>
@@ -60,7 +58,7 @@ export const MindMap = () => {
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
-					<Link to={`/student/mindmap/board/${localUserData.userInfo.id}`}>
+					<Link to={`/student/mindmap/board/${localUserData().userInfo.id}`}>
 						<Button
 							type="submit"
 							fullWidth
@@ -83,7 +81,9 @@ export const MindMap = () => {
 					Map Gallery
 				</Typography>
 				<Box>
-					{mindmaps.length ? (
+					{isLoading ? (
+						<Loading />
+					) : mindmaps.length ? (
 						<Box
 							component={"div"}
 							sx={{

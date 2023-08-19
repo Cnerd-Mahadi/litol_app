@@ -9,10 +9,12 @@ export const getLocalData = (key) => {
 	return JSON.parse(localStorage.getItem(key));
 };
 
-export const localUserData = getLocalData("userData");
+export const localUserData = () => {
+	return getLocalData("userData");
+};
 
 export const baseURL = "https://litolapi-production.up.railway.app/api/";
-// "http://127.0.0.1:8000/api/";
+//  "http://127.0.0.1:8000/api/";
 
 export const queryClient = new QueryClient();
 
@@ -20,7 +22,7 @@ export const checkUniqueValue = async (url, params) => {
 	const response = await axios.get(baseURL + url, {
 		params: params,
 		headers: {
-			Authorization: `Bearer ${getLocalData("userData").token}`,
+			Authorization: `Bearer ${localUserData() ? localUserData().token : ""}`,
 		},
 	});
 	return response.data;

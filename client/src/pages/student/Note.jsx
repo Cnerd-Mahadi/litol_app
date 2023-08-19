@@ -27,12 +27,10 @@ const paper = {
 export const Note = () => {
 	const { isLoading, data: response } = useGetQuery(
 		"student/notes",
-		`student/notes/${localUserData.userInfo.id}`
+		`student/notes/${localUserData().userInfo.id}`
 	);
 
 	const notes = response ? response.data.notes : [];
-
-	if (isLoading) return <Loading />;
 
 	return (
 		<>
@@ -51,7 +49,9 @@ export const Note = () => {
 					Note Gallery
 				</Typography>
 				<Box>
-					{notes.length ? (
+					{isLoading ? (
+						<Loading />
+					) : notes.length ? (
 						<Box
 							sx={{
 								display: "flex",

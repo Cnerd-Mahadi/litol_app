@@ -38,7 +38,7 @@ export const NoteForm = () => {
 		mutate(
 			{
 				...data,
-				user_id: localUserData.userInfo.id,
+				user_id: localUserData().userInfo.id,
 			},
 			{
 				onSuccess: (response) => {
@@ -129,6 +129,7 @@ export const NoteForm = () => {
 									justifyContent: "center",
 									mt: 1,
 								}}
+								disabled={fields.length === 8}
 								color="primary"
 								onClick={() => {
 									append({

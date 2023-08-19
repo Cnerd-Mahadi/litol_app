@@ -16,7 +16,7 @@ import { StudentLayout } from "./pages/student/StudentLayout";
 import { Subject } from "./pages/student/Subject";
 import { Summary } from "./pages/student/Summary";
 import { SummaryDetails } from "./pages/student/SummaryDetails";
-import { getLocalData } from "./utils";
+import { localUserData } from "./utils";
 
 export const Router = createBrowserRouter([
 	{
@@ -28,9 +28,7 @@ export const Router = createBrowserRouter([
 				index: true,
 				element: <SignIn />,
 				loader: () => {
-					const localUserData = getLocalData("userData");
-					console.log(localUserData, "SIGN");
-					const auth = localUserData ? localUserData.token : null;
+					const auth = localUserData() ? localUserData().token : null;
 					return auth ? redirect("/student") : null;
 				},
 			},
@@ -42,9 +40,7 @@ export const Router = createBrowserRouter([
 				path: "/student",
 				element: <StudentLayout />,
 				loader: () => {
-					const localUserData = getLocalData("userData");
-					console.log(localUserData, "SL");
-					const auth = localUserData ? localUserData.token : null;
+					const auth = localUserData() ? localUserData().token : null;
 					return auth ? null : redirect("/");
 				},
 				children: [

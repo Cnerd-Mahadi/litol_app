@@ -47,7 +47,7 @@ export const SummaryForm = () => {
 			{
 				...data,
 				image: data.image[0],
-				user_id: localUserData.userInfo.id,
+				user_id: localUserData().userInfo.id,
 			},
 			{
 				onSuccess: (response) => {

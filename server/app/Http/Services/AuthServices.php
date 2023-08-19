@@ -18,7 +18,7 @@ use Lcobucci\JWT\Validation\Validator;
 
 class AuthServices
 {
-    public function generateAuthToken($userId, $role)
+    public function generateAuthToken($userId)
     {
         $configuration = Configuration::forSymmetricSigner(
             new Sha256(),
@@ -35,7 +35,6 @@ class AuthServices
                 ->issuedAt($now)
                 ->expiresAt($expiration)
                 ->withClaim('id', $userId)
-                ->withClaim('role', $role)
                 ->getToken($configuration->signer(), $configuration->signingKey());
         } catch (\Throwable $th) {
             return ResponseHelper::error([

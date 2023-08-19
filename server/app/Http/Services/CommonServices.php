@@ -28,7 +28,7 @@ class CommonServices
             ->where('authorId', '=', $userId)
             ->documents();
         $isSameValue = $this->firebaseService->getData($uniqueValue);
-        return sizeof($isSameValue) > 0 && $id == $isSameValue[0]->id ? true : false;
+        return sizeof($isSameValue) > 0 && $id != $isSameValue[0]->id ? false : true;
     }
 
     public function saveImageWithData($content, $request, $contentType, $collection)
