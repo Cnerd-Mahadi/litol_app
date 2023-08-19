@@ -3,5 +3,13 @@ import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [react()],
+	server: {
+		port: 3000,
+	},
+	plugins: [react({ include: /\.(mdx|js|jsx|ts|tsx)$/ })],
+	resolve: {
+		alias: {
+			src: "/src",
+		},
+	},
 });

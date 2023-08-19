@@ -1,12 +1,14 @@
-import { Link, Paper, Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { MindMapCard } from "../../components/cards/MindMapCard";
-import { NotAvailable } from "../../components/common/NotAvailable";
-import { useGetQuery } from "../../hooks/useGetQuery";
-import { getHeader, getLocalData, headerType } from "../../utilities/utility";
-import { Loading } from "../Loading";
+import { MindMapCard } from "src/components/cards/MindMapCard";
+import { Loading } from "src/components/layouts/Loading";
+import { Link } from "src/components/ui/Link";
+import { NotAvailable } from "src/components/ui/NotAvailable";
+import { useGetQuery } from "src/hooks/useGetQuery";
+import { localUserData } from "src/utils";
+import { images } from "src/utils/resources";
 
 const getContents = ({ id, data }) => {
 	return (
@@ -14,16 +16,22 @@ const getContents = ({ id, data }) => {
 	);
 };
 
-const localUserData = getLocalData("userData");
+const paper = {
+	pt: 2,
+	pb: 5,
+	mt: 12,
+	mb: 6,
+	backgroundColor: "#fafafa",
+	borderRadius: "48px 48px 0px 0px",
+};
 
 export const MindMap = () => {
-	const { isLoading, data } = useGetQuery(
+	const { isLoading, data: response } = useGetQuery(
 		"student/mindmaps",
-		`student/mindmaps/${localUserData.userInfo.id}`,
-		getHeader(headerType.tokenize, localUserData.token)
+		`student/mindmaps/${localUserData.userInfo.id}`
 	);
 
-	console.log(data);
+	const mindmaps = response ? response.data.mindmaps : [];
 
 	if (isLoading) return <Loading />;
 
@@ -39,7 +47,12 @@ export const MindMap = () => {
 					m: "auto",
 				}}>
 				<Grid item xs={12} textAlign={"center"}>
-					<img src="/image/basic/mindmap.png" width={"50%"} alt="" />
+					<Box
+						component={"img"}
+						src={images.mindmap}
+						width={"50%"}
+						alt="mindmap-form"
+					/>
 				</Grid>
 				<Grid item xs={12}>
 					<Typography variant="h3" sx={{ textAlign: "center" }}>
@@ -47,7 +60,7 @@ export const MindMap = () => {
 					</Typography>
 				</Grid>
 				<Grid item xs={12}>
-					<Link href={"/student/mindmap/board/" + localUserData.userInfo.id}>
+					<Link to={`/student/mindmap/board/${localUserData.userInfo.id}`}>
 						<Button
 							type="submit"
 							fullWidth
@@ -59,16 +72,7 @@ export const MindMap = () => {
 				</Grid>
 			</Grid>
 
-			<Paper
-				elevation={3}
-				sx={{
-					pt: 2,
-					pb: 5,
-					mt: 12,
-					mb: 6,
-					backgroundColor: "#fafafa",
-					borderRadius: "48px 48px 0px 0px",
-				}}>
+			<Paper elevation={3} sx={paper}>
 				<Typography
 					variant="h3"
 					sx={{
@@ -79,7 +83,7 @@ export const MindMap = () => {
 					Map Gallery
 				</Typography>
 				<Box>
-					{data.mindmaps.length ? (
+					{mindmaps.length ? (
 						<Box
 							component={"div"}
 							sx={{
@@ -88,7 +92,7 @@ export const MindMap = () => {
 								justifyContent: "center",
 								py: 3,
 							}}>
-							{data.mindmaps.map(getContents)}
+							{mindmaps.map(getContents)}
 						</Box>
 					) : (
 						<NotAvailable contentType="mindmap content" />

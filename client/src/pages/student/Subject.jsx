@@ -1,8 +1,8 @@
 import { Box } from "@mui/system";
-import { useGraphQuery } from "../../hooks/useGraphQuery";
-import { subjectsQuery } from "../../utilities/graphqlQueries";
-import { SubjectCard } from "./../../components/cards/SubjectCard";
-import { Loading } from "./../Loading";
+import { SubjectCard } from "src/components/cards/SubjectCard";
+import { Loading } from "src/components/layouts/Loading";
+import { useGraphQuery } from "src/hooks/useGraphQuery";
+import { subjectsQuery } from "src/utils/graphqlQueries";
 
 const showSubjects = ({ name, image, sys }) => {
 	return (
@@ -12,6 +12,7 @@ const showSubjects = ({ name, image, sys }) => {
 
 export const Subject = () => {
 	const { isLoading, data } = useGraphQuery("subjects", subjectsQuery);
+	console.log(data);
 	const subjects = data ? data.data.subjectCollection.items : null;
 
 	if (isLoading) return <Loading />;
@@ -25,7 +26,7 @@ export const Subject = () => {
 				flexWrap: "wrap",
 				marginTop: "20px",
 			}}>
-			{subjects.map(showSubjects)}
+			{subjects?.map(showSubjects)}
 		</Box>
 	);
 };

@@ -1,35 +1,37 @@
-import { Link, Paper } from "@mui/material";
+import { Card, CardActionArea, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import { PropTypes } from "prop-types";
+import { Link } from "../ui/Link";
+
+const paper = {
+	width: 240,
+	borderRadius: "8px",
+	backgroundColor: "white",
+	color: "#2C3333",
+	padding: "30px",
+};
 
 export const MindMapCard = ({ id, title, updated }) => {
-	console.log(title, updated, id);
 	return (
-		<Link href={"/student/mindmap/" + id} underline="none">
-			<Paper
-				elevation={3}
-				sx={{
-					width: "100%",
-					borderRadius: "8px",
-					backgroundColor: "white",
-					color: "#2C3333",
-					padding: "30px",
-				}}>
-				<Typography gutterBottom variant="h6" component="div">
-					{title}
-				</Typography>
-				<Typography
-					variant="body2"
-					color="text.primary"
-					sx={{
-						overflow: "hidden",
-						textOverflow: "ellipsis",
-						display: "-webkit-box",
-						WebkitLineClamp: "1",
-						WebkitBoxOrient: "vertical",
-					}}>
-					{updated}
-				</Typography>
-			</Paper>
+		<Link to={"/student/mindmap/" + id} underline="none">
+			<Card sx={{ margin: "20px" }}>
+				<CardActionArea>
+					<Paper sx={paper}>
+						<Typography gutterBottom variant="h6" component="div">
+							{title}
+						</Typography>
+						<Typography variant="body2" color="text.primary" noWrap>
+							{updated}
+						</Typography>
+					</Paper>
+				</CardActionArea>
+			</Card>
 		</Link>
 	);
+};
+
+MindMapCard.propTypes = {
+	id: PropTypes.string.isRequired,
+	title: PropTypes.string.isRequired,
+	updated: PropTypes.string.isRequired,
 };

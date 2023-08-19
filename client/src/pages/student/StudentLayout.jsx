@@ -1,15 +1,14 @@
+import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import { Footer } from "../../layouts/partials/Footer";
-import { Header } from "../../layouts/partials/Header";
+import { Header } from "src/components/layouts/partials/Header";
 
 export const StudentLayout = () => {
 	return (
 		<>
 			<Header />
-			<div className="min-h-screen">
+			<Box sx={{ minHeight: "100vh" }}>
 				<Outlet />
-			</div>
-			<Footer />
+			</Box>
 		</>
 	);
 };

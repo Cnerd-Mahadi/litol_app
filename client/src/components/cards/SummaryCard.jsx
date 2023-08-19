@@ -1,35 +1,22 @@
-import { CardActionArea, Link } from "@mui/material";
+import { CardActionArea } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
+import Image from "mui-image";
+import { PropTypes } from "prop-types";
+import { Link } from "../ui/Link";
 
 export const SummaryCard = ({ id, title, details, image }) => {
-	console.log(title, details, id);
 	return (
-		<Link href={"/student/summary/" + id} underline="none">
+		<Link to={`/student/summary/${id}`} underline="none">
 			<Card sx={{ width: 240, margin: "20px" }}>
 				<CardActionArea>
-					<CardMedia
-						component="img"
-						height="140"
-						image={image}
-						alt="green iguana"
-					/>
+					<Image height={140} src={image} duration={1000} />
 					<CardContent>
 						<Typography gutterBottom variant="h6" component="div">
 							{title}
 						</Typography>
-						<Typography
-							variant="body2"
-							color="text.primary"
-							sx={{
-								overflow: "hidden",
-								textOverflow: "ellipsis",
-								display: "-webkit-box",
-								WebkitLineClamp: "1",
-								WebkitBoxOrient: "vertical",
-							}}>
+						<Typography variant="body2" color="text.primary" noWrap>
 							{details}
 						</Typography>
 					</CardContent>
@@ -37,4 +24,11 @@ export const SummaryCard = ({ id, title, details, image }) => {
 			</Card>
 		</Link>
 	);
+};
+
+SummaryCard.propTypes = {
+	id: PropTypes.string.isRequired,
+	title: PropTypes.string.isRequired,
+	details: PropTypes.string.isRequired,
+	image: PropTypes.string.isRequired,
 };

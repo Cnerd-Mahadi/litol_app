@@ -1,12 +1,12 @@
 import { createBrowserRouter, redirect } from "react-router-dom";
 import App from "./App";
-import { MindMapCanvas } from "./layouts/mindmap/MindMapCanvas";
-import { MindMapCanvasDetails } from "./layouts/mindmap/MindMapCanvasDetails";
-import { Error } from "./pages/Error";
+import { Error } from "./components/layouts/Error";
+import { MindMapCanvas } from "./components/layouts/mindmap/MindMapCanvas";
+import { MindMapCanvasDetails } from "./components/layouts/mindmap/MindMapCanvasDetails";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { Content } from "./pages/student/Content";
-import { FeynmanLayout } from "./pages/student/FeynmanLayout";
+import { Feynman } from "./pages/student/Feynman";
 import { LearnDetails } from "./pages/student/LearnDetails";
 import { MindMap } from "./pages/student/MindMap";
 import { Note } from "./pages/student/Note";
@@ -16,7 +16,7 @@ import { StudentLayout } from "./pages/student/StudentLayout";
 import { Subject } from "./pages/student/Subject";
 import { Summary } from "./pages/student/Summary";
 import { SummaryDetails } from "./pages/student/SummaryDetails";
-import { getLocalData } from "./utilities/utility";
+import { getLocalData } from "./utils";
 
 export const Router = createBrowserRouter([
 	{
@@ -28,7 +28,10 @@ export const Router = createBrowserRouter([
 				index: true,
 				element: <SignIn />,
 				loader: () => {
-					return getLocalData("userData") ? redirect("/student") : null;
+					const localUserData = getLocalData("userData");
+					console.log(localUserData, "SIGN");
+					const auth = localUserData ? localUserData.token : null;
+					return auth ? redirect("/student") : null;
 				},
 			},
 			{
@@ -39,7 +42,10 @@ export const Router = createBrowserRouter([
 				path: "/student",
 				element: <StudentLayout />,
 				loader: () => {
-					return getLocalData("userData") ? null : redirect("/");
+					const localUserData = getLocalData("userData");
+					console.log(localUserData, "SL");
+					const auth = localUserData ? localUserData.token : null;
+					return auth ? null : redirect("/");
 				},
 				children: [
 					{
@@ -88,7 +94,7 @@ export const Router = createBrowserRouter([
 					},
 					{
 						path: "/student/feynman",
-						element: <FeynmanLayout />,
+						element: <Feynman />,
 					},
 				],
 			},
