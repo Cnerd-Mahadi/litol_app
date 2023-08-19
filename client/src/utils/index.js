@@ -11,8 +11,8 @@ export const getLocalData = (key) => {
 
 export const localUserData = getLocalData("userData");
 
-export const baseURL = "http://127.0.0.1:8000/api/";
-// "https://litolapi-production.up.railway.app/api/";
+export const baseURL = "https://litolapi-production.up.railway.app/api/";
+// "http://127.0.0.1:8000/api/";
 
 export const queryClient = new QueryClient();
 
