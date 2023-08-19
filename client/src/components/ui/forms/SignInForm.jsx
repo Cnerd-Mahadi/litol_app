@@ -2,25 +2,21 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormHelperText } from "@mui/material";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
 import { Box } from "@mui/system";
 import { useForm } from "react-hook-form";
 
 import { useNavigate } from "react-router-dom";
 import { useMutateQuery } from "src/hooks/useMutateQuery";
+import { setLocalData } from "src/utils";
 import { signInSchema } from "src/validations";
 import { InputField } from "../InputField";
 import { InputFieldPassword } from "../InputFieldPassword";
+import { Link } from "../Link";
 
 export const SignInForm = () => {
 	const navigate = useNavigate();
-	const {
-		isLoading,
-		mutate,
-		data: response,
-	} = useMutateQuery("login", "login");
-
-	console.log(response);
+	const { isLoading, mutate, error } = useMutateQuery("login", "login");
+	const unAuthorized = error?.response?.status === 401;
 
 	const { handleSubmit, control } = useForm({
 		defaultValues: {
@@ -31,13 +27,14 @@ export const SignInForm = () => {
 		resolver: yupResolver(signInSchema),
 	});
 
-	const onSubmit = (data) => {
+	const onSubmit = async (data) => {
 		console.log(data);
-		try {
-			mutate(data);
-		} catch (error) {
-			console.log(error);
-		}
+		mutate(data, {
+			onSuccess: (response) => {
+				setLocalData("userData", response.data);
+				navigate("/student");
+			},
+		});
 	};
 
 	return (
@@ -65,9 +62,11 @@ export const SignInForm = () => {
 					/>
 				</Grid>
 			</Grid>
-			<FormHelperText error={true} sx={{ textAlign: "center" }}>
-				Invalid username or password
-			</FormHelperText>
+			{unAuthorized && (
+				<FormHelperText error={true} sx={{ textAlign: "center" }}>
+					{error?.response?.data?.message}
+				</FormHelperText>
+			)}
 			<Button
 				disabled={isLoading}
 				type="submit"
@@ -83,7 +82,7 @@ export const SignInForm = () => {
 					sx={{
 						textAlign: "end",
 					}}>
-					<Link href="/signup" variant="body2">
+					<Link to="/signup" variant="body2">
 						{"Don't have an account? Sign Up"}
 					</Link>
 				</Grid>

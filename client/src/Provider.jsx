@@ -1,14 +1,12 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { PropTypes } from "prop-types";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "react-query";
 import { RouterProvider } from "react-router-dom";
 import { ReactFlowProvider } from "reactflow";
 
 import { Router } from "./Router";
-import { AuthProvider } from "./contexts/Auth";
 import { theme } from "./styles/theme";
-
-const queryClient = new QueryClient();
+import { queryClient } from "./utils";
 
 export const Provider = ({ children }) => {
 	return (
@@ -16,9 +14,7 @@ export const Provider = ({ children }) => {
 			<CssBaseline />
 			<QueryClientProvider client={queryClient}>
 				<ReactFlowProvider>
-					<AuthProvider>
-						<RouterProvider router={Router}>{children}</RouterProvider>
-					</AuthProvider>
+					<RouterProvider router={Router}>{children}</RouterProvider>
 				</ReactFlowProvider>
 			</QueryClientProvider>
 		</ThemeProvider>

@@ -1,9 +1,10 @@
 import { Box } from "@mui/system";
 import { useParams } from "react-router-dom";
-import { useGraphQuery } from "../../hooks/useGraphQuery";
-import { contentsQuery } from "../../utilities/graphqlQueries";
-import { Loading } from "../Loading";
-import { TopicCard } from "./../../components/cards/TopicCard";
+
+import { TopicCard } from "src/components/cards/TopicCard";
+import { Loading } from "src/components/layouts/Loading";
+import { useGraphQuery } from "src/hooks/useGraphQuery";
+import { contentsQuery } from "src/utils/graphqlQueries";
 
 const showContents = ({ title, subjectRef, image, sys }) => {
 	return (

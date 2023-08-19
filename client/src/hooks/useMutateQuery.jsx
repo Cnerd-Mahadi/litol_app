@@ -1,8 +1,10 @@
 import { useMutation } from "react-query";
 import { useAxios } from "./useAxios";
 
-export const useMutateQuery = (key, url) => {
-	const axios = useAxios();
-	console.log(url);
-	return useMutation([key], async (data) => await axios.post(url, data));
+export const useMutateQuery = (key, url, header = "application/json") => {
+	const axios = useAxios(header);
+	return useMutation({
+		mutationKey: [key],
+		mutationFn: async (data) => await axios.post(url, data),
+	});
 };

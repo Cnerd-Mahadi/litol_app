@@ -28,10 +28,15 @@ class ContentController extends Controller
         return ResponseHelper::success($this->commonService->checkUniqueTitle($request->title, $request->collection, $request->user_id));
     }
 
+    public function titleCheckUpdated(Request $request)
+    {
+        return ResponseHelper::success($this->commonService->checkUniqueTitleUpdated($request->title, $request->id, $request->collection, $request->user_id));
+    }
+
     public function saveContent(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => ['required', 'string', 'max:255', new BeUniqueTitle('contents')],
+            'title' => ['required', 'string', 'max:255', new BeUniqueTitle('contents', $request->user_id)],
             'image' => 'required|image',
             'details' => 'required|string',
         ]);

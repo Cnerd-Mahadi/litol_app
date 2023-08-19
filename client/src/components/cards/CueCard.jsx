@@ -1,15 +1,15 @@
-import { Button, Paper, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
 
-export const CueButtonStyle = {
+const cueButton = {
 	display: "flex",
-	gap: "25px",
+	gap: 4,
 	backgroundColor: "#F9FCFB",
 	color: "#2C3333",
-	padding: "40px",
+	padding: 6,
 	height: "200px",
 	width: "500px",
-	borderRadius: "20px",
+	borderRadius: "15px",
 	"&:hover": {
 		backgroundColor: "#04293A",
 		color: "white",
@@ -18,9 +18,9 @@ export const CueButtonStyle = {
 
 export const CueCard = ({ image, text }) => {
 	return (
-		<Paper elevation={3} sx={{ width: "100%", borderRadius: "48px" }}>
-			<Button variant="contained" sx={CueButtonStyle}>
-				<img src={image} alt="learn" width={100} height={100} />
+		<Paper elevation={3} sx={{ width: "100%", borderRadius: "15px" }}>
+			<Button variant="contained" sx={cueButton}>
+				<Box component="img" src={image} alt={text} width={100} height={100} />
 				<Typography variant="h4">{text}</Typography>
 			</Button>
 		</Paper>

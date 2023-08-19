@@ -1,17 +1,23 @@
 import axios from "axios";
-import { useContext } from "react";
-import { AuthContext } from "src/contexts/Auth";
-import { baseURL } from "src/utils";
+import { PropTypes } from "prop-types";
+import { baseURL, getLocalData } from "src/utils";
 
-export const useAxios = () => {
-	const auth = useContext(AuthContext).auth;
+export const useAxios = (header) => {
+	const localUserData = getLocalData("userData");
 	const instance = axios.create({
 		baseURL: baseURL,
+		headers: {
+			"Content-Type": header,
+		},
 	});
 
-	instance.defaults.headers.common["Authorization"] = auth
-		? `Bearer ${auth.token}`
+	instance.defaults.headers.common["Authorization"] = localUserData
+		? `Bearer ${localUserData.token}`
 		: "";
 
 	return instance;
+};
+
+useAxios.propTypes = {
+	header: PropTypes.string.isRequired,
 };

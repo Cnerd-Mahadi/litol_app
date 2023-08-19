@@ -1,18 +1,13 @@
-import { Add, Clear } from "@mui/icons-material";
-import { IconButton, Paper, TextField, Typography } from "@mui/material";
+import { Container, Paper, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import { Controller, useFieldArray } from "react-hook-form";
-import { InputField } from "../../components/InputField";
-import { NoteCard } from "../../components/cards/NoteCard";
-import { NotAvailable } from "../../components/common/NotAvailable";
-import { ProgressButton } from "../../components/common/ProgressButton";
-import { SnackAlert } from "../../components/common/SnackAlert";
-import { useGetQuery } from "../../hooks/useGetQuery";
-import { ContentForm } from "../../layouts/forms/ContentForm";
-import { NoteServices } from "../../services/NoteServices";
-import { getHeader, getLocalData, headerType } from "../../utilities/utility";
-import { Loading } from "../Loading";
+import { NoteCard } from "src/components/cards/NoteCard";
+import { FormHead } from "src/components/layouts/FormHead";
+import { Loading } from "src/components/layouts/Loading";
+import { NotAvailable } from "src/components/ui/NotAvailable";
+import { NoteForm } from "src/components/ui/forms/NoteForm";
+import { useGetQuery } from "src/hooks/useGetQuery";
+import { localUserData } from "src/utils";
+import { images } from "src/utils/resources";
 
 const getContents = ({ data, id }) => {
 	return (
@@ -20,170 +15,32 @@ const getContents = ({ data, id }) => {
 	);
 };
 
-const localUserData = getLocalData("userData");
+const paper = {
+	pt: 2,
+	pb: 5,
+	mt: 12,
+	mb: 6,
+	backgroundColor: "#fafafa",
+	borderRadius: "48px 48px 0px 0px",
+};
 
 export const Note = () => {
-	const { isLoading, data } = useGetQuery(
+	const { isLoading, data: response } = useGetQuery(
 		"student/notes",
-		`student/notes/${localUserData.userInfo.id}`,
-		getHeader(headerType.tokenize, localUserData.token)
+		`student/notes/${localUserData.userInfo.id}`
 	);
-	const {
-		handleSubmit,
-		control,
-		onSubmit,
-		loading,
-		snack: { open, message, severity },
-		setSnack,
-	} = NoteServices();
-	const { fields, append, remove } = useFieldArray({
-		control,
-		name: "cues",
-	});
+
+	const notes = response ? response.data.notes : [];
 
 	if (isLoading) return <Loading />;
 
 	return (
 		<>
-			<ContentForm
-				maxWidth="sm"
-				headerImage="/image/basic/cornell.png"
-				headerTitle="Create New Note"
-				submitHandler={handleSubmit}
-				onSubmit={onSubmit}>
-				<Grid item xs={12}>
-					<InputField id="title" type="text" label="Title" control={control} />
-				</Grid>
-
-				<Grid item xs={12}>
-					<Controller
-						name={"details"}
-						control={control}
-						render={({ field, fieldState }) => (
-							<TextField
-								required
-								label="Details"
-								fullWidth
-								multiline
-								rows={2}
-								onChange={field.onChange}
-								onBlur={field.onBlur}
-								value={field.value}
-								error={fieldState.error ? true : false}
-								helperText={fieldState.error?.message}
-							/>
-						)}
-					/>
-				</Grid>
-
-				{fields.map((item, index) => (
-					<Grid
-						key={item.id}
-						width={"100%"}
-						container
-						spacing={2}
-						marginTop={1}
-						marginLeft={0}>
-						<Grid item xs={3}>
-							<Controller
-								name={`cues[${index}].key`}
-								control={control}
-								render={({ field, fieldState }) => (
-									<TextField
-										required
-										fullWidth
-										label="Key"
-										value={field.value}
-										onChange={field.onChange}
-										onBlur={field.onBlur}
-										error={fieldState.error ? true : false}
-										helperText={fieldState.error?.message}
-									/>
-								)}
-							/>
-						</Grid>
-						<Grid item xs={7}>
-							<Controller
-								name={`cues[${index}].details`}
-								control={control}
-								render={({ field, fieldState }) => (
-									<TextField
-										required
-										fullWidth
-										label="Details"
-										multiline
-										rows={1}
-										value={field.value}
-										onChange={field.onChange}
-										onBlur={field.onBlur}
-										error={fieldState.error ? true : false}
-										helperText={fieldState.error?.message}
-									/>
-								)}
-							/>
-						</Grid>
-						<Grid item xs={1}>
-							<IconButton
-								sx={{
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "center",
-									mt: 1,
-								}}
-								aria-label="add"
-								color="primary"
-								onClick={() => {
-									console.log(index, "INFD", fields.length);
-									append({
-										key: "",
-										details: "",
-									});
-								}}>
-								<Add />
-							</IconButton>
-						</Grid>
-						<Grid item xs={1}>
-							<IconButton
-								sx={{
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "center",
-									mt: 1,
-								}}
-								aria-label="delete"
-								color="primary"
-								disabled={fields.length === 1}
-								onClick={() => {
-									remove(index);
-								}}>
-								<Clear color={fields.length === 1 ? "inherit" : "error"} />
-							</IconButton>
-						</Grid>
-					</Grid>
-				))}
-
-				<Grid
-					item
-					xs={12}
-					sx={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-					}}>
-					<ProgressButton loading={loading} text={"Create New Note"} />
-				</Grid>
-			</ContentForm>
-
-			<Paper
-				elevation={3}
-				sx={{
-					pt: 2,
-					pb: 5,
-					mt: 12,
-					mb: 6,
-					backgroundColor: "#fafafa",
-					borderRadius: "48px 48px 0px 0px",
-				}}>
+			<Container component="main" maxWidth="sm">
+				<FormHead icon={images.note} title="Create New Note" />
+				<NoteForm />
+			</Container>
+			<Paper elevation={3} sx={paper}>
 				<Typography
 					variant="h3"
 					sx={{
@@ -194,28 +51,21 @@ export const Note = () => {
 					Note Gallery
 				</Typography>
 				<Box>
-					{data.notes.length ? (
+					{notes.length ? (
 						<Box
-							component={"div"}
 							sx={{
 								display: "flex",
 								flexWrap: "wrap",
 								justifyContent: "center",
 								py: 3,
 							}}>
-							{data.notes.map(getContents)}
+							{notes.map(getContents)}
 						</Box>
 					) : (
 						<NotAvailable contentType="note" />
 					)}
 				</Box>
 			</Paper>
-			<SnackAlert
-				open={open}
-				severity={severity}
-				message={message}
-				handleSnack={setSnack}
-			/>
 		</>
 	);
 };

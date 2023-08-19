@@ -5,15 +5,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { SignInForm } from "src/components/ui/forms/SignInForm";
-import { signInImage } from "src/utils";
-
-const image = {
-	backgroundImage: `url(${signInImage})`,
-	backgroundRepeat: "no-repeat",
-	backgroundSize: "cover",
-	backgroundPosition: "center",
-	height: "640px",
-};
+import { images } from "src/utils/resources";
 
 const container = {
 	marginTop: 8,
@@ -25,7 +17,16 @@ const container = {
 export const SignIn = () => {
 	return (
 		<Grid container component="main">
-			<Grid item xs={false} md={6} lg={7} sx={image} />
+			<Grid item xs={false} md={6} lg={7}>
+				<Box
+					component="img"
+					alt="sign-in"
+					src={images.signIn}
+					height={"640px"}
+					width="100%"
+					sx={{ objectFit: "cover" }}
+				/>
+			</Grid>
 			<Grid item xs={12} md={6} lg={5} component={Paper} elevation={6}>
 				<Box sx={container}>
 					<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>

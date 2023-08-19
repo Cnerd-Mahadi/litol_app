@@ -30,7 +30,6 @@ class FeynmanServices
     {
         $feynman = $this->checkRequested($request);
         $user = $this->firebaseService->getDocument($request->user_id, 'users');
-
         if ($feynman->found)
             return ResponseHelper::success([
                 'accepted' => false,

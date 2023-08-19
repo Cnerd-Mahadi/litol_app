@@ -22,7 +22,7 @@ export const InputFieldPassword = ({ id, control, ...props }) => {
 			control={control}
 			render={({ field, fieldState }) => (
 				<FormControl margin="none" fullWidth>
-					<InputLabel>Password</InputLabel>
+					<InputLabel>{props.label}</InputLabel>
 					<OutlinedInput
 						{...props}
 						type={showPassword ? "text" : "password"}
@@ -50,4 +50,5 @@ export const InputFieldPassword = ({ id, control, ...props }) => {
 InputFieldPassword.propTypes = {
 	id: PropTypes.string.isRequired,
 	control: PropTypes.object.isRequired,
+	label: PropTypes.string.isRequired,
 };

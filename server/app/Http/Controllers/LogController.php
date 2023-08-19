@@ -40,10 +40,9 @@ class LogController extends Controller
         }
 
         if (!$user) {
-            return ResponseHelper::success([
-                'login' => false,
-                'message' => 'Invalid username or password',
-            ]);
+            return ResponseHelper::error([
+                'message' => 'Invalid username or password'
+            ], 401);
         }
 
         try {

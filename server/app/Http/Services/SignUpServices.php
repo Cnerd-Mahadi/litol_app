@@ -25,53 +25,20 @@ class SignUpServices
             'username' => $request->username,
             'password' => Hash::make($request->password, ['rounds' => 5]),
             'email' => $request->email,
-            'role' => $request->role,
             'dob' => $request->dob,
         ];
         return $this->userServices->saveUser($user);
     }
 
-    public function createCreator(Request $request)
+    public function checkValidation($request)
     {
-        $user = [
-            'username' => $request->username,
-            'password' => Hash::make($request->password, ['rounds' => 5]),
-            'email' => $request->email,
-            'role' => $request->role,
-            'basic' => [
-                'bio' => $request->bio,
-                'age' => $request->age,
-                'dob' => $request->dob,
-                'gender' => $request->gender,
-                'phone' => $request->phone
-            ]
-        ];
-        return $this->userServices->saveUser($user);
-    }
-
-
-    public function checkValidation($request, $role)
-    {
-        if ($role === "student") {
-            return Validator::make($request->all(), [
-                "username" => ['required', 'string', 'max:255', new BeUniqueUser],
-                "password" => 'required|string',
-                "dob" => 'required|string',
-                "email" => ['required', 'email', new BeUniqueEmail],
-            ]);
-
-        } else if ($role === "creator") {
-            return Validator::make($request->all(), [
-                "username" => ['required', 'string', 'max:255', new BeUniqueUser],
-                "password" => 'required|string',
-                'gender' => 'required|string',
-                "age" => 'required|integer',
-                "dob" => 'required|string',
-                "email" => ['required', 'email', new BeUniqueEmail],
-                "phone" => 'required|string',
-                "bio" => 'required|string',
-            ]);
-        }
+        return Validator::make($request->all(), [
+            "username" => ['required', 'string', 'max:255', new BeUniqueUser],
+            "password" => 'required|string',
+            "confirmPassword" => 'required|string|same:password',
+            "dob" => 'required|string',
+            "email" => ['required', 'email', new BeUniqueEmail],
+        ]);
     }
 
 }

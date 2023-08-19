@@ -1,40 +1,34 @@
 import { Button, Chip, Paper, Typography } from "@mui/material";
+import { PropTypes } from "prop-types";
 import { useContext } from "react";
-import { useQuery } from "react-query";
-import { FeynmanContext } from "../../services/FeymanServices";
-import { contentFeymanQuery, requestUrl } from "../../utilities/graphqlQueries";
+import { FeynmanContext } from "src/contexts/FeynmanProvider";
+import { useGraphQuery } from "src/hooks/useGraphQuery";
+import { contentFeymanQuery } from "src/utils/graphqlQueries";
+
+const paper = {
+	display: "flex",
+	flexDirection: "column",
+	alignItems: "start",
+	gap: 2,
+	px: 4,
+	py: 2,
+	my: 3,
+	width: "100%",
+	backgroundColor: "#fafafa",
+	borderRadius: "24px",
+};
 
 export const FeynmanCard = ({ id, data }) => {
 	const feynmanContext = useContext(FeynmanContext);
-	const { isLoading, data: content } = useQuery(["feynItems", id], async () => {
-		return fetch(requestUrl, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: "Bearer DC4u9BY4yugEYxmzEadoAdHbFfk6GawAZXwf6uT8llo",
-			},
-			body: JSON.stringify({
-				query: contentFeymanQuery(data.contentId),
-			}),
-		}).then((res) => res.json());
-	});
+	console.log(feynmanContext);
+	const { isLoading, data: content } = useGraphQuery(
+		["feynItems", id],
+		contentFeymanQuery(data.contentId)
+	);
 
 	return (
 		!isLoading && (
-			<Paper
-				elevation={3}
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "start",
-					gap: 2,
-					px: 4,
-					py: 2,
-					my: 3,
-					width: "100%",
-					backgroundColor: "#fafafa",
-					borderRadius: "24px",
-				}}>
+			<Paper elevation={3} sx={paper}>
 				<Typography
 					variant="h6"
 					sx={{
@@ -89,15 +83,22 @@ export const FeynmanCard = ({ id, data }) => {
 				<Button
 					variant="contained"
 					onClick={() => {
-						feynmanContext.setContentInfo({
-							contentData: content.data.content,
-							id: id,
+						feynmanContext.setInvitation({
+							open: true,
+							info: {
+								contentData: content.data.content,
+								id: id,
+							},
 						});
-						feynmanContext.setOverlay(true);
 					}}>
 					Resolve
 				</Button>
 			</Paper>
 		)
 	);
+};
+
+FeynmanCard.propTypes = {
+	id: PropTypes.string.isRequired,
+	data: PropTypes.object.isRequired,
 };

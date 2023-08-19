@@ -39,6 +39,8 @@ Route::post('/signUp', [SignUpController::class, 'signUpSubmit']);
 Route::get('/student/usernameCheck', [StudentController::class, 'usernameCheck']);
 Route::get('/student/emailCheck', [StudentController::class, 'emailCheck']);
 Route::get('/student/titleCheck', [ContentController::class, 'titleCheck'])->middleware('validStudent');
+Route::get('/student/titleUpdateCheck', [ContentController::class, 'titleCheckUpdated'])->middleware('validStudent');
+
 
 
 Route::post('/student/submitSummary', [SummaryController::class, 'submitSummary'])->middleware('validStudent');

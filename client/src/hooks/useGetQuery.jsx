@@ -5,10 +5,13 @@ export const useGetQuery = (key, url, payload) => {
 	const axios = useAxios();
 
 	return useQuery(
-		[key],
+		key,
 		async () =>
 			await axios.get(url, {
 				params: payload,
-			})
+			}),
+		{
+			staleTimeout: 1000,
+		}
 	);
 };

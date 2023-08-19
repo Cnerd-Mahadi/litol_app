@@ -1,16 +1,19 @@
-import { CardActionArea, Link } from "@mui/material";
+import { CardActionArea } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
+import { PropTypes } from "prop-types";
+
+import Image from "mui-image";
+import { Link } from "../ui/Link";
 
 export const SubjectCard = ({ image, subject, id }) => {
 	console.log(image);
 	return (
-		<Link href={"/student/learn/subject/" + id} underline="none">
+		<Link to={`/student/learn/subject/${id}`} underline="none">
 			<Card sx={{ width: 280, margin: "20px" }}>
 				<CardActionArea>
-					<CardMedia component="img" height="140" image={image} alt="none" />
+					<Image height={140} src={image} alt={subject} duration={1000} />
 					<CardContent>
 						<Typography gutterBottom variant="h5" component="div">
 							{subject}
@@ -20,4 +23,10 @@ export const SubjectCard = ({ image, subject, id }) => {
 			</Card>
 		</Link>
 	);
+};
+
+SubjectCard.propTypes = {
+	image: PropTypes.string.isRequired,
+	subject: PropTypes.string.isRequired,
+	id: PropTypes.string.isRequired,
 };
