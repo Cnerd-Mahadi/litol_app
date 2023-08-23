@@ -31,7 +31,10 @@ export const LearnDetails = () => {
 	const { snack, setSnack } = useSnack();
 	const axios = useAxios();
 
-	const { isLoading, data } = useGraphQuery("content", contentQuery(topicId));
+	const { isLoading, data } = useGraphQuery(
+		["content", topicId],
+		contentQuery(topicId)
+	);
 	const content = data ? data.data.content : null;
 
 	const { data: collection } = useQuery(
@@ -56,7 +59,7 @@ export const LearnDetails = () => {
 	const contents = collection ? collection.data.contentCollection.items : null;
 
 	const { data: requested } = useGetQuery(
-		"feynman/requestCheck",
+		["feynman/requestCheck", topicId, localUserData().userInfo.id],
 		"student/feynman/requestCheck",
 		{
 			content_id: topicId,

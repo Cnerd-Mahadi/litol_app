@@ -1,4 +1,4 @@
-import { checkUniqueValue, isValidImage, localUserData } from "src/utils";
+import { isValidImage } from "src/utils";
 import * as yup from "yup";
 
 export const signInSchema = yup
@@ -10,35 +10,13 @@ export const signInSchema = yup
 
 export const signUpSchema = yup
 	.object({
-		username: yup
-			.string()
-			.required()
-			.min(3)
-			.max(20)
-			.test(
-				"usernameCheck",
-				"Username is not available",
-				async function (value) {
-					return await checkUniqueValue("student/usernameCheck", {
-						username: value,
-					});
-				}
-			),
+		username: yup.string().required().min(3).max(20),
 		dob: yup
 			.date()
 			.max(new Date(), "Date must be before today")
 			.min(new Date(Date.parse("1900-01-01")), "Date must be after year 1900")
 			.typeError("Date must be a valid date"),
-		email: yup
-			.string()
-			.email()
-			.required()
-			.max(50)
-			.test("emailCheck", "Email is not available", async function (value) {
-				return await checkUniqueValue("student/emailCheck", {
-					email: value,
-				});
-			}),
+		email: yup.string().email().required().max(50),
 		password: yup
 			.string()
 			.required()
@@ -57,18 +35,7 @@ export const signUpSchema = yup
 
 export const summarySchema = yup
 	.object({
-		title: yup
-			.string()
-			.required()
-			.min(3)
-			.max(20)
-			.test("titleCheck", "Title is not available", async function (value) {
-				return await checkUniqueValue("student/titleCheck", {
-					title: value,
-					collection: "summaries",
-					user_id: localUserData().userInfo.id,
-				});
-			}),
+		title: yup.string().required().min(3).max(20),
 		details: yup.string().required().max(350),
 		keywords: yup
 			.array()
@@ -95,18 +62,7 @@ export const summarySchema = yup
 	.required();
 
 export const noteSchema = yup.object().shape({
-	title: yup
-		.string()
-		.required()
-		.min(3)
-		.max(20)
-		.test("titleCheck", "Title is not available", async function (value) {
-			return await checkUniqueValue("student/titleCheck", {
-				title: value,
-				collection: "notes",
-				user_id: localUserData().userInfo.id,
-			});
-		}),
+	title: yup.string().required().min(3).max(20),
 	cues: yup.array().of(
 		yup.object().shape({
 			key: yup
@@ -124,36 +80,12 @@ export const noteSchema = yup.object().shape({
 });
 
 export const mindmapTitleSchema = yup.object().shape({
-	title: yup
-		.string()
-		.required()
-		.min(3)
-		.max(20)
-		.test("titleCheck", "Title is not available", async function (value) {
-			return await checkUniqueValue("student/titleCheck", {
-				title: value,
-				collection: "mindmaps",
-				user_id: localUserData().userInfo.id,
-			});
-		}),
+	title: yup.string().required().min(3).max(20),
 });
 
-export const mindmapTitleUpdatedSchema = (mindmapId) =>
-	yup.object().shape({
-		title: yup
-			.string()
-			.required()
-			.min(3)
-			.max(20)
-			.test("titleCheck", "Title is not available", async function (value) {
-				return await checkUniqueValue("student/titleUpdateCheck", {
-					title: value,
-					id: mindmapId,
-					collection: "mindmaps",
-					user_id: localUserData().userInfo.id,
-				});
-			}),
-	});
+export const mindmapTitleUpdatedSchema = yup.object().shape({
+	title: yup.string().required().min(3).max(20),
+});
 
 export const feynmanSchema = yup
 	.object({

@@ -7,6 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useCustomValidation } from "src/hooks/useCustomValidation";
 import { useMutateQuery } from "src/hooks/useMutateQuery";
 import { useSnack } from "src/hooks/useSnack";
 import { localUserData } from "src/utils";
@@ -25,12 +26,18 @@ export const MindMapCanvas = () => {
 		"student/submitMindMap"
 	);
 
-	const { handleSubmit, control } = useForm({
+	const { handleSubmit, control, ...methods } = useForm({
 		defaultValues: {
 			title: "",
 		},
 		mode: "onSubmit",
 		resolver: yupResolver(mindmapTitleSchema),
+	});
+
+	useCustomValidation("title", "student/titleCheck", methods, "Title", {
+		title: methods.watch("title"),
+		collection: "mindmaps",
+		user_id: localUserData().userInfo.id,
 	});
 
 	const onSubmit = (data) => {

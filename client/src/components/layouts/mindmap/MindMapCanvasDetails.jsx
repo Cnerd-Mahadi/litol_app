@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAxios } from "src/hooks/useAxios";
+import { useCustomValidation } from "src/hooks/useCustomValidation";
 import { useMutateQuery } from "src/hooks/useMutateQuery";
 import { useSnack } from "src/hooks/useSnack";
 import { localUserData } from "src/utils";
@@ -25,12 +26,19 @@ export const MindMapCanvasDetails = () => {
 	const { snack, setSnack } = useSnack();
 	const axios = useAxios();
 
-	const { handleSubmit, control, setValue } = useForm({
+	const { handleSubmit, control, setValue, ...methods } = useForm({
 		defaultValues: {
 			title: "",
 		},
 		mode: "onSubmit",
-		resolver: yupResolver(mindmapTitleUpdatedSchema(mindmapId)),
+		resolver: yupResolver(mindmapTitleUpdatedSchema),
+	});
+
+	useCustomValidation("title", "student/titleUpdateCheck", methods, "Title", {
+		title: methods.watch("title"),
+		id: mindmapId,
+		collection: "mindmaps",
+		user_id: localUserData().userInfo.id,
 	});
 
 	const { isLoading: isDataLoading } = useQuery(

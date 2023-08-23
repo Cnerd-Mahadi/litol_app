@@ -1,8 +1,9 @@
-import { Paper, Typography } from "@mui/material";
+import { Container, Paper, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { MindMapCard } from "src/components/cards/MindMapCard";
+import { FormHead } from "src/components/layouts/FormHead";
 import { Loading } from "src/components/layouts/Loading";
 import { Link } from "src/components/ui/Link";
 import { NotAvailable } from "src/components/ui/NotAvailable";
@@ -27,7 +28,7 @@ const paper = {
 
 export const MindMap = () => {
 	const { isLoading, data: response } = useGetQuery(
-		"student/mindmaps",
+		["student/mindmaps", localUserData().userInfo.id],
 		`student/mindmaps/${localUserData().userInfo.id}`
 	);
 
@@ -35,28 +36,8 @@ export const MindMap = () => {
 
 	return (
 		<>
-			<Grid
-				container
-				spacing={2}
-				maxWidth={"sm"}
-				display={"flex"}
-				justifyContent={"center"}
-				sx={{
-					m: "auto",
-				}}>
-				<Grid item xs={12} textAlign={"center"}>
-					<Box
-						component={"img"}
-						src={images.mindmap}
-						width={"50%"}
-						alt="mindmap-form"
-					/>
-				</Grid>
-				<Grid item xs={12}>
-					<Typography variant="h3" sx={{ textAlign: "center" }}>
-						Create Mind Map
-					</Typography>
-				</Grid>
+			<Container component="main" maxWidth="sm" sx={{ minHeight: "500px" }}>
+				<FormHead icon={images.mindmap} title="Create Mind Map" />
 				<Grid item xs={12}>
 					<Link to={`/student/mindmap/board/${localUserData().userInfo.id}`}>
 						<Button
@@ -68,7 +49,7 @@ export const MindMap = () => {
 						</Button>
 					</Link>
 				</Grid>
-			</Grid>
+			</Container>
 
 			<Paper elevation={3} sx={paper}>
 				<Typography

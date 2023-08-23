@@ -3,6 +3,7 @@ import { Box, Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
+import { useCustomValidation } from "src/hooks/useCustomValidation";
 import { useMutateQuery } from "src/hooks/useMutateQuery";
 import { useSnack } from "src/hooks/useSnack";
 import { setLocalData } from "src/utils";
@@ -18,7 +19,7 @@ export const SignUpForm = () => {
 	const { snack, setSnack } = useSnack();
 	const { isLoading, mutate } = useMutateQuery("signUp", "signUp");
 
-	const { handleSubmit, control } = useForm({
+	const { handleSubmit, control, ...methods } = useForm({
 		defaultValues: {
 			username: "",
 			dob: "2022-04-17",
@@ -30,7 +31,19 @@ export const SignUpForm = () => {
 		resolver: yupResolver(signUpSchema),
 	});
 
-	console.log(" DATA");
+	useCustomValidation(
+		"username",
+		"student/usernameCheck",
+		methods,
+		"Username",
+		{
+			username: methods.watch("username"),
+		}
+	);
+	useCustomValidation("email", "student/emailCheck", methods, "Email", {
+		email: methods.watch("email"),
+	});
+
 	const onSubmit = async (data) => {
 		console.log(" GORILLA");
 		const formData = {
@@ -48,7 +61,7 @@ export const SignUpForm = () => {
 					title: "Success",
 					message: "User created successfully!",
 				}));
-				setTimeout(() => navigate("/student"), 1900);
+				setTimeout(() => navigate("/student"), 1700);
 			},
 			onError: (error) => {
 				console.log(error);

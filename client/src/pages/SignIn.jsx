@@ -16,14 +16,14 @@ const container = {
 
 export const SignIn = () => {
 	return (
-		<Grid container component="main">
+		<Grid container component="main" sx={{ height: "100vh" }}>
 			<Grid item xs={false} md={6} lg={7}>
 				<Box
 					component="img"
 					alt="sign-in"
 					src={images.signIn}
-					height={"640px"}
 					width="100%"
+					height="100%"
 					sx={{ objectFit: "cover" }}
 				/>
 			</Grid>

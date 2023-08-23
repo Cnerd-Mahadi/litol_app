@@ -1,6 +1,7 @@
-import { Box, Typography } from "@mui/material";
+import { Container } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { FeynmanCard } from "src/components/cards/FeynmanCard";
+import { FormHead } from "src/components/layouts/FormHead";
 import { Loading } from "src/components/layouts/Loading";
 import { NotAvailable } from "src/components/ui/NotAvailable";
 import { useGetQuery } from "src/hooks/useGetQuery";
@@ -16,34 +17,8 @@ export const FeynmanGallery = () => {
 
 	return (
 		<>
-			<Grid
-				container
-				spacing={2}
-				maxWidth={"sm"}
-				display={"flex"}
-				justifyContent={"center"}
-				sx={{
-					m: "auto",
-				}}>
-				<Grid item xs={12} textAlign={"center"}>
-					<Box
-						component="img"
-						src={images.feynman}
-						width={"200px"}
-						alt="feynman-list"
-					/>
-				</Grid>
-				<Grid item xs={12}>
-					<Typography
-						variant="h4"
-						sx={{
-							fontWeight: 700,
-							textAlign: "center",
-							mb: 3,
-						}}>
-						Feyman Gallery
-					</Typography>
-				</Grid>
+			<Container component="main" maxWidth="md">
+				<FormHead icon={images.feynman} title="Feynman Gallery" />
 				<Grid item xs={12}>
 					{isLoading ? (
 						<Loading />
@@ -57,7 +32,7 @@ export const FeynmanGallery = () => {
 						<NotAvailable contentType="feynman request" />
 					)}
 				</Grid>
-			</Grid>
+			</Container>
 		</>
 	);
 };

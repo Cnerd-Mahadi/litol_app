@@ -21,7 +21,7 @@ const showContents = ({ title, subjectRef, image, sys }) => {
 export const Content = () => {
 	const { subjectId } = useParams();
 	const { isLoading, data } = useGraphQuery(
-		"contents",
+		["contents", subjectId],
 		contentsQuery(subjectId)
 	);
 

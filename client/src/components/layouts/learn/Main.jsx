@@ -18,7 +18,7 @@ function Main({ content }) {
 			</Typography>
 			<Divider />
 			<article>
-				<Typography gutterBottom>
+				<Typography component={"div"} gutterBottom>
 					{documentToReactComponents(content.details.json, {
 						renderMark: {
 							[MARKS.CODE]: (text) => (
@@ -28,9 +28,7 @@ function Main({ content }) {
 							),
 						},
 					})}
-				</Typography>
 
-				<Typography gutterBottom>
 					{documentToReactComponents(content.usefulLinks.json, {
 						renderMark: {
 							[MARKS.CODE]: (text) => (

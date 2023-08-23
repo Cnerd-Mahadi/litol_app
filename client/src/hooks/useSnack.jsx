@@ -4,8 +4,8 @@ const initSnackContext = {
 	open: false,
 	exit: true,
 	status: "success",
-	title: "BC",
-	message: "BC Ka reply",
+	title: "",
+	message: "",
 };
 
 export const useSnack = () => {

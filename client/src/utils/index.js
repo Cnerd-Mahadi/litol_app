@@ -14,11 +14,24 @@ export const localUserData = () => {
 };
 
 export const baseURL = "https://litolapi-production.up.railway.app/api/";
-//  "http://127.0.0.1:8000/api/";
+// "http://127.0.0.1:8000/api/";
 
 export const queryClient = new QueryClient();
 
-export const checkUniqueValue = async (url, params) => {
+let onlyUsedForDebouncedTimeout = null;
+export function debounce(cb, delay = 500) {
+	return (...args) => {
+		clearTimeout(onlyUsedForDebouncedTimeout);
+		return new Promise((resolve) => {
+			onlyUsedForDebouncedTimeout = setTimeout(() => {
+				const result = cb(...args);
+				resolve(result);
+			}, delay);
+		});
+	};
+}
+
+export const checkUniqueValue = debounce(async (url, params) => {
 	const response = await axios.get(baseURL + url, {
 		params: params,
 		headers: {
@@ -26,7 +39,7 @@ export const checkUniqueValue = async (url, params) => {
 		},
 	});
 	return response.data;
-};
+});
 
 export function isValidImage(value) {
 	const image = value && value[0];

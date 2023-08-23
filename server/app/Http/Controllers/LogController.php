@@ -6,7 +6,9 @@ use App\Helpers\ResponseHelper;
 use App\Http\Services\AuthServices;
 use App\Http\Services\LogServices;
 use App\Http\Services\SignUpServices;
+use App\Mail\ResetMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class LogController extends Controller
@@ -59,6 +61,31 @@ class LogController extends Controller
         } catch (\Throwable $th) {
             return ResponseHelper::error([
                 'message' => 'User could not be logged in',
+                'error' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function resetPasswordMail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'url' => ['required', 'string'],
+            'email' => ['required', 'string', 'email'],
+        ]);
+
+        if ($validator->fails()) {
+            return ResponseHelper::error($validator->errors());
+        }
+
+        try {
+            Mail::to($request->email)
+                ->queue(new ResetMail($request->url));
+
+            return ResponseHelper::success("Password reset mail sent successfully");
+
+        } catch (\Throwable $th) {
+            return ResponseHelper::error([
+                'message' => "Password reset mail sent failed",
                 'error' => $th->getMessage()
             ]);
         }

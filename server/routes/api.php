@@ -24,12 +24,14 @@ use Illuminate\Support\Facades\Route;
 // This is just the working or not test
 
 Route::get('/test', function () {
-    return "<h1>Well Hello There, API IN TESTED</h1>";
+    return view('reset');
+    // "<h1>Well Hello There, API IN TESTED</h1>";
 });
 
 // API starts from here
 
 Route::post('/login', [LogController::class, 'loginSubmit']);
+Route::get('/resetPassMail', [LogController::class, 'resetPasswordMail']);
 Route::post('/signUp', [SignUpController::class, 'signUpSubmit']);
 
 

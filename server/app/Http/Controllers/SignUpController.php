@@ -31,7 +31,7 @@ class SignUpController extends Controller
         try {
             $savedUser = $this->signupService->createStudent($request);
             return ResponseHelper::success([
-                'token' => $this->authService->generateAuthToken($savedUser->id(), $request->role),
+                'token' => $this->authService->generateAuthToken($savedUser->id()),
                 'userInfo' => [
                     'id' => $savedUser->id(),
                     'name' => $request->username,

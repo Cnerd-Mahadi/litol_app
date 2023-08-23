@@ -109,7 +109,7 @@ export const SummaryDetails = () => {
 							sx={{
 								mt: 2,
 							}}>
-							Show Details
+							{showDetails ? "Hide Details" : " Show Details"}
 						</Button>
 					</Grid>
 				</Grid>

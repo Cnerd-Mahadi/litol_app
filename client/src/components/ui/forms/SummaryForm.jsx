@@ -3,6 +3,7 @@ import { Box, Grid, Paper } from "@mui/material";
 import { MuiChipsInput } from "mui-chips-input";
 import { Controller, useForm } from "react-hook-form";
 import { ImageUpload } from "src/components/ui/ImageUpload";
+import { useCustomValidation } from "src/hooks/useCustomValidation";
 import { useMutateQuery } from "src/hooks/useMutateQuery";
 import { useSnack } from "src/hooks/useSnack";
 import { localUserData, queryClient } from "src/utils";
@@ -30,7 +31,7 @@ export const SummaryForm = () => {
 		fileAllowed
 	);
 
-	const { handleSubmit, control } = useForm({
+	const { handleSubmit, control, ...methods } = useForm({
 		defaultValues: {
 			title: "",
 			details: "",
@@ -39,6 +40,12 @@ export const SummaryForm = () => {
 		},
 		mode: "onSubmit",
 		resolver: yupResolver(summarySchema),
+	});
+
+	useCustomValidation("title", "student/titleCheck", methods, "Title", {
+		title: methods.watch("title"),
+		collection: "summaries",
+		user_id: localUserData().userInfo.id,
 	});
 
 	const onSubmit = (data) => {

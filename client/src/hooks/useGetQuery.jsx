@@ -11,7 +11,7 @@ export const useGetQuery = (key, url, payload) => {
 				params: payload,
 			}),
 		{
-			staleTimeout: 1000,
+			cacheTime: 1000,
 		}
 	);
 };

@@ -34,7 +34,7 @@ export const Note = () => {
 
 	return (
 		<>
-			<Container component="main" maxWidth="sm">
+			<Container component="main" maxWidth="sm" sx={{ minHeight: "500px" }}>
 				<FormHead icon={images.note} title="Create New Note" />
 				<NoteForm />
 			</Container>

@@ -23,5 +23,5 @@ export default function Sidebar({ tldr, type, children }) {
 Sidebar.propTypes = {
 	tldr: PropTypes.string.isRequired,
 	type: PropTypes.string.isRequired,
-	children: PropTypes.node.isRequired,
+	children: PropTypes.node,
 };

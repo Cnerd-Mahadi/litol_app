@@ -48,7 +48,7 @@ export const Summary = () => {
 
 	return (
 		<>
-			<Container component="main" maxWidth="sm">
+			<Container component="main" maxWidth="sm" sx={{ minHeight: "500px" }}>
 				<FormHead icon={images.summary} title="Create New Summary" />
 				<SummaryForm />
 			</Container>

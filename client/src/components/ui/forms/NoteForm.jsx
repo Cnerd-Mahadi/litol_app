@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { AddCircle, CancelRounded } from "@mui/icons-material";
 import { Box, Grid, IconButton } from "@mui/material";
 import { useFieldArray, useForm } from "react-hook-form";
+import { useCustomValidation } from "src/hooks/useCustomValidation";
 import { useMutateQuery } from "src/hooks/useMutateQuery";
 import { useSnack } from "src/hooks/useSnack";
 import { localUserData, queryClient } from "src/utils";
@@ -18,7 +19,7 @@ export const NoteForm = () => {
 		"student/submitNote"
 	);
 
-	const { handleSubmit, control } = useForm({
+	const { handleSubmit, control, ...methods } = useForm({
 		defaultValues: {
 			title: "",
 			cues: [
@@ -31,6 +32,12 @@ export const NoteForm = () => {
 		},
 		mode: "onSubmit",
 		resolver: yupResolver(noteSchema),
+	});
+
+	useCustomValidation("title", "student/titleCheck", methods, "Title", {
+		title: methods.watch("title"),
+		collection: "notes",
+		user_id: localUserData().userInfo.id,
 	});
 
 	const onSubmit = (data) => {
