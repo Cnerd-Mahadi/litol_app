@@ -28,7 +28,8 @@ class CommonServices
             ->where('authorId', '=', $userId)
             ->documents();
         $isSameValue = $this->firebaseService->getData($uniqueValue);
-        return sizeof($isSameValue) > 0 && $id != $isSameValue[0]->id ? false : true;
+        // dd((sizeof($isSameValue) > 0 && $id != $isSameValue[0]->id));
+        return (sizeof($isSameValue) > 0 && $id != $isSameValue[0]->id) ? false : true;
     }
 
     public function saveImageWithData($content, $request, $contentType, $collection)
@@ -75,5 +76,12 @@ class CommonServices
         $contentsSnap = $this->firebaseService->getCollection($collection)->where('authorId', '==', $authorId)
             ->documents();
         return $this->firebaseService->getDataWithImage($contentsSnap, $collection);
+    }
+
+    public function getContentCountByAuthor($authorId, $collection)
+    {
+        $contentsSnap = $this->firebaseService->getCollection($collection)->where('authorId', '==', $authorId)
+            ->documents();
+        return $this->firebaseService->getData($contentsSnap);
     }
 }

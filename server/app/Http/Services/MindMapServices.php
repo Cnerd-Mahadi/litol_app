@@ -80,7 +80,7 @@ class MindMapServices
         ];
 
         try {
-            $this->firebaseService->getCollection('mindmaps')->document($request->mindmap_id)->set($mindmap);
+            $this->firebaseService->getCollection('mindmaps')->document($request->id)->set($mindmap);
             return ResponseHelper::success('MindMap updated successfully');
 
         } catch (\Throwable $th) {

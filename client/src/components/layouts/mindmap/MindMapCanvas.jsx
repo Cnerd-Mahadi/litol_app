@@ -37,7 +37,7 @@ export const MindMapCanvas = () => {
 	useCustomValidation("title", "student/titleCheck", methods, "Title", {
 		title: methods.watch("title"),
 		collection: "mindmaps",
-		user_id: localUserData().userInfo.id,
+		user_id: localUserData().uid,
 	});
 
 	const onSubmit = (data) => {
@@ -45,7 +45,7 @@ export const MindMapCanvas = () => {
 			title: data.title,
 			nodes: JSON.stringify(nodes),
 			edges: JSON.stringify(edges),
-			user_id: localUserData().userInfo.id,
+			user_id: localUserData().uid,
 		};
 		if (nodes.length > 0) {
 			mutate(resultData, {

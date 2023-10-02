@@ -9,7 +9,12 @@ export default defineConfig({
 	server: {
 		port: 3000,
 	},
-	plugins: [react({ include: /\.(mdx|js|jsx|ts|tsx)$/ })],
+	plugins: [react()],
+	esbuild: {
+		loader: "jsx",
+		include: ["src/**/*.jsx", "src/**/*.js"],
+		exclude: [],
+	},
 	resolve: {
 		alias: {
 			src: "/src",

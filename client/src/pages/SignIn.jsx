@@ -1,43 +1,78 @@
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import { SignInForm } from "src/components/ui/forms/SignInForm";
-import { images } from "src/utils/resources";
-
-const container = {
-	marginTop: 8,
-	display: "flex",
-	flexDirection: "column",
-	alignItems: "center",
-};
+import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { BlurBackground } from "src/components/layouts/BlurBackground";
+import { Logo } from "src/components/layouts/partials/SideBar/Logo";
+import { signIn } from "src/services/firebase/googleSignIn";
+import { borderStyle } from "src/styles/components/Layouts";
+import { colors, colors as myColors } from "src/utils";
 
 export const SignIn = () => {
+	const theme = useTheme();
+	const navigate = useNavigate();
+
 	return (
-		<Grid container component="main" sx={{ height: "100vh" }}>
-			<Grid item xs={false} md={6} lg={7}>
-				<Box
-					component="img"
-					alt="sign-in"
-					src={images.signIn}
-					width="100%"
-					height="100%"
-					sx={{ objectFit: "cover" }}
-				/>
-			</Grid>
-			<Grid item xs={12} md={6} lg={5} component={Paper} elevation={6}>
-				<Box sx={container}>
-					<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-						<LockOutlinedIcon />
-					</Avatar>
-					<Typography component="h1" variant="h5">
-						Sign in
-					</Typography>
-					<SignInForm />
-				</Box>
-			</Grid>
-		</Grid>
+		<>
+			<BlurBackground />
+			<Stack
+				spacing={3}
+				sx={{
+					...borderStyle(theme),
+					backgroundColor: colors.white,
+					width: "25rem",
+					position: "absolute",
+					top: "50%",
+					left: "50%",
+					transform: "translate(-50%, -50%)",
+					padding: "1.5rem 4rem 4rem 4rem",
+				}}>
+				<Stack alignItems="center">
+					<Box component={"img"} pr={1} pb={1} src="/lock.png" width={45} />
+					<Logo fontSize="2.1rem" />
+				</Stack>
+				<Stack alignItems="center">
+					<Box
+						component={"img"}
+						pb={1}
+						textAlign="center"
+						src="/test.png"
+						width={250}
+					/>
+				</Stack>
+				<Typography
+					variant="h4"
+					textAlign={"center"}
+					color={myColors.text_main}>
+					Welcome,
+				</Typography>
+				<Stack spacing={2.5}>
+					<Button
+						variant="outlined"
+						sx={{
+							padding: "0.6rem 0.35rem",
+							borderRadius: "0.5rem",
+							textTransform: "uppercase",
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							gap: "0.7rem",
+						}}
+						onClick={() => {
+							signIn(navigate);
+						}}>
+						<Box
+							component={"img"}
+							src="/google.png"
+							width={27}
+							p={0.5}
+							sx={{
+								borderRadius: "50%",
+								backgroundColor: "white",
+							}}
+						/>
+						<Typography variant="h6">Sign In With Google</Typography>
+					</Button>
+				</Stack>
+			</Stack>
+		</>
 	);
 };

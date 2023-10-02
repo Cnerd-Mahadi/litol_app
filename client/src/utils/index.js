@@ -10,7 +10,7 @@ export const getLocalData = (key) => {
 };
 
 export const localUserData = () => {
-	return getLocalData("userData");
+	return getLocalData("user");
 };
 
 export const baseURL = "https://litolapi-production.up.railway.app/api/";
@@ -52,3 +52,37 @@ export function isValidImage(value) {
 		value[0].type === "image/jpg"
 	);
 }
+
+export const colors = {
+	black: "#000",
+	white: "#fff",
+
+	blue_light: "#e0f2fe",
+	blue: "#3b82f6",
+	blue_dark: "#2563eb",
+	blue_variant: "#60a5fa",
+
+	text_dark: "#334155",
+	text: "#475569",
+	text_light: "#94a3b8",
+
+	error_light: "#fecaca",
+	error: "#ef4444",
+
+	success_light: "#a7f3d0",
+	success: "#34d399",
+
+	divider: "#e4e4e7",
+	disabled: "#d4d4d4",
+};
+
+export const shadows = {
+	none: "none",
+	shadow_main:
+		"rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px",
+	shadow_small: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+	shadow_regular:
+		"0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+	shadow_medium:
+		"0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+};

@@ -1,4 +1,4 @@
-import { FeynmanForm } from "src/components/ui/forms/FeynmanForm";
+import { FeynmanForm } from "src/components/layouts/Feynman/FeynmanForm";
 import { FeynmanProvider } from "src/contexts/FeynmanProvider";
 import { FeynmanGallery } from "./FeynmanGallery";
 

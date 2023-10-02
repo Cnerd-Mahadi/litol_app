@@ -1,5 +1,11 @@
 import { AddCircle } from "@mui/icons-material";
-import { Box, Button, CircularProgress, IconButton } from "@mui/material";
+import {
+	Box,
+	Button,
+	CircularProgress,
+	IconButton,
+	useTheme,
+} from "@mui/material";
 import { useCallback, useMemo, useRef } from "react";
 import ReactFlow, {
 	Background,
@@ -13,7 +19,9 @@ import "reactflow/dist/style.css";
 import "./MindMap.css";
 
 import { PropTypes } from "prop-types";
+import { BiRightArrowCircle } from "react-icons/bi";
 import { InputField } from "src/components/ui/InputField";
+import { Link } from "src/components/ui/Link";
 import SnackAlert from "src/components/ui/SnackAlert";
 import { Node } from "./Node";
 
@@ -29,6 +37,7 @@ const form = {
 };
 
 export const MindMapBoard = ({ ...props }) => {
+	const theme = useTheme();
 	const {
 		isLoading,
 		handleSubmit,
@@ -114,6 +123,9 @@ export const MindMapBoard = ({ ...props }) => {
 				noValidate
 				onSubmit={handleSubmit(onSubmit)}
 				sx={form}>
+				<Link to="/student/mindmap">
+					<BiRightArrowCircle size={35} color={theme.palette.primary.main} />
+				</Link>
 				<InputField id={"title"} control={control} label="Title" />
 				<Button
 					type="submit"

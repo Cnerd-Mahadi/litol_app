@@ -1,17 +1,11 @@
 import { useQuery } from "react-query";
-import { useAxios } from "./useAxios";
+import { Axios } from "src/services/Axios";
 
 export const useGetQuery = (key, url, payload) => {
-	const axios = useAxios();
-
-	return useQuery(
-		key,
-		async () =>
-			await axios.get(url, {
-				params: payload,
-			}),
-		{
-			cacheTime: 1000,
-		}
-	);
+	return useQuery(key, async () => {
+		const instance = await Axios();
+		return await instance.get(url, {
+			params: payload,
+		});
+	});
 };

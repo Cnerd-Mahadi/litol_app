@@ -11,7 +11,7 @@ export const contentsQuery = (subjectId) =>
 
 export const contentQuery = (contentId) =>
 	`{content(id: "${contentId}"){
-        sys{id}, title, image{url}, subjectRef{name, sys{id}}, authorRef{name, authorImage{url}}, details{json},usefulLinks{ json } }}`;
+        sys{id, publishedAt}, title, image{url}, subjectRef{name, sys{id}}, authorRef{name, authorImage{url}}, details{json},usefulLinks{ json } }}`;
 
 export const contentFeymanQuery = (contentId) =>
 	`{content(id: "${contentId}"){

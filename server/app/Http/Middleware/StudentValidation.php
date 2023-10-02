@@ -5,8 +5,6 @@ namespace App\Http\Middleware;
 use App\Http\Services\AuthServices;
 use Closure;
 use Illuminate\Http\Request;
-use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Token\Parser;
 
 class StudentValidation
 {
@@ -26,24 +24,7 @@ class StudentValidation
     public function handle(Request $request, Closure $next)
     {
         if ($this->authService->validateToken($request)) {
-            try {
-                $token = $request->bearerToken();
-                $parser = new Parser(new JoseEncoder());
-                $parsedToken = $parser->parse($token);
-
-            } catch (\Throwable $th) {
-                return response()->json([
-                    'message' => 'Unauthorized',
-                    'error' => $th->getMessage()
-                ], 403);
-            }
-
-            if ($parsedToken) {
-                return $next($request);
-            } else {
-                return response()->json(['message' => 'Unauthorized'], 403);
-            }
-
+            return $next($request);
         } else {
             return response()->json(['message' => 'Unauthorized'], 403);
         }

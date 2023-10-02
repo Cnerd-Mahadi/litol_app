@@ -8,13 +8,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAxios } from "src/hooks/useAxios";
+import { Loading } from "src/components/ui/Loading";
 import { useCustomValidation } from "src/hooks/useCustomValidation";
 import { useMutateQuery } from "src/hooks/useMutateQuery";
 import { useSnack } from "src/hooks/useSnack";
+import { Axios } from "src/services/Axios";
 import { localUserData } from "src/utils";
 import { mindmapTitleUpdatedSchema } from "src/validations";
-import { Loading } from "../Loading";
 
 export const MindMapCanvasDetails = () => {
 	const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -24,7 +24,6 @@ export const MindMapCanvasDetails = () => {
 	const { mindmapId } = useParams();
 	const navigate = useNavigate();
 	const { snack, setSnack } = useSnack();
-	const axios = useAxios();
 
 	const { handleSubmit, control, setValue, ...methods } = useForm({
 		defaultValues: {
@@ -38,12 +37,15 @@ export const MindMapCanvasDetails = () => {
 		title: methods.watch("title"),
 		id: mindmapId,
 		collection: "mindmaps",
-		user_id: localUserData().userInfo.id,
+		user_id: localUserData().uid,
 	});
 
 	const { isLoading: isDataLoading } = useQuery(
 		["student/mindmapContent"],
-		() => axios.get(`student/mindmap/${mindmapId}`),
+		async () => {
+			const axios = await Axios();
+			return await axios.get(`student/mindmap/${mindmapId}`);
+		},
 		{
 			cacheTime: 0,
 			onSuccess: (response) => {
@@ -69,8 +71,8 @@ export const MindMapCanvasDetails = () => {
 			title: data.title,
 			nodes: JSON.stringify(nodes),
 			edges: JSON.stringify(edges),
-			user_id: localUserData().userInfo.id,
-			mindmap_id: mindmapId,
+			user_id: localUserData().uid,
+			id: mindmapId,
 		};
 		if (nodes.length > 0) {
 			mutate(resultData, {
@@ -107,7 +109,7 @@ export const MindMapCanvasDetails = () => {
 		}
 	};
 
-	if (isDataLoading) return <Loading />;
+	if (isDataLoading) return <Loading sx={{ my: 4 }} />;
 
 	return (
 		<MindMapBoard

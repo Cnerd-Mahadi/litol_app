@@ -1,52 +1,74 @@
+import { BiClipboard, BiNotepad, BiSolidBookContent } from "react-icons/bi";
+import { FaChalkboardUser } from "react-icons/fa6";
+import { GoHomeFill } from "react-icons/go";
+import { LuNetwork } from "react-icons/lu";
+
 export const images = {
 	studentDash: "/image/general/class.jpg",
 	signIn: "/image/general/SI.png",
 	logo: "/image/general/logo.png",
-	user: "/image/basic/user.png",
+	about: "/image/basic/about.png",
+	user: "/image/basic/user.jpg",
 	learn: "/image/basic/learn.png",
 	summary: "/image/basic/summary.png",
-	note: "/image/basic/cornell.png",
+	note: "/image/basic/note.png",
 	mindmap: "/image/basic/mindmap.png",
 	feynman: "/image/basic/feynman.png",
 	no_image: "/image/general/no-image.png",
 };
 
-export const pages = [
+export const navItems = [
+	{
+		name: "Home",
+		route: "/student",
+		icon: <GoHomeFill size={22} />,
+	},
 	{
 		name: "Learn",
-		feature: "Learn A Topic",
 		route: "/student/learn",
-		icon: images.learn,
+		icon: <BiSolidBookContent size={20} />,
 	},
 	{
 		name: "Summary",
-		feature: "Summarize The Topic",
 		route: "/student/summary",
-		icon: images.summary,
+		icon: <BiNotepad size={20} />,
 	},
 	{
-		name: "Cornell",
-		feature: "Use Cornell Method",
+		name: "Note",
 		route: "/student/note",
-		icon: images.note,
+		icon: <BiClipboard size={20} />,
 	},
 	{
 		name: "MindMap",
-		feature: "Mind Map",
 		route: "/student/mindmap",
-		icon: images.mindmap,
+		icon: <LuNetwork size={20} />,
 	},
 	{
 		name: "Feynman",
-		feature: "Feynman Section",
 		route: "/student/feynman",
-		icon: images.feynman,
+		icon: <FaChalkboardUser size={20} />,
+	},
+];
+
+export const statItems = [
+	{
+		id: "summaries",
+		name: "Summary",
+		icon: <BiNotepad size={25} />,
+	},
+	{
+		id: "notes",
+		name: "Note",
+		icon: <BiClipboard size={25} />,
+	},
+	{
+		id: "mindmaps",
+		name: "MindMap",
+		icon: <LuNetwork size={25} />,
 	},
 ];
 
 export const fileAllowed = "multipart/form-data";
-
-export const userSettings = ["Logout"];
 
 export const genderOptions = [
 	{
@@ -80,8 +102,37 @@ export const sidebarInfo = {
 	},
 };
 
-export const colorCode = {
-	navyBlue: "#083344",
-	red: "#ef4444",
-	white: "#f3f4f6",
+export const about = {
+	name: "What are we?",
+	details: `Welcome to our innovative Active Learning Method platform, a
+	revolutionary approach designed to enhance knowledge retention and
+	topic mastery. Our platform is meticulously crafted to provide
+	students with an engaging and effective learning experience, helping
+	them grasp complex concepts and retain information with remarkable
+	ease. With our cutting-edge platform, we've seamlessly integrated
+	active learning techniques that have been proven to elevate learning
+	outcomes`,
+};
+
+export const features = {
+	learn: {
+		name: "Learn Section",
+		details: `Dive into our "Learn" section, where curated content awaits students, including tutorials, lectures, and informative resources. This section caters to various learning styles and preferences, enabling students to access materials that suit their needs. Our platform places the power of learning in the hands of the user`,
+	},
+	summary: {
+		name: "Summary",
+		details: `Our platform offers a unique "Summary" feature that empowers students to distill complex topics into concise summaries. After crafting their summary, students can challenge themselves with a quiz, guessing the main points using three provided keywords as hints. This active recall technique enhances comprehension and retention`,
+	},
+	note: {
+		name: "Note",
+		details: `Experience the power of effective note-taking with our "Notes" feature, inspired by the Cornell Note-Taking Method. Students can jot down cues, questions, and highlights while studying. These cues serve as valuable prompts for reviewing and self-testing, transforming the way students engage with their materials`,
+	},
+	mindmap: {
+		name: "MindMap",
+		details: `Unleash your creativity with our "Mindmap" tool, which enables users to visually organize concepts, ideas, and connections. This intuitive diagram-based approach enhances understanding and helps students see the bigger picture. Effortlessly create mind maps to reinforce learning and facilitate comprehensive understanding`,
+	},
+	feynman: {
+		name: "Feynman Gallery",
+		details: `In the "Feynman Gallery," students can explore and interact with the community's Feynman requests. Engage with explanations submitted by fellow learners or contribute your own insights. For collaborative learning, the feature facilitates Google Meet chat invitations, promoting shared understanding and camaraderie among students`,
+	},
 };

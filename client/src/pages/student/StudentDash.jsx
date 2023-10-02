@@ -1,34 +1,81 @@
-import { Box } from "@mui/material";
-import Image from "mui-image";
-import { CueCard } from "src/components/cards/CueCard";
-import { Link } from "src/components/ui/Link";
-import { images, pages } from "src/utils/resources";
-
-const cue = {
-	display: "flex",
-	flexWrap: "wrap",
-	justifyContent: "center",
-	alignItems: "center",
-	gap: "100px",
-	marginTop: "60px",
-	marginBottom: "200px",
-};
+import { Box, Stack, Typography, useTheme } from "@mui/material";
+import { About } from "src/components/layouts/Dashboard/About";
+import { FeatureItem } from "src/components/layouts/Dashboard/FeatureItem";
+import { ProfileCard } from "src/components/layouts/Dashboard/ProfileCard";
+import { StatCard } from "src/components/layouts/Dashboard/StatCard";
+import { useGetQuery } from "src/hooks/useGetQuery";
+import { borderStyle, roundedImage } from "src/styles/components/Layouts";
+import { localUserData } from "src/utils";
+import { features, images } from "src/utils/resources";
 
 export const StudentDash = () => {
+	const theme = useTheme();
+	const { isLoading, data: response } = useGetQuery(
+		"student/dashboard",
+		`student/dashboard`,
+		{
+			user_id: localUserData().uid,
+		}
+	);
+	const statInfo = response?.data;
+	console.log(statInfo);
 	return (
-		<>
-			<Box>
-				<Image alt="dash-image" src={images.studentDash} height={500} />
-			</Box>
-			<Box sx={cue}>
-				{pages.map((page) => {
-					return (
-						<Link key={page.name} to={page.route} underline="none">
-							<CueCard key={page.name} image={page.icon} text={page.feature} />
-						</Link>
-					);
-				})}
-			</Box>
-		</>
+		<Stack spacing={3} p={2}>
+			<Stack direction={"row"} spacing={2} width="100%">
+				<Box
+					component="img"
+					src={images.studentDash}
+					width="70%"
+					minHeight={350}
+					sx={{
+						...roundedImage,
+					}}
+				/>
+				<ProfileCard />
+			</Stack>
+			<StatCard info={statInfo} loading={isLoading} />
+			<About />
+			<Stack
+				alignItems="center"
+				spacing={6}
+				sx={{
+					...borderStyle(theme),
+					px: 2,
+					pt: 5,
+					pb: 10,
+				}}>
+				<Typography
+					variant="h2"
+					color={theme.palette.secondary.contrastText}
+					textAlign="center">
+					Key Features
+				</Typography>
+				<FeatureItem
+					direction="row"
+					feature={features.learn}
+					image={images.learn}
+				/>
+				<FeatureItem
+					direction="row-reverse"
+					feature={features.summary}
+					image={images.summary}
+				/>
+				<FeatureItem
+					direction="row"
+					feature={features.note}
+					image={images.note}
+				/>
+				<FeatureItem
+					direction="row-reverse"
+					feature={features.mindmap}
+					image={images.mindmap}
+				/>
+				<FeatureItem
+					direction="row"
+					feature={features.feynman}
+					image={images.feynman}
+				/>
+			</Stack>
+		</Stack>
 	);
 };
