@@ -20,7 +20,7 @@ export const images = {
 export const navItems = [
 	{
 		name: "Home",
-		route: "/student",
+		route: "/student/dash",
 		icon: <GoHomeFill size={22} />,
 	},
 	{

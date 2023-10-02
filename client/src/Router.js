@@ -33,7 +33,6 @@ export const Router = createBrowserRouter([
 				},
 			},
 			{
-				path: "/student",
 				element: <StudentLayout />,
 				loader: () => {
 					const signedIn = localUserData();
@@ -41,7 +40,7 @@ export const Router = createBrowserRouter([
 				},
 				children: [
 					{
-						index: true,
+						path: "/student/dash",
 						element: <StudentDash />,
 					},
 					{

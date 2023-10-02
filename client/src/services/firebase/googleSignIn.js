@@ -18,7 +18,7 @@ export const signIn = async (navigate) => {
 			expiration: tokenStatus.expirationTime,
 		};
 		setLocalData("user", localData);
-		navigate("/student");
+		navigate("/student/dash");
 	});
 };
 
