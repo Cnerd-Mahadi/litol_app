@@ -29,7 +29,7 @@ export const Router = createBrowserRouter([
 				element: <SignIn />,
 				loader: () => {
 					const signedIn = localUserData();
-					return signedIn ? redirect("/student") : null;
+					return signedIn ? redirect("/student/dash") : null;
 				},
 			},
 			{
