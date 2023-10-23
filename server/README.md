@@ -1,3 +1,2 @@
-# Welcome to LITOL - An Active Learning Platform!
-
-A project based on the implementation of active learning methods. 
+# litol_app
+A platform based on active learning methods and techniques for better learning
