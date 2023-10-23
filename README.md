@@ -4,4 +4,4 @@ A Thesis based project designed and developed based on research data available o
 # Technologies
 React, Laravel, ReactFlow, MUI, ReactQuery
 
-## App is still going through development. And only available for pc.
+## 🚀 App is still going through development. And only available for pc.
