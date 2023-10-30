@@ -110,7 +110,7 @@ export const SummaryForm = () => {
 									error={fieldState.error ? true : false}
 									helperText={fieldState.error?.message}
 									hideClearAll={false}
-									placeholder="Add Keywords"
+									placeholder="Add keywords separated by 'Enter' key"
 									fullWidth
 								/>
 							</Box>

@@ -43,7 +43,7 @@ export const FeynmanGallery = () => {
 						Feynman Gallery
 					</Typography>
 				</Stack>
-				<Stack alignItems={"center"} paddingBottom={32}>
+				<Stack alignItems={"center"} paddingX={2} paddingBottom={32}>
 					{isLoading ? (
 						<Loading />
 					) : response.data.length ? (

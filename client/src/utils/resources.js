@@ -104,35 +104,28 @@ export const sidebarInfo = {
 
 export const about = {
 	name: "What are we?",
-	details: `Welcome to our innovative Active Learning Method platform, a
-	revolutionary approach designed to enhance knowledge retention and
-	topic mastery. Our platform is meticulously crafted to provide
-	students with an engaging and effective learning experience, helping
-	them grasp complex concepts and retain information with remarkable
-	ease. With our cutting-edge platform, we've seamlessly integrated
-	active learning techniques that have been proven to elevate learning
-	outcomes`,
+	details: `In this digital age of education students are facing the issue of information overload and difficulties in retaining knowledge. While there are established offline active learning methods for students, there is currently a lack of online solutions to replicate these methods. To solve this issue here comes our platform LITOL. It provides features based on active learning techniques like Cornell Note Taking, Summarization, the Feynman Approach, and Mind mapping. There is an additional Learn section so that students can read content on various topics and engage in the Feynman technique. This platform overall gives a student opportunity to apply Cornell Note Taking method to take class notes, Summarize the material after reading, Use mind mapping for visual memorization and use Feynman Technique to learn as a group`,
 };
 
 export const features = {
 	learn: {
 		name: "Learn Section",
-		details: `Dive into our "Learn" section, where curated content awaits students, including tutorials, lectures, and informative resources. This section caters to various learning styles and preferences, enabling students to access materials that suit their needs. Our platform places the power of learning in the hands of the user`,
+		details: `This section is provided as an extension with Feynman section. In this section students can learn the provided topics from range of subjects. And if they have difficulties in understanding any of the topic they can ask for help from other students using Feynman request button provided in the bottom`,
 	},
 	summary: {
 		name: "Summary",
-		details: `Our platform offers a unique "Summary" feature that empowers students to distill complex topics into concise summaries. After crafting their summary, students can challenge themselves with a quiz, guessing the main points using three provided keywords as hints. This active recall technique enhances comprehension and retention`,
+		details: `Students can create a summary on a topic which contains a topic image, title, details, keys. Keys are basically keyword related to the topic. The strategy is the details of the topic would be hidden to students for them to recall while studying. Only the keys will be shown. Students will try to recall the material using the hint of the content. If they are unable to do that there is a show button to reveal the content`,
 	},
 	note: {
 		name: "Note",
-		details: `Experience the power of effective note-taking with our "Notes" feature, inspired by the Cornell Note-Taking Method. Students can jot down cues, questions, and highlights while studying. These cues serve as valuable prompts for reviewing and self-testing, transforming the way students engage with their materials`,
+		details: `Students can take notes during class using Cornell Note Taking strategy. It contains a title, details and cues. Cues are consist of key and details. It is used to structure the material in a question answer manner. Where the key is a question and the detail is the answer. It helps students to take structured note based on question-answer in the classroom`,
 	},
 	mindmap: {
 		name: "MindMap",
-		details: `Unleash your creativity with our "Mindmap" tool, which enables users to visually organize concepts, ideas, and connections. This intuitive diagram-based approach enhances understanding and helps students see the bigger picture. Effortlessly create mind maps to reinforce learning and facilitate comprehensive understanding`,
+		details: `Students can create mind map in a drawing board. It contains title, nodes and edges. It is just like traditional mind mapping technique but for online. Massively helpful for brainstorming and analysis`,
 	},
 	feynman: {
 		name: "Feynman Gallery",
-		details: `In the "Feynman Gallery," students can explore and interact with the community's Feynman requests. Engage with explanations submitted by fellow learners or contribute your own insights. For collaborative learning, the feature facilitates Google Meet chat invitations, promoting shared understanding and camaraderie among students`,
+		details: `When a student requests a topic to be discussed in the learn section, that request will be stored in the Feynman section for other students to see. If a student wants to teach that topic to students who have requested it, they can invite them to a session using a Google Meet link. A session can contain up to 4 students. This technique is based on the principle articulated by Richard Feynman that "teaching is to learn twice." When a student conducts a Feynman session, they will better understand the topic by teaching it, and the other students will learn the topic from them`,
 	},
 };

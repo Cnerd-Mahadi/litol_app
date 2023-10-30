@@ -9,7 +9,10 @@ export const FeatureItem = ({ direction, feature, image }) => {
 				<Typography variant="h3" color={theme.palette.text.primary}>
 					{feature.name}
 				</Typography>
-				<Typography color={theme.palette.text.secondary} maxWidth={"80%"}>
+				<Typography
+					color={theme.palette.text.secondary}
+					maxWidth={"80%"}
+					textAlign={"justify"}>
 					{feature.details}
 				</Typography>
 			</Stack>

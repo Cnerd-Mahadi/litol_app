@@ -46,7 +46,7 @@ export const StudentDash = () => {
 				}}>
 				<Typography
 					variant="h2"
-					color={theme.palette.secondary.contrastText}
+					color={theme.palette.primary.main}
 					textAlign="center">
 					Key Features
 				</Typography>
