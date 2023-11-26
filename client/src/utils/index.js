@@ -13,7 +13,7 @@ export const localUserData = () => {
 	return getLocalData("user");
 };
 
-export const baseURL = "https://litolapi-production.up.railway.app/api/";
+export const baseURL = "https://litolapp-production.up.railway.app/api/";
 // "http://127.0.0.1:8000/api/";
 
 export const queryClient = new QueryClient();
