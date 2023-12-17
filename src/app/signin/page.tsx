@@ -2,8 +2,9 @@
 
 import lock from "@/../public/assets/lock.png";
 import signin from "@/../public/assets/test.png";
-
+import { Logo } from "@/components/layout/partials/sidebar/logo";
 import { signIn } from "@/libs/auth";
+
 import { Button, Container, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -35,8 +36,8 @@ export const SignIn = () => {
 					justifyContent={"space-between"}
 					alignItems={"center"}>
 					<Stack alignItems="center">
+						<Logo />
 						<Image src={lock} alt="lock-icon" width={25} />
-						{/* <LogOut fontSize="2rem" /> */}
 					</Stack>
 					<Stack alignItems="center">
 						<Image src={signin} alt="signin" width={300} />
