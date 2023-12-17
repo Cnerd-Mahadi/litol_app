@@ -1,12 +1,8 @@
-import { LogoutOutlined } from "@mui/icons-material";
-import { Avatar, Link, Stack, Typography, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { auth } from "src/services/firebase";
-import { localUserData } from "src/utils";
+import { Link } from "@/components/ui/link";
+import { Stack, Typography, useTheme } from "@mui/material";
 
 export const LogOut = () => {
 	const theme = useTheme();
-	const navigate = useNavigate();
 	return (
 		<Stack
 			sx={{
@@ -14,13 +10,7 @@ export const LogOut = () => {
 				py: 15,
 				color: theme.palette.text.primary,
 			}}>
-			<Link
-				component="button"
-				onClick={() => {
-					localStorage.removeItem("user");
-					auth.signOut();
-					navigate("/");
-				}}>
+			<Link component="button">
 				<Stack
 					direction={"row"}
 					spacing={3}
@@ -33,9 +23,9 @@ export const LogOut = () => {
 						borderRadius: 1.5,
 						backgroundColor: theme.palette.primary.light,
 					}}>
-					<Avatar src={localUserData()?.image} sx={{ width: 30, height: 30 }} />
+					{/* <Avatar src={localUserData()?.image} sx={{ width: 30, height: 30 }} /> */}
 					<Stack direction={"row"} alignItems={"center"} spacing={0.5}>
-						<LogoutOutlined />
+						{/* <LogoutOutlined /> */}
 						<Typography variant="h5">LogOut</Typography>
 					</Stack>
 				</Stack>

@@ -9,7 +9,7 @@
 // };
 "use client";
 
-import NextAppDirEmotionCacheProvider from "@/styles/theme/EmotionCache";
+import NextAppDirEmotionCacheProvider from "@/styles/theme/emotion-cache";
 import {
 	CssBaseline,
 	ThemeProvider as GlobalThemeProvider,
