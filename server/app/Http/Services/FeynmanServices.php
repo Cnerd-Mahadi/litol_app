@@ -169,7 +169,7 @@ class FeynmanServices
             Mail::to("mahadidroid@gmail.com")
                     ->queue(new ConfirmationMail($recipient->name, $meetingData));
             
-            $this->firebaseService->getCollection('feynmen')->document($request->feynman_id)->delete();
+            // $this->firebaseService->getCollection('feynmen')->document($request->feynman_id)->delete();
 
             return ResponseHelper::success("Feynman request resolved successfully");
 
