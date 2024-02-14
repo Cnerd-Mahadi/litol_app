@@ -167,7 +167,7 @@ class FeynmanServices
             $feynmanRequest = $this->firebaseService->getDocument($request->feynman_id, 'feynmen');
             $emailList = $this->createEmailList($feynmanRequest->data->slots);
             Mail::to("mahadidroid@gmail.com")
-                    ->queue(new ConfirmationMail($recipient->name, $meetingData));
+                    ->send(new ConfirmationMail("Cnerd", $meetingData));
             
             // $this->firebaseService->getCollection('feynmen')->document($request->feynman_id)->delete();
 
