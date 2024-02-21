@@ -1,50 +1,52 @@
-import { useCallback, useEffect, useState } from "react";
-import { Handle, Position, useReactFlow } from "reactflow";
+"use client";
 
-export const Node = ({ data, isConnectable, id, selected }) => {
-	const reactFlow = useReactFlow();
-	const [nodeName, setNodeName] = useState(data.label);
+import { ChangeEvent, memo, useCallback } from "react";
+import { Handle, NodeProps, Position, useReactFlow } from "reactflow";
 
-	useEffect(() => {
-		reactFlow.setNodes((nds) =>
-			nds.map((node) => {
-				if (node.id === id) {
-					node.data = {
-						...node.data,
-						label: nodeName,
-					};
-				}
-
-				return node;
-			})
-		);
-	}, [reactFlow, id, nodeName]);
-
-	const onChange = useCallback((evt) => {
-		setNodeName(evt.target.value);
-	}, []);
+export const InputNode = memo(function InputNode({
+	isConnectable,
+	id,
+	data,
+}: NodeProps) {
+	const { setNodes } = useReactFlow();
+	const onChange = useCallback(
+		(evt: ChangeEvent<HTMLInputElement>) => {
+			setNodes((nodes) =>
+				nodes.map((node) =>
+					node.id === id
+						? {
+								...node,
+								data: { label: evt.currentTarget.value },
+						  }
+						: node
+				)
+			);
+		},
+		[id, setNodes]
+	);
 
 	return (
-		<div className={`${selected && "node_selected"} text_updater_node`}>
+		<div className="px-2 py-2 border-2 bg-white border-purple-400 rounded-md">
 			<Handle
 				type="target"
 				position={Position.Top}
 				isConnectable={isConnectable}
+				className="!w-8 !h-4 !rounded-sm !-mt-2 !bg-purple-600"
 			/>
-			<div className="text-input">
-				<input
-					id="text"
-					name="text"
-					value={data.label}
-					onChange={onChange}
-					className="nodrag"
-				/>
-			</div>
+			<input
+				id="text"
+				name="text"
+				defaultValue={data.label}
+				onChange={onChange}
+				placeholder="New Node"
+				className="nodrag font-medium text-slate-900 focus:outline-none focus:bg-slate-100 focus:rounded-sm text-center"
+			/>
 			<Handle
 				type="source"
 				position={Position.Bottom}
 				isConnectable={isConnectable}
+				className="!w-8 !h-4 !rounded-sm !-mb-2 !bg-purple-600"
 			/>
 		</div>
 	);
-};
+});

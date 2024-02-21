@@ -1,39 +1,32 @@
-import { Stack, Typography, useTheme } from "@mui/material";
-import { PropTypes } from "prop-types";
-import { NavLink } from "react-router-dom";
-import { colors } from "src/utils";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { IconType } from "react-icons/lib";
 
-export const NavItem = ({ navItem }) => {
-	const theme = useTheme();
+export interface NavItemProps {
+	route: string;
+	title: string;
+	Icon: IconType;
+}
+
+export const NavItem = ({ route, title, Icon }: NavItemProps) => {
+	const path = usePathname();
+	const isActive =
+		(path.startsWith(route) && route !== "/") ||
+		(route === "/" && path === "/");
 	return (
-		<NavLink
-			to={navItem.route}
-			style={({ isActive }) => {
-				return {
-					textDecoration: "none",
-					color: isActive ? theme.palette.primary.main : colors.text_dark,
-				};
-			}}>
-			<Stack
-				direction={"row"}
-				alignItems={"center"}
-				spacing={2}
-				sx={{
-					"&:hover": {
-						cursor: "pointer",
-						backgroundColor: theme.palette.primary.light,
-						color: theme.palette.primary.main,
-						borderRadius: 1.5,
-					},
-					p: 1,
-				}}>
-				{navItem.icon}
-				<Typography variant="h5">{navItem.name}</Typography>
-			</Stack>
-		</NavLink>
+		<Link
+			href={route}
+			className="flex flex-row items-center gap-5 py-2 pl-3 rounded-md group hover:bg-blue-50">
+			<Icon
+				className={`
+					${isActive ? "text-blue-500" : "text-slate-500"} group-hover:text-blue-500`}
+			/>
+			<p
+				className={`font-semibold text-sm ${
+					isActive ? "text-blue-500" : "text-slate-600"
+				} group-hover:text-blue-500`}>
+				{title}
+			</p>
+		</Link>
 	);
-};
-
-NavItem.propTypes = {
-	navItem: PropTypes.object.isRequired,
 };

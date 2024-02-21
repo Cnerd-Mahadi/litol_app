@@ -1,44 +1,34 @@
-import { Grid } from "@mui/material";
-import { SummaryCard } from "src/components/layouts/Summary/SummaryCard";
-import { Loading } from "src/components/ui/Loading";
-import { NotAvailable } from "src/components/ui/NotAvailable";
-import { useGetQuery } from "src/hooks/useGetQuery";
-import { localUserData } from "src/utils";
+import { getSummaries } from "@/actions/summary";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { getCurrentUser } from "@/lib/firebase";
+import { blurImage } from "@/lib/plaiceholder";
+import { Suspense } from "react";
+import LoadingCards from "../loading/cards";
+import { SummaryCard } from "./summarycard";
 
-const getContents = ({ data, id, imageUrl }) => {
+export const SummaryGallery = async () => {
+	const user = await getCurrentUser();
+	const summaries = await getSummaries(user.id);
+	const blurs = await Promise.all(
+		summaries.map((item) => blurImage(item.imageUrl))
+	);
 	return (
-		<Grid key={id} item md={3}>
-			<SummaryCard
-				id={id}
-				title={data.title}
-				details={data.details}
-				image={imageUrl}
-			/>
-		</Grid>
-	);
-};
-
-export const SummaryGallery = () => {
-	const { isLoading, data: response } = useGetQuery(
-		"student/summaries",
-		`student/summaries/${localUserData().uid}`
-	);
-	const summaries = response ? response.data.summaries : [];
-
-	console.log(summaries);
-
-	if (isLoading) return <Loading />;
-
-	return summaries.length ? (
-		<Grid container padding={4} paddingBottom={32} spacing={4}>
-			{summaries.map(getContents)}
-		</Grid>
-	) : (
-		<NotAvailable
-			sx={{
-				mx: 4,
-			}}
-			contentType="summary content"
-		/>
+		<ScrollArea>
+			<Suspense fallback={<LoadingCards />}>
+				<section className="py-8 pb-32 px-6 grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-16">
+					{summaries.map((item, index) => (
+						<SummaryCard
+							key={item.id}
+							id={item.id}
+							title={item.title}
+							image={item.imageUrl}
+							blur={blurs[index]!}
+							imageId={item.image}
+							updated={item.updated}
+						/>
+					))}
+				</section>
+			</Suspense>
+		</ScrollArea>
 	);
 };

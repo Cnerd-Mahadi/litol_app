@@ -1,36 +1,25 @@
-import { Stack, useTheme } from "@mui/material";
-import { navItems } from "src/utils/resources";
-import { LogOut } from "./LogOut";
-import { Logo } from "./Logo";
-import { NavItem } from "./NavItem";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { navItems } from "@/utils";
+import { Logo } from "./logo";
+import { LogOut } from "./logout";
+import { NavItem } from "./nav-item";
 
 export const SideBar = () => {
-	const theme = useTheme();
 	return (
-		<Stack
-			sx={{
-				width: "250px",
-				height: "100%",
-				position: "fixed",
-				zIndex: 10,
-				top: 0,
-				bottom: 0,
-				borderRight: `1px solid ${theme.palette.divider}`,
-			}}>
-			<Stack
-				spacing={4}
-				sx={{
-					py: 3,
-					px: 2,
-				}}>
-				<Logo />
-				<Stack spacing={1.5} sx={{ px: 2 }}>
-					{navItems.map((navItem) => (
-						<NavItem key={navItem.name} navItem={navItem} />
-					))}
-				</Stack>
-			</Stack>
-			<LogOut />
-		</Stack>
+		<ScrollArea className="w-52 pt-8 h-screen">
+			<Logo className="text-4xl text-center pb-8" />
+			<div className="px-6">
+				<div id="nav-item" className="flex flex-col gap-2 pb-6">
+					{navItems.map(({ name, route, Icon }) => {
+						return (
+							<NavItem key={name} route={route} title={name} Icon={Icon} />
+						);
+					})}
+				</div>
+				<div className="pt-24 pb-16">
+					<LogOut />
+				</div>
+			</div>
+		</ScrollArea>
 	);
 };

@@ -1,36 +1,28 @@
-import { CardActionArea, Stack } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import { PropTypes } from "prop-types";
+import Image from "next/image";
+import Link from "next/link";
 
-import { StarsRounded } from "@mui/icons-material";
-import Image from "mui-image";
-import { Link } from "../../ui/Link";
+interface SubjectCardProps {
+	image: string;
+	subject: string;
+	id: string;
+	blur: string;
+}
 
-export const SubjectCard = ({ image, subject, id }) => {
-	console.log(image);
+export const SubjectCard = ({ image, subject, id, blur }: SubjectCardProps) => {
 	return (
-		<Link to={`/student/learn/subject/${id}`}>
-			<Card>
-				<Image height={200} src={image} alt={subject} duration={1000} />
-				<CardContent>
-					<CardActionArea>
-						<Stack direction="row" justifyContent="space-between">
-							<Typography gutterBottom variant="h5">
-								{subject}
-							</Typography>
-							<StarsRounded fontSize="small" />
-						</Stack>
-					</CardActionArea>
-				</CardContent>
-			</Card>
+		<Link href={`/learn/${id}`} className="space-y-4 group">
+			<Image
+				src={image}
+				alt="subject-pic"
+				width={512}
+				height={512}
+				blurDataURL={blur}
+				placeholder="blur"
+				className="rounded-lg w-full h-72 object-cover"
+			/>
+			<p className="font-semibold text-gray-600 px-2 group-hover:text-blue-500">
+				{subject}
+			</p>
 		</Link>
 	);
-};
-
-SubjectCard.propTypes = {
-	image: PropTypes.string.isRequired,
-	subject: PropTypes.string.isRequired,
-	id: PropTypes.string.isRequired,
 };

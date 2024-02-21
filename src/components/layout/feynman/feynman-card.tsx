@@ -1,118 +1,43 @@
-import {
-	Avatar,
-	Box,
-	Button,
-	Stack,
-	Tooltip,
-	Typography,
-	useTheme,
-} from "@mui/material";
-import { PropTypes } from "prop-types";
-import { useContext } from "react";
-import { FeynmanContext } from "src/contexts/FeynmanProvider";
-import { useGraphQuery } from "src/hooks/useGraphQuery";
-import { borderStyle, roundedImage } from "src/styles/components/Layouts";
-import { colors } from "src/utils";
-import { contentFeymanQuery } from "src/utils/graphqlQueries";
+"use client";
 
-const slots = ["A", "B", "C", "D"];
+import { feynmanSchema } from "@/types";
+import Image from "next/image";
+import * as z from "zod";
+import { FeynmanDialog } from "./feynman-dialog";
+import { FeynmanHover } from "./feynman-hover";
+import { FeynmanMobileHover } from "./feynman-mobile-hover";
 
-export const FeynmanCard = ({ id, data }) => {
-	const theme = useTheme();
-	const feynmanContext = useContext(FeynmanContext);
-	console.log(feynmanContext);
-	const { isLoading, data: content } = useGraphQuery(
-		["feynItems", id],
-		contentFeymanQuery(data.contentId)
-	);
-
+export const FeynmanCard = ({
+	item,
+}: {
+	item: z.infer<typeof feynmanSchema>;
+}) => {
 	return (
-		!isLoading && (
-			<Stack
-				direction="row"
-				alignItems="start"
-				bgcolor={colors.white}
-				spacing={1}
-				sx={{
-					...borderStyle(theme),
-					width: 530,
-				}}>
-				<Box
-					component={"img"}
-					src="/physics.jpg"
-					height="100%"
-					width={150}
-					sx={{
-						...roundedImage,
-						borderTopRightRadius: 0,
-						borderBottomRightRadius: 0,
-					}}
+		<div className="border border-blue-200 rounded-xl flex flex-row justify-between items-start px-3 md:px-8 py-4 md:py-6">
+			<div className="flex flex-row items-start gap-5">
+				<Image
+					src={item.content.imageUrl}
+					width={520}
+					height={520}
+					alt="content-pic"
+					className="size-12 rounded-full mt-1 object-cover"
 				/>
-				<Stack
-					direction="row"
-					justifyContent={"space-between"}
-					alignItems="start"
-					sx={{ width: "100%", p: 1.5 }}>
-					<Stack spacing={0.25}>
-						<Typography
-							variant="h5"
-							sx={{ pb: 0.5 }}
-							color={theme.palette.text.primary}>
-							{content.data.content.title}
-						</Typography>
-						<Stack>
-							<Typography variant="subtitle2" color={colors.text_light}>
-								{data.updated}
-							</Typography>
-							<Typography variant="subtitle2" color={colors.text_light}>
-								{content.data.content.subjectRef.name}
-							</Typography>
-						</Stack>
-						<Typography variant="subtitle2" pt={0.5} color={colors.text_light}>
-							Requested by
-							<Stack direction="row" spacing={-0.5} sx={{ pt: 0.9 }}>
-								{slots.map((slot) => {
-									return (
-										data.slots[slot] && (
-											<Box key={slot}>
-												<Tooltip
-													title={`${data.slots[slot].name} | ${data.slots[slot].email}`}
-													arrow>
-													<Avatar
-														src={data.slots[slot].image}
-														sx={{ width: 30, height: 30 }}
-													/>
-												</Tooltip>
-											</Box>
-										)
-									);
-								})}
-							</Stack>
-						</Typography>
-					</Stack>
-					<Button
-						variant="outlined"
-						sx={{
-							px: 4,
-						}}
-						onClick={() => {
-							feynmanContext.setInvitation({
-								open: true,
-								info: {
-									contentData: content.data.content,
-									id: id,
-								},
-							});
-						}}>
-						Resolve
-					</Button>
-				</Stack>
-			</Stack>
-		)
+				<div>
+					<h3 className="text-slate-800 text-sm font-semibold pb-1">
+						{item.content.title}
+					</h3>
+					<p className="text-slate-400 text-xs font-medium pb-3">
+						{item.subject}
+					</p>
+					<div className="hidden md:block">
+						<FeynmanHover requested={item.requested} />
+					</div>
+					<div className="block md:hidden">
+						<FeynmanMobileHover requested={item.requested} />
+					</div>
+				</div>
+			</div>
+			<FeynmanDialog item={item} />
+		</div>
 	);
-};
-
-FeynmanCard.propTypes = {
-	id: PropTypes.string.isRequired,
-	data: PropTypes.object.isRequired,
 };

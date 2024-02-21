@@ -1,193 +1,122 @@
-import { yupResolver } from "@hookform/resolvers/yup";
+import { feynmanResolve } from "@/actions/feynman";
+import { Button } from "@/components/ui/button";
 import {
-	Avatar,
-	Box,
-	Button,
-	CircularProgress,
-	Container,
-	Grid,
-	Typography,
-} from "@mui/material";
-import {
-	ArrowDropDownIcon,
-	DateTimePicker,
-	LocalizationProvider,
-} from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
-import { useContext } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import Modal from "src/components/ui/Modal";
-import { FeynmanContext } from "src/contexts/FeynmanProvider";
-import { useSnack } from "src/hooks/useSnack";
-import { Axios } from "src/services/Axios";
-import { localUserData, queryClient } from "src/utils";
-import { feynmanSchema } from "src/validations";
-import { InputField } from "../../ui/InputField";
-import SnackAlert from "../../ui/SnackAlert";
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { feynmanSchema } from "@/types";
+import { feynmanFormSchema as formSchema } from "@/types/forms";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { Calendar } from "primereact/calendar";
+import { classNames } from "primereact/utils";
+import { Dispatch, SetStateAction } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
-const container = {
-	marginTop: 8,
-	marginBottom: 4,
-	display: "flex",
-	flexDirection: "column",
-	alignItems: "center",
-};
-
-export const FeynmanForm = () => {
-	const { snack, setSnack } = useSnack();
-	const feynmanContext = useContext(FeynmanContext);
-
-	const { isLoading, mutate } = useMutation({
-		mutationKey: ["student/feynman/resolve"],
-		mutationFn: async (params) => {
-			const axios = await Axios();
-			return await axios.get("student/feynman/resolve", {
-				params: params,
-			});
-		},
-	});
-
-	const { handleSubmit, control } = useForm({
+export const FeynmanForm = ({
+	item,
+	setVisible,
+}: {
+	item: z.infer<typeof feynmanSchema>;
+	setVisible: Dispatch<SetStateAction<boolean>>;
+}) => {
+	const { toast } = useToast();
+	const router = useRouter();
+	const form = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
 		defaultValues: {
 			meeting_link: "",
-			schedule: dayjs(Date.now()),
+			schedule: null,
 		},
-		mode: "onSubmit",
-		resolver: yupResolver(feynmanSchema),
 	});
 
-	const onSubmit = (data) => {
-		const formData = {
-			feynman_id: feynmanContext.invitation.info.id,
-			resolverName: localUserData().name,
-			topic: feynmanContext.invitation.info.contentData.title,
-			subject: feynmanContext.invitation.info.contentData.subjectRef.name,
-			link: data.meeting_link,
-			time: data.schedule.toUTCString(),
-		};
-		mutate(formData, {
-			onSuccess: (response) => {
-				console.log(response);
-				setSnack((prev) => ({
-					...prev,
-					open: true,
-					status: "success",
-					title: "Success",
-					message: response.data,
-				}));
-				feynmanContext.setInvitation({
-					...feynmanContext.invitation,
-					open: false,
+	const { isPending, mutate } = useMutation({
+		mutationKey: ["feynman/resolve"],
+		mutationFn: async (values: z.infer<typeof formSchema>) =>
+			await feynmanResolve(values, item),
+		onSuccess: async (data) => {
+			if (data.success) {
+				setVisible(false);
+				toast({
+					title: "Success!",
+					description: "Feynman invitation sent successfully!",
 				});
-				queryClient.invalidateQueries("student/feynmen");
-			},
-			onError: (error) => {
-				console.log(error);
-				setSnack((prev) => ({
-					...prev,
-					open: true,
-					status: "error",
-					title: "Failed",
-					message: "Something went wrong! Please try again.",
-				}));
-			},
-		});
-	};
+				router.refresh();
+			}
+		},
+	});
+
+	function onSubmit(values: z.infer<typeof formSchema>) {
+		mutate(values);
+	}
 
 	return (
-		<>
-			<Modal
-				open={feynmanContext.invitation.open}
-				setInvitation={feynmanContext.setInvitation}>
-				<Container component="div" maxWidth="xs">
-					<Box sx={container}>
-						<Avatar
-							sx={{ m: 1, width: 56, height: 56, bgcolor: "primary.main" }}>
-							<ArrowDropDownIcon
-								sx={{
-									fontSize: "60px",
-								}}
-							/>
-						</Avatar>
-						<Typography component="h1" variant="h5">
-							Feyman Invitation
-						</Typography>
-						<Box
-							component="form"
-							noValidate
-							onSubmit={handleSubmit(onSubmit)}
-							sx={{ mt: 8 }}>
-							<Grid container spacing={3} sx={{ justifyContent: "center" }}>
-								<Grid item xs={12}>
-									<InputField
-										id="meeting_link"
-										label={"Meeting Link"}
-										control={control}
-										fullWidth
-									/>
-								</Grid>
-
-								<Grid item xs={12}>
-									<Controller
-										name={"schedule"}
-										control={control}
-										render={({ field, fieldState: { error } }) => (
-											<LocalizationProvider dateAdapter={AdapterDayjs}>
-												<DateTimePicker
-													{...field}
-													label={"Schedule"}
-													slotProps={{
-														textField: {
-															fullWidth: true,
-															variant: "outlined",
-															error: error ? true : false,
-															helperText: error?.message,
-														},
-													}}
-												/>
-											</LocalizationProvider>
-										)}
-									/>
-								</Grid>
-
-								<Grid
-									item
-									xs={12}
-									sx={{
-										display: "flex",
-										justifyContent: "center",
-										alignItems: "center",
-									}}>
-									<Button
-										type="submit"
-										variant="contained"
-										disabled={isLoading}
-										sx={{ mt: 5, mb: 2 }}>
-										Invite
-										{isLoading && (
-											<CircularProgress
-												size={"1rem"}
-												sx={{ ml: 1 }}
-												color="inherit"
-											/>
-										)}
-									</Button>
-								</Grid>
-							</Grid>
-						</Box>
-					</Box>
-				</Container>
-			</Modal>
-			<SnackAlert
-				open={snack.open}
-				status={snack.status}
-				message={snack.message}
-				title={snack.title}
-				exit={snack.exit}
-				setSnack={setSnack}
-			/>
-		</>
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+				<FormField
+					control={form.control}
+					name="meeting_link"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Input
+									placeholder="Provide the meeting link"
+									{...field}
+									className="shadow-none border-slate-300 font-medium"
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="schedule"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Calendar
+									inputId={field.name}
+									value={field.value}
+									placeholder="Schedule a time"
+									onChange={field.onChange}
+									minDate={new Date()}
+									showTime
+									hourFormat="12"
+									pt={{
+										root: {
+											className: classNames("flex w-full focus:border-none"),
+										},
+										input: {
+											root: {
+												className: classNames("text-sm font-medium py-2"),
+											},
+										},
+									}}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<Button
+					className="px-8 origin-center flex flex-row gap-2 mx-auto"
+					disabled={form.formState.isSubmitting || isPending}
+					type="submit">
+					{(form.formState.isSubmitting || isPending) && (
+						<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+					)}
+					Invite
+				</Button>
+			</form>
+		</Form>
 	);
 };

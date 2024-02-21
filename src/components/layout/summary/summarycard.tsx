@@ -1,34 +1,77 @@
-import { CardActionArea } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Image from "mui-image";
-import { PropTypes } from "prop-types";
-import { Link } from "../../ui/Link";
+"use client";
 
-export const SummaryCard = ({ id, title, details, image }) => {
+import { deleteSummary } from "@/actions/summary";
+import { DeleteButton } from "@/components/ui/delete-button";
+import { useToast } from "@/components/ui/use-toast";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+export interface SummaryCardProps {
+	image: string;
+	blur: string;
+	title: string;
+	id: string;
+	updated: string;
+	imageId: string;
+}
+
+export const SummaryCard = ({
+	image,
+	blur,
+	title,
+	id,
+	updated,
+	imageId,
+}: SummaryCardProps) => {
+	const [loading, setLoading] = useState(false);
+	const [open, setOpen] = useState(false);
+	const router = useRouter();
+	const { toast } = useToast();
+
+	const handleDelete = async () => {
+		setLoading(true);
+		await deleteSummary(id, imageId);
+		setLoading(false);
+		setOpen(false);
+		toast({
+			title: "Success!",
+			description: "Summary deleted successfully!",
+		});
+		router.refresh();
+	};
+
 	return (
-		<Link to={`/student/summary/${id}`}>
-			<Card>
-				<Image height={180} src={image} duration={1000} />
-				<CardContent>
-					<CardActionArea>
-						<Typography variant="h5" pb={1}>
-							{title}
-						</Typography>
-					</CardActionArea>
-					<Typography variant="body2" color="text.secondary" noWrap>
-						{details}
-					</Typography>
-				</CardContent>
-			</Card>
-		</Link>
+		<div className="relative">
+			<DeleteButton
+				className="top-4 right-4"
+				loading={loading}
+				open={open}
+				setOpen={setOpen}
+				handleDelete={handleDelete}
+			/>
+			<Link
+				href={{
+					pathname: `/summary/${id}`,
+				}}
+				className="space-y-2 group md:max-w-72 relative">
+				<Image
+					src={image}
+					alt="summary-pic"
+					width={512}
+					height={512}
+					blurDataURL={blur}
+					placeholder="blur"
+					className="rounded-lg w-full h-56 object-cover"
+				/>
+				<div className="px-2">
+					<p className="font-semibold text-gray-600 group-hover:text-blue-500 overflow-ellipsis">
+						{title}
+					</p>
+					<p className="text-sm text-gray-500 font-semibold">{updated}</p>
+				</div>
+			</Link>
+		</div>
 	);
-};
-
-SummaryCard.propTypes = {
-	id: PropTypes.string.isRequired,
-	title: PropTypes.string.isRequired,
-	details: PropTypes.string.isRequired,
-	image: PropTypes.string.isRequired,
 };

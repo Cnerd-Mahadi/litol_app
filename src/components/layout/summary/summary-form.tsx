@@ -1,153 +1,136 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Grid } from "@mui/material";
-import { MuiChipsInput } from "mui-chips-input";
-import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { ImageUpload } from "src/components/ui/ImageUpload";
-import { useCustomValidation } from "src/hooks/useCustomValidation";
-import { useMutateQuery } from "src/hooks/useMutateQuery";
-import { useSnack } from "src/hooks/useSnack";
-import { localUserData, queryClient } from "src/utils";
-import { fileAllowed } from "src/utils/resources";
-import { summarySchema } from "src/validations";
-import { InputField } from "../../ui/InputField";
-import { ProgressButton } from "../../ui/ProgressButton";
-import SnackAlert from "../../ui/SnackAlert";
+"use client";
 
-const muiChip = {
-	display: "flex",
-	justifyContent: "flex-start",
-	flexWrap: "wrap",
-	listStyle: "none",
-	p: 0.5,
-	m: 0,
-};
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+import { createSummary } from "@/actions/summary";
+import { Button } from "@/components/ui/button";
+import Chips from "@/components/ui/chips";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { UploadImage } from "@/components/ui/upload-image";
+import { useToast } from "@/components/ui/use-toast";
+import { summaryFormSchema as formSchema } from "@/types/forms";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { ChipsChangeEvent } from "primereact/chips";
+import { useForm } from "react-hook-form";
 
 export const SummaryForm = () => {
-	const { snack, setSnack } = useSnack();
-	const navigate = useNavigate();
-
-	const { isLoading, mutate } = useMutateQuery(
-		"student/submitSummary",
-		"student/submitSummary",
-		fileAllowed
-	);
-
-	const { handleSubmit, control, ...methods } = useForm({
+	const router = useRouter();
+	const { toast } = useToast();
+	const form = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
 		defaultValues: {
 			title: "",
 			details: "",
 			keywords: [],
-			image: undefined,
+			image: "",
 		},
-		mode: "onSubmit",
-		resolver: yupResolver(summarySchema),
 	});
 
-	useCustomValidation("title", "student/titleCheck", methods, "Title", {
-		title: methods.watch("title"),
-		collection: "summaries",
-		user_id: localUserData().uid,
-	});
-
-	const onSubmit = (data) => {
-		console.log(data);
-		mutate(
-			{
-				...data,
-				image: data.image[0],
-				user_id: localUserData().uid,
-			},
-			{
-				onSuccess: (response) => {
-					console.log(response);
-					setSnack((prev) => ({
-						...prev,
-						open: true,
-						status: "success",
-						title: "Success",
-						message: response.data,
-					}));
-					queryClient.invalidateQueries("student/summaries");
-					navigate(0);
-				},
-				onError: () => {
-					setSnack((prev) => ({
-						...prev,
-						open: true,
-						status: "error",
-						title: "Failed",
-						message: "Something went wrong! Please try again.",
-					}));
-				},
+	const { isPending, mutate } = useMutation({
+		mutationKey: ["summary/create"],
+		mutationFn: async (values: z.infer<typeof formSchema>) =>
+			await createSummary(values),
+		onSuccess: async (success) => {
+			if (success) {
+				form.reset();
+				toast({
+					title: "Success!",
+					description: "Summary created successfully!",
+				});
+				router.refresh();
 			}
-		);
-	};
+		},
+	});
+
+	function onSubmit(values: z.infer<typeof formSchema>) {
+		mutate(values);
+	}
 
 	return (
-		<Box
-			component="form"
-			noValidate
-			onSubmit={handleSubmit(onSubmit)}
-			sx={{
-				mt: 3,
-			}}>
-			<Grid container spacing={2} justifyContent={"center"}>
-				<Grid item xs={12} sm={12}>
-					<InputField id="title" label={"Title"} control={control} fullWidth />
-				</Grid>
-				<Grid item xs={12}>
-					<Controller
-						name={"keywords"}
-						control={control}
-						render={({ field, fieldState }) => (
-							<Box sx={muiChip}>
-								<MuiChipsInput
-									size="small"
-									value={field.value}
-									onChange={field.onChange}
-									onBlur={field.onBlur}
-									error={fieldState.error ? true : false}
-									helperText={fieldState.error?.message}
-									hideClearAll={false}
-									placeholder="Add keywords separated by 'Enter' key"
-									fullWidth
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+				<FormField
+					control={form.control}
+					name="title"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Input
+									placeholder="Give a title.."
+									{...field}
+									className="shadow-none border-slate-300 font-medium"
 								/>
-							</Box>
-						)}
-					/>
-				</Grid>
-				<ImageUpload id={"image"} control={control} />
-				<Grid item xs={12}>
-					<InputField
-						label="Write Something..."
-						id="details"
-						fullWidth
-						control={control}
-						multiline
-						minRows={4}
-						maxRows={6}
-					/>
-				</Grid>
-				<Grid
-					item
-					xs={12}
-					sx={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-					}}>
-					<ProgressButton loading={isLoading} text={"Create New Summary"} />
-				</Grid>
-			</Grid>
-			<SnackAlert
-				open={snack.open}
-				status={snack.status}
-				message={snack.message}
-				title={snack.title}
-				exit={snack.exit}
-				setSnack={setSnack}
-			/>
-		</Box>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="keywords"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Chips
+									id={field.name}
+									value={field.value}
+									onChange={(e: ChipsChangeEvent) => field.onChange(e.value)}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="image"
+					render={() => (
+						<FormItem>
+							<FormControl>
+								<UploadImage register={form.register("image")} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="details"
+					render={({ field }) => (
+						<FormItem className="mb-16">
+							<FormControl>
+								<Textarea
+									placeholder="Add details to your summary..."
+									rows={4}
+									{...field}
+									className="shadow-none font-medium"
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<Button
+					className="px-8 origin-center flex flex-row gap-2 mx-auto"
+					disabled={form.formState.isSubmitting || isPending}
+					type="submit">
+					{(form.formState.isSubmitting || isPending) && (
+						<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+					)}
+					Create Summary
+				</Button>
+			</form>
+		</Form>
 	);
 };

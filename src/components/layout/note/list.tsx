@@ -1,38 +1,24 @@
-import { Grid } from "@mui/material";
-import { NoteCard } from "src/components/layouts/Note/NoteCard";
-import { Loading } from "src/components/ui/Loading";
-import { NotAvailable } from "src/components/ui/NotAvailable";
-import { useGetQuery } from "src/hooks/useGetQuery";
-import { localUserData } from "src/utils";
+import { getNotes } from "@/actions/note";
+import { getCurrentUser } from "@/lib/firebase";
+import { Suspense } from "react";
+import LoadingBoxes from "../loading/boxes";
+import { NoteCard } from "./note-card";
 
-const getContents = ({ data, id }) => {
+export const NoteGallery = async () => {
+	const user = await getCurrentUser();
+	const notes = await getNotes(user.id);
 	return (
-		<Grid key={id} item md={3}>
-			<NoteCard id={id} title={data.title} updated={data.updated} />
-		</Grid>
-	);
-};
-
-export const NoteGallery = () => {
-	const { isLoading, data: response } = useGetQuery(
-		"student/notes",
-		`student/notes/${localUserData().uid}`
-	);
-
-	const notes = response ? response.data.notes : [];
-
-	if (isLoading) return <Loading />;
-
-	return notes.length ? (
-		<Grid container padding={4} paddingBottom={32} spacing={4}>
-			{notes.map(getContents)}
-		</Grid>
-	) : (
-		<NotAvailable
-			sx={{
-				mx: 4,
-			}}
-			contentType="note content"
-		/>
+		<Suspense fallback={<LoadingBoxes boxHeight="h-32" />}>
+			<section className="py-8 pb-32 px-4 grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-16">
+				{notes.map((item) => (
+					<NoteCard
+						key={item.id}
+						id={item.id}
+						title={item.title}
+						updated={item.updated}
+					/>
+				))}
+			</section>
+		</Suspense>
 	);
 };

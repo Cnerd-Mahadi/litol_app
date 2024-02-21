@@ -1,17 +1,16 @@
-import { Box, Typography } from "@mui/material";
+import { cn } from "@/lib/utils";
 
-export const Logo = ({ ...props }) => {
+export interface LogoProps {
+	className?: string;
+}
+
+export const Logo = ({ className, ...props }: LogoProps) => {
 	return (
-		<Typography
-			variant="h1"
-			lineHeight={1.5}
-			color="primary"
-			textAlign={"center"}
+		<div
+			className={cn("text-blue-400 text-3xl font-semibold", className)}
 			{...props}>
 			litol
-			<Box component={"span"} color="text.dark">
-				.
-			</Box>
-		</Typography>
+			<span className="text-slate-900">.</span>
+		</div>
 	);
 };

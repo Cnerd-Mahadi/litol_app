@@ -1,20 +1,17 @@
-import { Box, Container, Stack, Typography } from "@mui/material";
-import { SummaryForm } from "src/components/layouts/Summary/SummaryForm";
-import { images } from "src/utils/resources";
+import summaryImage from "@/../public/assets/summary.png";
+import Image from "next/image";
+import { SummaryForm } from "./summary-form";
 
 export const CreateSummary = () => {
 	return (
-		<Container
-			component="main"
-			maxWidth="sm"
-			sx={{
-				pb: 12,
-			}}>
-			<Stack alignItems="center" pb={2}>
-				<Box component="img" src={images.summary} width={300} alt="summary" />
-				<Typography variant="h3">Create New Summary</Typography>
-			</Stack>
-			<SummaryForm />
-		</Container>
+		<section>
+			<Image src={summaryImage} alt="summary-pic" className="w-60 mx-auto" />
+			<h2 className="text-2xl font-semibold text-slate-600 text-center">
+				Create New Summary
+			</h2>
+			<div className="mx-auto max-w-lg pt-8 pb-40">
+				<SummaryForm />
+			</div>
+		</section>
 	);
 };

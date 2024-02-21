@@ -1,49 +1,34 @@
-import { Box, Stack, Typography, useTheme } from "@mui/material";
-import { PropTypes } from "prop-types";
-import { Loading } from "src/components/ui/Loading";
-import { borderStyle } from "src/styles/components/Layouts";
-import { statItems } from "src/utils/resources";
+import { Skeleton } from "@/components/ui/skeleton";
+import Image, { StaticImageData } from "next/image";
+import { Suspense } from "react";
 
-export const StatCard = ({ info, loading }) => {
-	const theme = useTheme();
+interface StatCardProps {
+	bg: string;
+	title: string;
+	title_color: string;
+	text: string;
+	icon: StaticImageData;
+}
+
+export const StatCard = ({
+	bg,
+	title,
+	title_color,
+	text,
+	icon,
+}: StatCardProps) => {
 	return (
-		<Stack
-			direction="row"
-			justifyContent="space-between"
-			spacing={2}
-			sx={{ ...borderStyle(theme), p: 2 }}>
-			{statItems.map((item) => (
-				<Stack
-					key={item.id}
-					direction="row"
-					alignItems={"center"}
-					spacing={2}
-					flex={1}
-					sx={{
-						p: 1,
-						backgroundColor: theme.palette.primary.light,
-						color: theme.palette.primary.main,
-						borderRadius: 3,
-						paddingLeft: 4,
-					}}>
-					<Box color={theme.palette.primary.main} pt={1.3}>
-						{item.icon}
-					</Box>
-					<Stack direction="row" spacing={1} alignItems={"center"}>
-						<Typography variant="h4">{item.name} :</Typography>
-						{!loading ? (
-							<Typography variant="h4">{info[item.id]}</Typography>
-						) : (
-							<Loading size={20} />
-						)}
-					</Stack>
-				</Stack>
-			))}
-		</Stack>
+		<div
+			className={`lg:px-10 px-6  flex flex-row justify-between items-center gap-2 ${bg} py-5 rounded-xl w-full`}>
+			<div className="flex flex-col justify-between">
+				<h3 className={`${title_color} font-semibold text-xl pb-3`}>{title}</h3>
+				<Suspense fallback={<Skeleton className="h-5 bg-slate-300" />}>
+					<p className={`text-slate-500 text-sm font-semibold`}>
+						Total Count: {text}
+					</p>
+				</Suspense>
+			</div>
+			<Image src={icon} alt={`stat-icon-${title}`} className="w-12" />
+		</div>
 	);
-};
-
-StatCard.propTypes = {
-	info: PropTypes.object,
-	loading: PropTypes.bool,
 };

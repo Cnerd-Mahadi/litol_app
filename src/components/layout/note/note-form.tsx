@@ -1,199 +1,178 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { AddCircle, CancelRounded } from "@mui/icons-material";
-import { Box, Grid, IconButton } from "@mui/material";
+"use client";
+
+import { createNote } from "@/actions/note";
+import { Button } from "@/components/ui/button";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { noteFormSchema as formSchema } from "@/types/forms";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ReloadIcon, TrashIcon } from "@radix-ui/react-icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useFieldArray, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { useCustomValidation } from "src/hooks/useCustomValidation";
-import { useMutateQuery } from "src/hooks/useMutateQuery";
-import { useSnack } from "src/hooks/useSnack";
-import { localUserData, queryClient } from "src/utils";
-import { noteSchema } from "src/validations";
-import { InputField } from "../../ui/InputField";
-import { ProgressButton } from "../../ui/ProgressButton";
-import SnackAlert from "../../ui/SnackAlert";
+import { v4 as uuidv4 } from "uuid";
+import * as z from "zod";
+
+const createNewCue = () => {
+	return { id: `cue_${uuidv4()}`, key: "", details: "" };
+};
 
 export const NoteForm = () => {
-	const { snack, setSnack } = useSnack();
-	const navigate = useNavigate();
-
-	const { isLoading, mutate } = useMutateQuery(
-		"student/submitNote",
-		"student/submitNote"
-	);
-
-	const { handleSubmit, control, ...methods } = useForm({
+	const router = useRouter();
+	const { toast } = useToast();
+	const form = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
 		defaultValues: {
 			title: "",
-			cues: [
-				{
-					key: "",
-					details: "",
-				},
-			],
 			details: "",
+			cues: [createNewCue()],
 		},
-		mode: "onSubmit",
-		resolver: yupResolver(noteSchema),
+	});
+	const {
+		append: appendCue,
+		remove: removeCue,
+		fields: cues,
+	} = useFieldArray({
+		name: "cues",
+		control: form.control,
 	});
 
-	useCustomValidation("title", "student/titleCheck", methods, "Title", {
-		title: methods.watch("title"),
-		collection: "notes",
-		user_id: localUserData().uid,
-	});
-
-	const onSubmit = (data) => {
-		console.log(data);
-		mutate(
-			{
-				...data,
-				user_id: localUserData().uid,
-			},
-			{
-				onSuccess: (response) => {
-					console.log(response);
-					setSnack((prev) => ({
-						...prev,
-						open: true,
-						status: "success",
-						title: "Success",
-						message: "Note created successfully!",
-					}));
-					queryClient.invalidateQueries("student/notes");
-					navigate(0);
-				},
-				onError: (error) => {
-					console.log(error);
-					setSnack((prev) => ({
-						...prev,
-						open: true,
-						status: "error",
-						title: "Failed",
-						message: "Something went wrong! Please try again.",
-					}));
-				},
+	const queryClient = useQueryClient();
+	const { isPending, mutate } = useMutation({
+		mutationKey: ["note/create"],
+		mutationFn: async (values: z.infer<typeof formSchema>) =>
+			await createNote(values),
+		onSuccess: async (success) => {
+			if (success) {
+				form.reset();
+				toast({
+					title: "Success!",
+					description: "Note created successfully!",
+				});
+				router.refresh();
 			}
-		);
+		},
+	});
+
+	function onSubmit(values: z.infer<typeof formSchema>) {
+		mutate(values);
+	}
+
+	const handleAddNewCue = () => {
+		appendCue(createNewCue());
 	};
 
-	const { fields, append, remove } = useFieldArray({
-		control,
-		name: "cues",
-	});
+	const handleRemoveCue = (index: number) => {
+		removeCue(index);
+	};
 
 	return (
-		<Box
-			component="form"
-			noValidate
-			onSubmit={handleSubmit(onSubmit)}
-			sx={{
-				mt: 3,
-			}}>
-			<Grid container spacing={2} justifyContent={"center"}>
-				<Grid item xs={12}>
-					<InputField id="title" label="Title" control={control} fullWidth />
-				</Grid>
-
-				<Grid item xs={12}>
-					<InputField
-						id="details"
-						control={control}
-						label="Details"
-						fullWidth
-						multiline
-						rows={2}
-					/>
-				</Grid>
-
-				{fields.map((item, index) => (
-					<Grid
-						key={item.id}
-						width={"100%"}
-						container
-						spacing={2}
-						marginTop={1}
-						marginLeft={0}>
-						<Grid item xs={3}>
-							<InputField
-								id={`cues[${index}].key`}
-								control={control}
-								fullWidth
-								label="Key"
-							/>
-						</Grid>
-						<Grid item xs={7}>
-							<InputField
-								id={`cues[${index}].details`}
-								control={control}
-								label="Details"
-								fullWidth
-								multiline
-								rows={1}
-							/>
-						</Grid>
-						<Grid item xs={1}>
-							<IconButton
-								sx={{
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "center",
-									mt: 1,
-								}}
-								disabled={fields.length === 8}
-								color="primary"
-								onClick={() => {
-									append({
-										key: "",
-										details: "",
-									});
-								}}>
-								<AddCircle sx={{ fontSize: 25 }} />
-							</IconButton>
-						</Grid>
-						<Grid item xs={1}>
-							<IconButton
-								sx={{
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "center",
-									mt: 1,
-								}}
-								aria-label="delete"
-								color="primary"
-								disabled={fields.length === 1}
-								onClick={() => {
-									remove(index);
-								}}>
-								<CancelRounded
-									sx={{
-										fontSize: 25,
-										color: fields.length === 1 ? "inherit" : "#ff5252",
-									}}
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+				<FormField
+					control={form.control}
+					name="title"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Input
+									placeholder="Give a title.."
+									{...field}
+									className="shadow-none border-slate-300 font-medium"
 								/>
-							</IconButton>
-						</Grid>
-					</Grid>
-				))}
-
-				<Grid
-					item
-					xs={12}
-					sx={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-					}}>
-					<ProgressButton loading={isLoading} text={"Create New Note"} />
-				</Grid>
-			</Grid>
-			<SnackAlert
-				open={snack.open}
-				status={snack.status}
-				message={snack.message}
-				title={snack.title}
-				exit={snack.exit}
-				setSnack={setSnack}
-			/>
-		</Box>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="details"
+					render={({ field }) => (
+						<FormItem className="mb-16">
+							<FormControl>
+								<Textarea
+									placeholder="Add details to your note..."
+									rows={4}
+									{...field}
+									className="shadow-none font-medium"
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<div className="px-2 py-4 rounded-md">
+					<div className="flex flex-row justify-between items-center pb-4 px-2">
+						<p className="text-slate-800 text-lg font-bold">Cue Section</p>
+						<Button
+							type="button"
+							onClick={handleAddNewCue}
+							className="bg-slate-900 hover:bg-slate-800">
+							New Cue
+						</Button>
+					</div>
+					<div className="flex flex-col gap-4">
+						{cues.map((item, index) => (
+							<div key={item.id} className="flex md:flex-row gap-3 flex-col">
+								<FormField
+									control={form.control}
+									name={`cues.${index}.key`}
+									render={({ field }) => (
+										<FormItem className="w-full md:max-w-48">
+											<FormControl>
+												<Input
+													placeholder="Give a key.."
+													{...field}
+													className="shadow-none border-slate-300 bg-white font-medium"
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name={`cues.${index}.details`}
+									render={({ field }) => (
+										<FormItem className="w-full">
+											<FormControl>
+												<Input
+													placeholder="Add details.."
+													{...field}
+													className="shadow-none border-slate-300 bg-white font-medium"
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<TrashIcon
+									onClick={() => handleRemoveCue(index)}
+									className="size-6 md:size-10 text-slate-600 hover:text-red-500 cursor-pointer"
+								/>
+							</div>
+						))}
+					</div>
+				</div>
+				<Button
+					className="px-8 origin-center flex flex-row gap-2 mx-auto"
+					disabled={form.formState.isSubmitting || isPending}
+					type="submit">
+					{(form.formState.isSubmitting || isPending) && (
+						<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+					)}
+					Create Note
+				</Button>
+			</form>
+		</Form>
 	);
 };

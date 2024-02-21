@@ -1,56 +1,55 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {
-	AccordionDetails,
-	AccordionSummary,
-	Box,
-	Accordion as MuiAccordion,
-	Stack,
-	Typography,
-	useTheme,
-} from "@mui/material";
-import { PropTypes } from "prop-types";
-import { useState } from "react";
-import { BiClipboard } from "react-icons/bi";
-import { colors } from "src/utils";
+"use client";
 
-export const Accordion = ({ data }) => {
-	const [expanded, setExpanded] = useState(false);
-	const theme = useTheme();
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
+import * as React from "react";
 
-	const handleChange = (panel) => (event, isExpanded) => {
-		setExpanded(isExpanded ? panel : false);
-	};
+import { cn } from "@/lib/utils";
 
-	return (
-		<MuiAccordion
-			key={data.key}
-			sx={{
-				boxShadow: theme.shadows[4],
-			}}
-			expanded={expanded === `panel${data.key}`}
-			onChange={handleChange(`panel${data.key}`)}>
-			<AccordionSummary
-				expandIcon={<ExpandMoreIcon />}
-				aria-controls={`panel${data.key}bh-content`}
-				id={`panel${data.key}bh-header`}>
-				<Stack direction="row" alignItems={"center"} width={"100%"}>
-					<Box pr={4} display="flex">
-						<BiClipboard size={25} color={theme.palette.primary.main} />
-					</Box>
-					<Typography
-						sx={{ color: theme.palette.primary.main }}
-						fontWeight={theme.typography.fontWeightBold}>
-						{data.key}
-					</Typography>
-				</Stack>
-			</AccordionSummary>
-			<AccordionDetails>
-				<Typography color={colors.text_light}>{data.details}</Typography>
-			</AccordionDetails>
-		</MuiAccordion>
-	);
-};
+const Accordion = AccordionPrimitive.Root;
 
-Accordion.propTypes = {
-	data: PropTypes.object.isRequired,
-};
+const AccordionItem = React.forwardRef<
+	React.ElementRef<typeof AccordionPrimitive.Item>,
+	React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
+>(({ className, ...props }, ref) => (
+	<AccordionPrimitive.Item
+		ref={ref}
+		className={cn("border-b", className)}
+		{...props}
+	/>
+));
+AccordionItem.displayName = "AccordionItem";
+
+const AccordionTrigger = React.forwardRef<
+	React.ElementRef<typeof AccordionPrimitive.Trigger>,
+	React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+	<AccordionPrimitive.Header className="flex">
+		<AccordionPrimitive.Trigger
+			ref={ref}
+			className={cn(
+				"flex flex-1 items-center justify-between py-4 font-medium transition-all [&[data-state=open]>svg]:rotate-180",
+				className
+			)}
+			{...props}>
+			{children}
+			<ChevronDownIcon className="h-4 w-4 shrink-0 transition-transform duration-200 text-blue-500" />
+		</AccordionPrimitive.Trigger>
+	</AccordionPrimitive.Header>
+));
+AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
+
+const AccordionContent = React.forwardRef<
+	React.ElementRef<typeof AccordionPrimitive.Content>,
+	React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+	<AccordionPrimitive.Content
+		ref={ref}
+		className="overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+		{...props}>
+		<div className={cn("pb-4 pt-0", className)}>{children}</div>
+	</AccordionPrimitive.Content>
+));
+AccordionContent.displayName = AccordionPrimitive.Content.displayName;
+
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger };
