@@ -86,6 +86,7 @@ export const MindmapUpdateForm = ({
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="bg-white absolute top-1 md:top-5 left-1/2 -translate-x-1/2 lg:-translate-x-1/2 border-2 border-slate-200 rounded-md px-3 py-2 hidden  md:flex flex-row gap-2 justify-between items-start w-full max-w-lg">
 				<Button
+					type="button"
 					onClick={() => router.back()}
 					variant="outline"
 					size="icon"
@@ -110,6 +111,7 @@ export const MindmapUpdateForm = ({
 					)}
 				/>
 				<Toggle
+					type="button"
 					variant="outline"
 					pressed={editable}
 					onPressedChange={() => setEditable(!editable)}>
