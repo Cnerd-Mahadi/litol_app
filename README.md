@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Welcome to LITOL APP
 
-## Getting Started
+An implementation of a web app based on a thesis on active learning methods catering the student demography. Implements features like Summarization, Cornell Note Taking, Mind Mapping and Feynman Technique. Used by more than 60+ users.
 
-First, run the development server:
+### N.B: 🚀 App is still going through incremental development phase. And currently only available for pc.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Technologies
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+NextJS, TailwindCSS, ShadCN, ReactFlow, ReactQuery, Firebase Tools, Contentful
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+🚀 <b>Learn Section:</b> This section is provided as an extension with Feynman section. In this section students can learn the provided topics from range of subjects. And if they have difficulties in understanding any of the topic they can ask for help from other students using Feynman request button provided in the bottom.
 
-## Learn More
+🚀 <b>Summary:</b> Users can summarize about a topic or content they have learned. The speciality of this feature is it contains keys. Keys are basically keyword related to the topic. The strategy is the details of the topic would be hidden to students for them to recall while studying. Only the keys will be shown. Students will try to recall the material using the hint of the content. If they are unable to do that there is a show button to reveal the content.
 
-To learn more about Next.js, take a look at the following resources:
+🚀 <b>Note:</b> This section is specially designed for taking class notes. Students can take notes during class using Cornell Note Taking strategy. It contains cues. Cues are consist of key and details. It is used to structure the material in a question answer manner. Where the key is a question and the detail is the answer. It helps students to take structured note based on question-answer in the classroom.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+🚀 <b>Mind Map:</b> Students can create mind map in a drawing board. It contains title, nodes and edges. It is just like traditional mind mapping technique but for online. Massively helpful for brainstorming and analysis.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+🚀 <b>Feyman Gallery:</b> When a student requests a topic to be discussed in the learn section, that request will be stored in the Feynman section for other students to see. If a student wants to teach that topic to students who have requested it, they can invite them to a session using a Google Meet link. A session can contain up to 4 students. This technique is based on the principle articulated by Richard Feynman that "teaching is to learn twice." When a student conducts a Feynman session, they will better understand the topic by teaching it, and the other students will learn the topic from them.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+<br><br>
