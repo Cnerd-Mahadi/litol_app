@@ -6,7 +6,7 @@ An implementation of a web app based on a thesis on active learning methods cate
 
 ## Technologies
 
-React, Laravel, ReactFlow, MaterialUI, ReactQuery, Firebase Tools, Contentful
+NextJS, TailwindCSS, ShadCN, ReactFlow, ReactQuery, Firebase Tools, Contentful
 
 ## Features
 
