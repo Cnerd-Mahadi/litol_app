@@ -2,10 +2,8 @@
 
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\FeynmanController;
-use App\Http\Controllers\LogController;
 use App\Http\Controllers\MindMapController;
 use App\Http\Controllers\NoteController;
-use App\Http\Controllers\SignUpController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SummaryController;
 use Illuminate\Support\Facades\Route;
@@ -24,21 +22,19 @@ use Illuminate\Support\Facades\Route;
 // This is just the working or not test
 
 Route::get('/test', function () {
-    return "<h1>Well Hello There, API IN TESTED</h1>";
+    return view('reset');
+    // "<h1>Well Hello There, API IN TESTED</h1>";
 });
 
-// API starts from here
-
-Route::post('/login', [LogController::class, 'loginSubmit']);
-Route::post('/signUp', [SignUpController::class, 'signUpSubmit']);
 
 
 // Route::get('/student/subjects', [StudentController::class, 'subjects'])->middleware('validStudent');
 // Route::get('/student/subject/{subject_id}', [StudentController::class, 'contentsBySubject'])->middleware('validStudent');
 // Route::get('/student/content/{content_id}', [StudentController::class, 'contentDetails'])->middleware('validStudent');
-Route::get('/student/usernameCheck', [StudentController::class, 'usernameCheck']);
-Route::get('/student/emailCheck', [StudentController::class, 'emailCheck']);
+Route::get('/student/dashboard', [StudentController::class, 'dashboardInfo'])->middleware('validStudent');
 Route::get('/student/titleCheck', [ContentController::class, 'titleCheck'])->middleware('validStudent');
+Route::get('/student/titleUpdateCheck', [ContentController::class, 'titleCheckUpdated'])->middleware('validStudent');
+
 
 
 Route::post('/student/submitSummary', [SummaryController::class, 'submitSummary'])->middleware('validStudent');

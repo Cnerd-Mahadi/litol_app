@@ -1,32 +1,29 @@
-import { Box } from "@mui/system";
-import React from "react";
-import { useGraphQuery } from "../../hooks/useGraphQuery";
-import { subjectsQuery } from "../../utilities/graphqlQueries";
-import { SubjectCard } from "./../../components/cards/SubjectCard";
-import { Loading } from "./../Loading";
+import { Grid } from "@mui/material";
+import { SubjectCard } from "src/components/layouts/Learn/SubjectCard";
+import { Loading } from "src/components/ui/Loading";
+import { useGraphQuery } from "src/hooks/useGraphQuery";
+import { subjectsQuery } from "src/utils/graphqlQueries";
 
 const showSubjects = ({ name, image, sys }) => {
 	return (
-		<SubjectCard key={sys.id} id={sys.id} image={image.url} subject={name} />
+		<Grid key={sys.id} item md={3}>
+			<SubjectCard id={sys.id} image={image.url} subject={name} />
+		</Grid>
 	);
 };
 
 export const Subject = () => {
 	const { isLoading, data } = useGraphQuery("subjects", subjectsQuery);
+	console.log(data);
 	const subjects = data ? data.data.subjectCollection.items : null;
 
-	if (isLoading) return <Loading />;
+	if (isLoading) return <Loading sx={{ my: 4 }} />;
 
 	console.log(subjects);
 
 	return (
-		<Box
-			sx={{
-				display: "flex",
-				flexWrap: "wrap",
-				marginTop: "20px",
-			}}>
-			{subjects.map(showSubjects)}
-		</Box>
+		<Grid container padding={4} spacing={4}>
+			{subjects?.map(showSubjects)}
+		</Grid>
 	);
 };

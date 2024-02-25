@@ -8,6 +8,7 @@ class FirebaseServices
 {
     private static $database;
     private static $bucket;
+    private static $auth;
     public function __construct()
     {
         $firestore = app('firebase.firestore');
@@ -15,6 +16,13 @@ class FirebaseServices
 
         $firestorage = app('firebase.storage');
         self::$bucket = $firestorage->getBucket();
+
+        self::$auth = app('firebase.auth');
+    }
+
+    public function getAuth()
+    {
+        return self::$auth;
     }
 
     public function getCollection($collection)

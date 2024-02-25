@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Helpers\ResponseHelper;
 use App\Rules\BeUniqueTitle;
+use App\Rules\BeUniqueTitleUpdated;
 use App\Rules\CheckJson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -61,7 +62,7 @@ class MindMapServices
     public function updateMindMap(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:255', new BeUniqueTitleUpdated('mindmaps', $request->user_id, $request->id)],
             'nodes' => ['required', new CheckJson()],
             'edges' => ['required', new CheckJson()],
         ]);
@@ -79,7 +80,7 @@ class MindMapServices
         ];
 
         try {
-            $this->firebaseService->getCollection('mindmaps')->document($request->mindmap_id)->set($mindmap);
+            $this->firebaseService->getCollection('mindmaps')->document($request->id)->set($mindmap);
             return ResponseHelper::success('MindMap updated successfully');
 
         } catch (\Throwable $th) {

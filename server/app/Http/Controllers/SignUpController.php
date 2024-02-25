@@ -23,24 +23,22 @@ class SignUpController extends Controller
 
     public function signUpSubmit(Request $request)
     {
-        $validation = $this->signupService->checkValidation($request, $request->role);
+        $validation = $this->signupService->checkValidation($request);
         if ($validation->fails()) {
             return ResponseHelper::error($validation->errors());
         }
 
         try {
-            $savedUser = $request->role === "student" ? $this->signupService->createStudent($request)
-                : $this->signupService->createCreator($request);
+            $savedUser = $this->signupService->createStudent($request);
             return ResponseHelper::success([
-                'token' => $this->authService->generateAuthToken($savedUser->id(), $request->role),
+                'token' => $this->authService->generateAuthToken($savedUser->id()),
                 'userInfo' => [
                     'id' => $savedUser->id(),
                     'name' => $request->username,
                     'email' => $request->email,
-                    'role' => $request->role,
                     'dob' => $request->dob
                 ],
-            ]);
+            ], 201);
 
         } catch (\Throwable $th) {
             return ResponseHelper::error([

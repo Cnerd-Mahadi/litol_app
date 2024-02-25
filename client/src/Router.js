@@ -1,13 +1,12 @@
-import React from "react";
 import { createBrowserRouter, redirect } from "react-router-dom";
-import { App } from "./App";
-import { MindMapCanvas } from "./layouts/mindmap/MindMapCanvas";
-import { MindMapCanvasDetails } from "./layouts/mindmap/MindMapCanvasDetails";
-import { Error } from "./pages/Error";
+import App from "./App";
+
+import { MindMapCanvas } from "./components/layouts/Mindmap/MindMapCanvas";
+import { MindMapCanvasDetails } from "./components/layouts/Mindmap/MindMapCanvasDetails";
+import { Error } from "./components/ui/Error";
 import { SignIn } from "./pages/SignIn";
-import { SignUp } from "./pages/SignUp";
 import { Content } from "./pages/student/Content";
-import { FeynmanLayout } from "./pages/student/FeynmanLayout";
+import { Feynman } from "./pages/student/Feynman";
 import { LearnDetails } from "./pages/student/LearnDetails";
 import { MindMap } from "./pages/student/MindMap";
 import { Note } from "./pages/student/Note";
@@ -17,7 +16,7 @@ import { StudentLayout } from "./pages/student/StudentLayout";
 import { Subject } from "./pages/student/Subject";
 import { Summary } from "./pages/student/Summary";
 import { SummaryDetails } from "./pages/student/SummaryDetails";
-import { getLocalData } from "./utilities/utility";
+import { localUserData } from "./utils";
 
 export const Router = createBrowserRouter([
 	{
@@ -28,20 +27,20 @@ export const Router = createBrowserRouter([
 			{
 				index: true,
 				element: <SignIn />,
+				loader: () => {
+					const signedIn = localUserData();
+					return signedIn ? redirect("/student/dash") : null;
+				},
 			},
 			{
-				path: "/signup",
-				element: <SignUp />,
-			},
-			{
-				path: "/student",
 				element: <StudentLayout />,
 				loader: () => {
-					return getLocalData("userData") ? null : redirect("/");
+					const signedIn = localUserData();
+					return signedIn ? null : redirect("/");
 				},
 				children: [
 					{
-						index: true,
+						path: "/student/dash",
 						element: <StudentDash />,
 					},
 					{
@@ -86,7 +85,7 @@ export const Router = createBrowserRouter([
 					},
 					{
 						path: "/student/feynman",
-						element: <FeynmanLayout />,
+						element: <Feynman />,
 					},
 				],
 			},

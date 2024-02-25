@@ -20,6 +20,11 @@ class StudentController extends Controller
         $this->userService = $userService;
     }
 
+    public function dashboardInfo(Request $request)
+    {
+        return ResponseHelper::success($this->studentService->getDashboardInfo($request->user_id));
+    }
+
     public function usernameCheck(Request $request)
     {
         return ResponseHelper::success($this->userService->checkUniqueUser($request->username));

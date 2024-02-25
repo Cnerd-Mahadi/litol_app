@@ -29,7 +29,6 @@ class FeynmanServices
     public function requestFeynman($request)
     {
         $feynman = $this->checkRequested($request);
-        $user = $this->firebaseService->getDocument($request->user_id, 'users');
 
         if ($feynman->found)
             return ResponseHelper::success([
@@ -38,14 +37,14 @@ class FeynmanServices
             ]);
         else {
             if (!$feynman->status || $feynman->status === 0)
-                return $this->addFeynman($request, $user);
+                return $this->addFeynman($request);
             else {
                 if ($feynman->status === 1)
-                    return $this->updateFeynman($user, $feynman->feynmanId, 2, 'B');
+                    return $this->updateFeynman($feynman->feynmanId, 2, 'B', $request);
                 else if ($feynman->status === 2)
-                    return $this->updateFeynman($user, $feynman->feynmanId, 3, 'C');
+                    return $this->updateFeynman($feynman->feynmanId, 3, 'C', $request);
                 else if ($feynman->status === 3)
-                    return $this->updateFeynman($user, $feynman->feynmanId, false, 'D');
+                    return $this->updateFeynman($feynman->feynmanId, false, 'D', $request);
             }
         }
     }
@@ -56,7 +55,6 @@ class FeynmanServices
             ->where('contentId', '==', $request->content_id)
             ->documents();
         $feynman = $this->firebaseService->getData($feynmanSnap);
-
         if (sizeof($feynman) === 0) {
             return $this->firebaseService->snapToObject([
                 'found' => false,
@@ -96,7 +94,7 @@ class FeynmanServices
         }
     }
 
-    public function addFeynman($request, $user)
+    public function addFeynman($request)
     {
         $feynman = [
             'updated' => date("F j, Y, g:i a"),
@@ -104,9 +102,10 @@ class FeynmanServices
             'status' => 1,
             'slots' => [
                 'A' => [
-                    'userId' => $user->id,
-                    'username' => $user->data->username,
-                    'email' => $user->data->email
+                    'userId' => $request->user_id,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'image' => $request->image
                 ]
             ]
         ];
@@ -125,7 +124,7 @@ class FeynmanServices
         }
     }
 
-    public function updateFeynman($user, $documentId, $status, $slotPoint)
+    public function updateFeynman($documentId, $status, $slotPoint, $request)
     {
         try {
             $this->firebaseService->getCollection('feynmen')->document($documentId)->update([
@@ -134,9 +133,10 @@ class FeynmanServices
                 [
                     'path' => 'slots.' . $slotPoint,
                     'value' => [
-                        'userId' => $user->id,
-                        'username' => $user->data->username,
-                        'email' => $user->data->email
+                        'userId' => $request->user_id,
+                        'name' => $request->name,
+                        'email' => $request->email,
+                        'image' => $request->image
                     ]
                 ]
             ]);
@@ -157,7 +157,7 @@ class FeynmanServices
     {
         $meetingData = new stdClass();
         $meetingData->id = $request->feynman_id;
-        $meetingData->resolverName = $request->resolver;
+        $meetingData->resolverName = $request->resolverName;
         $meetingData->topic = $request->topic;
         $meetingData->subject = $request->subject;
         $meetingData->link = $request->link;
@@ -166,11 +166,10 @@ class FeynmanServices
         try {
             $feynmanRequest = $this->firebaseService->getDocument($request->feynman_id, 'feynmen');
             $emailList = $this->createEmailList($feynmanRequest->data->slots);
-            foreach ($emailList as $recipient) {
-                Mail::to($recipient->email)
-                    ->queue(new ConfirmationMail($recipient->username, $meetingData));
-            }
-            $this->firebaseService->getCollection('feynmen')->document($request->feynman_id)->delete();
+            Mail::to("mahadidroid@gmail.com")
+                    ->send(new ConfirmationMail("Cnerd", $meetingData));
+            
+            // $this->firebaseService->getCollection('feynmen')->document($request->feynman_id)->delete();
 
             return ResponseHelper::success("Feynman request resolved successfully");
 

@@ -1,103 +1,52 @@
-import { Link, Paper, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import * as React from "react";
-import "swiper/css";
-import "swiper/css/pagination";
-import { MindMapCard } from "../../components/cards/MindMapCard";
-import { NotAvailable } from "../../components/common/NotAvailable";
-import { useGetQuery } from "../../hooks/useGetQuery";
-import { getHeader, getLocalData, headerType } from "../../utilities/utility";
-import { Loading } from "../Loading";
+import { MindMapCard } from "src/components/layouts/Mindmap/MindMapCard";
+import { Link } from "src/components/ui/Link";
+import { Loading } from "src/components/ui/Loading";
+import { NotAvailable } from "src/components/ui/NotAvailable";
+import { useGetQuery } from "src/hooks/useGetQuery";
+import { localUserData } from "src/utils";
+import { images } from "src/utils/resources";
 
 const getContents = ({ id, data }) => {
 	return (
-		<MindMapCard key={id} id={id} title={data.title} updated={data.updated} />
+		<Grid key={id} item md={3}>
+			<MindMapCard id={id} title={data.title} updated={data.updated} />
+		</Grid>
 	);
 };
 
-const localUserData = getLocalData("userData");
-
 export const MindMap = () => {
-	const { isLoading, data } = useGetQuery(
-		"student/mindmaps",
-		`student/mindmaps/${localUserData.userInfo.id}`,
-		getHeader(headerType.tokenize, localUserData.token)
+	const { isLoading, data: response } = useGetQuery(
+		["student/mindmaps", localUserData().uid],
+		`student/mindmaps/${localUserData().uid}`
 	);
 
-	console.log(data);
-
-	if (isLoading) return <Loading />;
+	const mindmaps = response ? response.data.mindmaps : [];
 
 	return (
-		<>
-			<Grid
-				container
-				spacing={2}
-				maxWidth={"sm"}
-				display={"flex"}
-				justifyContent={"center"}
-				sx={{
-					m: "auto",
-				}}>
-				<Grid item xs={12} textAlign={"center"}>
-					<img src="/image/basic/mindmap.png" width={"50%"} alt="" />
-				</Grid>
-				<Grid item xs={12}>
-					<Typography variant="h3" sx={{ textAlign: "center" }}>
-						Create Mind Map
-					</Typography>
-				</Grid>
-				<Grid item xs={12}>
-					<Link href={"/student/mindmap/board/" + localUserData.userInfo.id}>
-						<Button
-							type="submit"
-							fullWidth
-							variant="contained"
-							sx={{ mt: 3, mb: 2 }}>
-							Start Mapping
-						</Button>
-					</Link>
-				</Grid>
+		<Container component="main">
+			<Stack alignItems="center" spacing={1} pb={2}>
+				<Box component="img" src={images.mindmap} width={300} alt="summary" />
+				<Typography variant="h3">Create New Mind Map</Typography>
+			</Stack>
+			<Grid item xs={12} textAlign="end">
+				<Link to={`/student/mindmap/board/6ff59a16d0df455b8e35`}>
+					<Button type="submit" variant="contained" sx={{ px: 3.5, my: 2 }}>
+						Create
+					</Button>
+				</Link>
 			</Grid>
-
-			<Paper
-				elevation={3}
-				sx={{
-					pt: 2,
-					pb: 5,
-					mt: 12,
-					mb: 6,
-					backgroundColor: "#fafafa",
-					borderRadius: "48px 48px 0px 0px",
-				}}>
-				<Typography
-					variant="h3"
-					sx={{
-						fontWeight: 700,
-						textAlign: "center",
-						mb: 3,
-					}}>
-					Map Gallery
-				</Typography>
-				<Box>
-					{data.mindmaps.length ? (
-						<Box
-							component={"div"}
-							sx={{
-								display: "flex",
-								flexWrap: "wrap",
-								justifyContent: "center",
-								py: 3,
-							}}>
-							{data.mindmaps.map(getContents)}
-						</Box>
-					) : (
-						<NotAvailable contentType="mindmap content" />
-					)}
-				</Box>
-			</Paper>
-		</>
+			{isLoading ? (
+				<Loading />
+			) : mindmaps.length ? (
+				<Grid container padding={4} paddingBottom={32} spacing={4}>
+					{mindmaps.map(getContents)}
+				</Grid>
+			) : (
+				<NotAvailable contentType="mindmap content" />
+			)}
+		</Container>
 	);
 };

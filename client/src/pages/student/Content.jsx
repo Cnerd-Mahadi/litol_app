@@ -1,27 +1,43 @@
-import { Box } from "@mui/system";
-import React from "react";
+import { Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useGraphQuery } from "../../hooks/useGraphQuery";
-import { contentsQuery } from "../../utilities/graphqlQueries";
-import { Loading } from "../Loading";
-import { TopicCard } from "./../../components/cards/TopicCard";
+
+import { TopicCard } from "src/components/layouts/Learn/TopicCard";
+import { BreadCrumbs } from "src/components/ui/BreadCrumbs";
+import { Link } from "src/components/ui/Link";
+import { Loading } from "src/components/ui/Loading";
+
+import { useGraphQuery } from "src/hooks/useGraphQuery";
+import { colors } from "src/utils";
+import { contentsQuery } from "src/utils/graphqlQueries";
+
+const breadcrumbs = [
+	<Link key="1" to="/student/learn">
+		<Typography variant="h5" color={colors.text}>
+			Learn
+		</Typography>
+	</Link>,
+	<Typography key="2" variant="h5" color={colors.text_light}>
+		Topic
+	</Typography>,
+];
 
 const showContents = ({ title, subjectRef, image, sys }) => {
 	return (
-		<TopicCard
-			key={sys.id}
-			id={sys.id}
-			image={image.url}
-			title={title}
-			subject={subjectRef.name}
-		/>
+		<Grid key={sys.id} item md={3}>
+			<TopicCard
+				id={sys.id}
+				image={image.url}
+				title={title}
+				subject={subjectRef.name}
+			/>
+		</Grid>
 	);
 };
 
 export const Content = () => {
 	const { subjectId } = useParams();
 	const { isLoading, data } = useGraphQuery(
-		"contents",
+		["contents", subjectId],
 		contentsQuery(subjectId)
 	);
 
@@ -31,13 +47,17 @@ export const Content = () => {
 
 	console.log(contents);
 	return (
-		<Box
-			sx={{
-				display: "flex",
-				flexWrap: "wrap",
-				marginTop: "20px",
-			}}>
-			{contents.map(showContents)}
-		</Box>
+		<>
+			<BreadCrumbs
+				breadcrumbs={breadcrumbs}
+				title="Topic"
+				sx={{
+					px: 2,
+				}}
+			/>
+			<Grid container paddingX={4} spacing={4}>
+				{contents.map(showContents)}
+			</Grid>
+		</>
 	);
 };
