@@ -18,6 +18,6 @@ NextJS, TailwindCSS, ShadCN, ReactFlow, ReactQuery, Firebase Tools, Contentful
 
 🚀 <b>Mind Map:</b> Students can create mind map in a drawing board. It contains title, nodes and edges. It is just like traditional mind mapping technique but for online. Massively helpful for brainstorming and analysis.
 
-🚀 <b>Feyman Gallery:</b> When a student requests a topic to be discussed in the learn section, that request will be stored in the Feynman section for other students to see. If a student wants to teach that topic to students who have requested it, they can invite them to a session using a Google Meet link. A session can contain up to 4 students. This technique is based on the principle articulated by Richard Feynman that "teaching is to learn twice." When a student conducts a Feynman session, they will better understand the topic by teaching it, and the other students will learn the topic from them.
+🚀 <b>Feyman Gallery:</b> When a student requests a topic to be discussed in the learn section, that request will be stored in the Feynman section for other students to see. If a student wants to teach that topic to students who have requested it, they can invite them to a session using a Google Meet link. A session can contain up to 4 students. This technique is based on the principle articulated by Richard Feynman that "teaching is to learn twice." When a student conducts a Feynman session, they will better understand the topic by teaching it, and the other students will learn the topics from them.
 
 <br><br>
