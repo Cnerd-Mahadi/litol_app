@@ -1,48 +1,48 @@
 "use client";
 
 import googleImage from "@/../public/assets/google.png";
-import { auth, googleSignIn, saveSession } from "@/lib/firebase/client";
+import { getResponse } from "@/lib/firebase";
+import { auth, saveSession } from "@/lib/firebase/client";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { getRedirectResult } from "firebase/auth";
+import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../../ui/button";
 
 export const LoginButton = () => {
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
-	const handleLogin = async () => {
-		setLoading(true);
-		await googleSignIn();
-		setLoading(false);
-	};
 
-	useEffect(() => {
-		(async () => {
-			setLoading(true);
-			const userCred = await getRedirectResult(auth);
-			if (userCred) {
-				const idToken = await userCred.user.getIdToken();
-				const isOk = await saveSession(idToken);
+	const loginWitnGoogle = useGoogleLogin({
+		onSuccess: async (codeResponse) => {
+			console.log(codeResponse);
+			const idTOken = await getResponse(codeResponse.code);
+			const credential = GoogleAuthProvider.credential(idTOken);
+
+			signInWithCredential(auth, credential).then(async (res) => {
+				const idToken = await auth.currentUser?.getIdToken();
+				console.log(idTOken, "__________________");
+				const isOk = await saveSession(idToken!!);
 				if (isOk) router.push("/");
-			}
-			setLoading(false);
-		})();
-	}, [router]);
+			});
+		},
+		flow: "auth-code",
+	});
 
 	return (
 		<Button
-			onClick={handleLogin}
+			onClick={loginWitnGoogle}
 			variant={"outline"}
 			disabled={loading ? true : false}
-			className="px-8 py-5 flex flex-row items-center justify-center rounded-full gap-3 mx-auto max-w-60 w-full">
+			className="flex flex-row justify-center items-center gap-3 mx-auto px-8 py-5 rounded-full w-full max-w-60">
 			{loading ? (
-				<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+				<ReloadIcon className="mr-2 w-4 h-4 animate-spin" />
 			) : (
 				<Image src={googleImage} alt="google-image" className="w-4" />
 			)}
-			<p className="font-medium text-sm text-blue-500">Google</p>
+			<p className="font-medium text-blue-500 text-sm">Google</p>
 		</Button>
 	);
 };

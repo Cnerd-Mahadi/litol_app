@@ -2,6 +2,7 @@
 
 import { userSchema } from "@/types";
 import { getAuth } from "firebase-admin/auth";
+import { OAuth2Client } from "google-auth-library";
 import { cookies } from "next/headers";
 import { isUserAuthenticated } from "./admin";
 
@@ -31,3 +32,14 @@ export async function getCurrentUser() {
 	const user = userSchema.parse(userRaw);
 	return user;
 }
+
+export const getResponse = async (code: string) => {
+	const oAuth2Client = new OAuth2Client(
+		process.env.AUTH_GOOGLE_ID,
+		process.env.AUTH_GOOGLE_SECRET,
+		"postmessage"
+	);
+	const { tokens } = await oAuth2Client.getToken(code);
+	console.log(tokens, "__________IOP");
+	return tokens.id_token;
+};

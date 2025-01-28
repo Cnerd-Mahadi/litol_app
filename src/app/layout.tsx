@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { PrimeProvider } from "@/contexts/prime-provider";
 import { FlowProvider } from "@/contexts/react-flow-provider";
 import { ReactQueryProvider } from "@/contexts/react-query-provider";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -22,9 +23,11 @@ export default async function RootLayout({
 		<html lang="en">
 			<body className={`inter.className`}>
 				<ReactQueryProvider>
-					<PrimeProvider>
-						<FlowProvider>{children}</FlowProvider>
-					</PrimeProvider>
+					<GoogleOAuthProvider clientId={process.env.AUTH_GOOGLE_ID!}>
+						<PrimeProvider>
+							<FlowProvider>{children}</FlowProvider>
+						</PrimeProvider>
+					</GoogleOAuthProvider>
 				</ReactQueryProvider>
 				<Toaster />
 			</body>
