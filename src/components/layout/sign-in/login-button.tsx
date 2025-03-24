@@ -1,11 +1,10 @@
 "use client";
 
 import googleImage from "@/../public/assets/google.png";
-import { getResponse } from "@/lib/firebase";
+import { useToast } from "@/components/ui/use-toast";
 import { auth, saveSession } from "@/lib/firebase/client";
-import { ReloadIcon } from "@radix-ui/react-icons";
-import { useGoogleLogin } from "@react-oauth/google";
-import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import { useProgress } from "@bprogress/next";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,35 +12,52 @@ import { Button } from "../../ui/button";
 
 export const LoginButton = () => {
 	const [loading, setLoading] = useState(false);
+	const { toast } = useToast();
 	const router = useRouter();
+	const progress = useProgress();
 
-	const loginWitnGoogle = useGoogleLogin({
-		onSuccess: async (codeResponse) => {
-			console.log(codeResponse);
-			const idTOken = await getResponse(codeResponse.code);
-			const credential = GoogleAuthProvider.credential(idTOken);
+	const loginWithGoogle = async () => {
+		setLoading(true);
+		await signInWithPopup(auth, new GoogleAuthProvider()).then(
+			async (result) => {
+				const user = result.user;
+				const idToken = await result.user.getIdToken();
 
-			signInWithCredential(auth, credential).then(async (res) => {
-				const idToken = await auth.currentUser?.getIdToken();
-				console.log(idTOken, "__________________");
-				const isOk = await saveSession(idToken!!);
-				if (isOk) router.push("/");
-			});
-		},
-		flow: "auth-code",
-	});
+				if (idToken) {
+					const isOk = await saveSession(idToken, user);
+
+					if (isOk) {
+						progress.start();
+						router.push("/");
+						progress.enableAutoStop();
+					} else {
+						setLoading(false);
+						progress.stop();
+						toast({
+							title: "Sorry!",
+							description: "Something went wrong! Please try again.",
+						});
+					}
+				}
+
+				if (!idToken) {
+					toast({
+						title: "Oops!",
+						description: "Something went wrong! Please try again.",
+					});
+					setLoading(false);
+				}
+			}
+		);
+	};
 
 	return (
 		<Button
-			onClick={loginWitnGoogle}
+			onClick={loginWithGoogle}
 			variant={"outline"}
 			disabled={loading ? true : false}
 			className="flex flex-row justify-center items-center gap-3 mx-auto px-8 py-5 rounded-full w-full max-w-60">
-			{loading ? (
-				<ReloadIcon className="mr-2 w-4 h-4 animate-spin" />
-			) : (
-				<Image src={googleImage} alt="google-image" className="w-4" />
-			)}
+			<Image src={googleImage} alt="google-image" className="w-4" />
 			<p className="font-medium text-blue-500 text-sm">Google</p>
 		</Button>
 	);

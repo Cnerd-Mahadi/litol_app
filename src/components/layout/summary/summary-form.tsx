@@ -122,11 +122,11 @@ export const SummaryForm = () => {
 					)}
 				/>
 				<Button
-					className="px-8 origin-center flex flex-row gap-2 mx-auto"
+					className="flex flex-row gap-2 mx-auto px-8 origin-center"
 					disabled={form.formState.isSubmitting || isPending}
 					type="submit">
 					{(form.formState.isSubmitting || isPending) && (
-						<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+						<ReloadIcon className="mr-2 w-4 h-4 animate-spin" />
 					)}
 					Create Summary
 				</Button>

@@ -9,21 +9,16 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/user-provider";
-import { signOut } from "@/lib/firebase/client";
+import { useLogOut } from "@/hooks/logout-hook";
 import { formatedName } from "@/utils";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { MdOutlineLogout } from "react-icons/md";
 
 export const DropdownMobile = () => {
-	const router = useRouter();
+	const { handleLogOut, loading } = useLogOut();
 	const user = useUser();
 	const name = formatedName(user.name);
 
-	const handleLogOut = async () => {
-		const isOk = await signOut();
-		if (isOk) router.push("/signin");
-	};
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger>
@@ -32,20 +27,21 @@ export const DropdownMobile = () => {
 					width={200}
 					height={200}
 					alt="user-pic"
-					className="size-8 rounded-full"
+					className="rounded-full size-8"
 				/>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
 				<DropdownMenuLabel>
-					<h3 className="text-cyan-700 font-semibold pb-2">Welcome</h3>
-					<p className="text-slate-500 font-semibold">{name}</p>
+					<h3 className="pb-2 font-semibold text-cyan-700">Welcome</h3>
+					<p className="font-semibold text-slate-500">{name}</p>
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem className="py-0">
 					<Button
 						variant="ghost"
 						onClick={handleLogOut}
-						className=" text-slate-500 hover:text-blue-500 w-full gap-3">
+						disabled={loading}
+						className="gap-3 w-full text-slate-500 hover:text-blue-500">
 						<MdOutlineLogout size={20} />
 						<p>Log Out</p>
 					</Button>

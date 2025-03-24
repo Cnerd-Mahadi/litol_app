@@ -12,8 +12,9 @@ export async function GET() {
 		);
 
 	cookies().delete("__session");
+	const session = (await JSON.parse(sessionCookie)).session;
 
-	await revokeAllSessions(sessionCookie);
+	await revokeAllSessions(session);
 
 	return Response.json({
 		success: true,

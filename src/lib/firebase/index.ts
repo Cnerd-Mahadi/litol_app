@@ -1,10 +1,8 @@
 "use server";
 
 import { userSchema } from "@/types";
-import { getAuth } from "firebase-admin/auth";
 import { OAuth2Client } from "google-auth-library";
 import { cookies } from "next/headers";
-import { isUserAuthenticated } from "./admin";
 
 export async function getSession() {
 	try {
@@ -16,19 +14,11 @@ export async function getSession() {
 
 export async function getCurrentUser() {
 	const session = await getSession();
-	if (!session || !(await isUserAuthenticated(session))) {
+	if (!session) {
 		throw new Error("Session not found or not valid!");
 	}
 
-	const decodedIdToken = await getAuth().verifySessionCookie(session);
-	const retrievedUser = await getAuth().getUser(decodedIdToken.uid);
-	const userRaw = {
-		name: retrievedUser.displayName,
-		email: retrievedUser.email,
-		image: retrievedUser.photoURL,
-		id: retrievedUser.uid,
-	};
-
+	const userRaw = (await JSON.parse(session)).user;
 	const user = userSchema.parse(userRaw);
 	return user;
 }

@@ -22,7 +22,8 @@ export async function isUserAuthenticated(
 	if (!_session) return false;
 
 	try {
-		const isRevoked = !(await getAuth().verifySessionCookie(_session, true));
+		const session: string = (await JSON.parse(_session)).session;
+		const isRevoked = !(await getAuth().verifySessionCookie(session, true));
 		return !isRevoked;
 	} catch (error) {
 		throw new Error("Sorry! Couldnt verify the user!", { cause: error });

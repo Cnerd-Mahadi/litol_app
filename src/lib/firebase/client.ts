@@ -1,5 +1,10 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
-import { GoogleAuthProvider, getAuth, signInWithRedirect } from "firebase/auth";
+import {
+	GoogleAuthProvider,
+	User,
+	getAuth,
+	signInWithRedirect,
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
@@ -26,14 +31,14 @@ export async function googleSignIn() {
 	await signInWithRedirect(auth, provider);
 }
 
-export async function saveSession(idToken: string) {
+export async function saveSession(idToken: string, user: User) {
 	try {
 		const response = await fetch("/api/auth/signin", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ idToken }),
+			body: JSON.stringify({ idToken, user }),
 		});
 		const resBody = await response.json();
 		if (response.ok && resBody.success) {

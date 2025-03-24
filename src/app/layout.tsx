@@ -1,5 +1,6 @@
 import { Toaster } from "@/components/ui/toaster";
 import { PrimeProvider } from "@/contexts/prime-provider";
+import { ProgressProvider } from "@/contexts/progress-provider";
 import { FlowProvider } from "@/contexts/react-flow-provider";
 import { ReactQueryProvider } from "@/contexts/react-query-provider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -25,7 +26,9 @@ export default async function RootLayout({
 				<ReactQueryProvider>
 					<GoogleOAuthProvider clientId={process.env.AUTH_GOOGLE_ID!}>
 						<PrimeProvider>
-							<FlowProvider>{children}</FlowProvider>
+							<ProgressProvider>
+								<FlowProvider>{children}</FlowProvider>
+							</ProgressProvider>
 						</PrimeProvider>
 					</GoogleOAuthProvider>
 				</ReactQueryProvider>

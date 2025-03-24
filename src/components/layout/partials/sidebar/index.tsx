@@ -1,13 +1,13 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { navItems } from "@/utils";
 import { Logo } from "./logo";
-import { LogOut } from "./logout";
+import { LogOutSidebar } from "./logout-sidebar";
 import { NavItem } from "./nav-item";
 
 export const SideBar = () => {
 	return (
-		<ScrollArea className="w-52 pt-8 h-screen">
-			<Logo className="text-4xl text-center pb-8" />
+		<ScrollArea className="pt-8 w-52 h-screen">
+			<Logo className="pb-8 text-4xl text-center" />
 			<div className="px-6">
 				<div id="nav-item" className="flex flex-col gap-2 pb-6">
 					{navItems.map(({ name, route, Icon }) => {
@@ -17,7 +17,7 @@ export const SideBar = () => {
 					})}
 				</div>
 				<div className="pt-24 pb-16">
-					<LogOut />
+					<LogOutSidebar />
 				</div>
 			</div>
 		</ScrollArea>

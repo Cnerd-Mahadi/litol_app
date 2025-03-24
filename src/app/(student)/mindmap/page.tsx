@@ -1,23 +1,25 @@
+import LoadingBoxes from "@/components/layout/loading/boxes";
 import { CreateMindMap } from "@/components/layout/mindmap/create";
 import { MindMapGallery } from "@/components/layout/mindmap/list";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
 export default function MindMapPage() {
 	return (
 		<main className="py-8 h-screen">
-			<Tabs defaultValue="create" className="h-full pl-4">
-				<TabsList className="w-full max-w-sm flex mx-auto p-0 border border-blue-500 text-blue-600 bg-white">
+			<Tabs defaultValue="create" className="pl-4 h-full">
+				<TabsList className="flex bg-white mx-auto p-0 border border-blue-500 w-full max-w-sm text-blue-600">
 					<TabsTrigger
 						value="create"
-						className="w-full py-3 bg-transparent rounded-r-none data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-none">
+						className="bg-transparent data-[state=active]:bg-blue-500 data-[state=active]:shadow-none py-3 rounded-r-none w-full data-[state=active]:text-white">
 						Create
 					</TabsTrigger>
 					<TabsTrigger
 						value="gallery"
-						className="w-full py-3 bg-transparent rounded-l-none data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-none">
+						className="bg-transparent data-[state=active]:bg-blue-500 data-[state=active]:shadow-none py-3 rounded-l-none w-full data-[state=active]:text-white">
 						Gallery
 					</TabsTrigger>
 				</TabsList>
@@ -28,7 +30,9 @@ export default function MindMapPage() {
 				</TabsContent>
 				<TabsContent value="gallery" className="py-4">
 					<ScrollArea className="h-screen">
-						<MindMapGallery />
+						<Suspense fallback={<LoadingBoxes boxHeight="h-40" />}>
+							<MindMapGallery />
+						</Suspense>
 					</ScrollArea>
 				</TabsContent>
 			</Tabs>
