@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	webpack: (config) => {
+		config.resolve.fallback = { ...config.resolve.fallback, "pg-native": false };
+		return config;
+	},
 	images: {
 		remotePatterns: [
 			{

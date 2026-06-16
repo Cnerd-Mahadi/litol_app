@@ -1,0 +1,161 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  subjects      Subject[]
+  notes         Note[]
+  summaries     Summary[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Subject {
+  id        String    @id @default(uuid(7)) @db.Uuid
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  notes     Note[]
+  summaries Summary[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("subject")
+}
+
+model Note {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  subjectId   String   @db.Uuid
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  description String
+  keywords    String[]
+  cues        Cue[]
+  chunks      Chunk[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([subjectId])
+  @@map("note")
+}
+
+model Cue {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  noteId    String   @db.Uuid
+  note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  cue         String
+  details   String
+  chunks    Chunk[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([noteId])
+  @@unique([id, noteId])
+  @@map("cue")
+}
+
+model Summary {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  keywords    String[]
+  content     String
+  subjectId   String?  @db.Uuid
+  subject     Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([subjectId])
+  @@map("summary")
+}
+
+model Chunk {
+  id        String                      @id @default(uuid(7)) @db.Uuid
+  noteId    String                      @db.Uuid
+  note      Note                        @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  cueId     String                      @db.Uuid
+  cue       Cue                         @relation(fields: [cueId, noteId], references: [id, noteId], onDelete: Cascade)
+  content   String
+  embedding Unsupported("vector(1536)")
+  createdAt DateTime                    @default(now())
+  updatedAt DateTime                    @updatedAt
+
+  @@index([noteId])
+  @@index([cueId])
+  @@map("chunk")
+}
