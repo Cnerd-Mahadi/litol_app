@@ -1,78 +1,93 @@
-import { getCurrentUser } from "@/lib/firebase";
-import { db } from "@/lib/firebase/client";
-import { noteSchema, notesSchema } from "@/types";
-import { noteFormSchema } from "@/types/forms";
-import { entities } from "@/utils";
-import {
-	addDoc,
-	collection,
-	deleteDoc,
-	doc,
-	getDoc,
-	getDocs,
-	query,
-	where,
-} from "firebase/firestore";
-import * as z from "zod";
+"use server";
 
-export const getNotes = async (id: string) => {
-	const noteQuery = query(
-		collection(db, entities.notes),
-		where("authorId", "==", id)
-	);
-	const response = await getDocs(noteQuery);
-	const raw = response.docs.map((item) => {
-		return {
-			...item.data(),
-			id: item.id,
-		};
+import { waitUntil } from "@vercel/functions";
+import { z } from "zod";
+import { ingestNoteChunks } from "../lib/ai/ingestion";
+import { authActionClient } from "../safe-action";
+import { prisma } from "../prisma";
+import { DbError } from "../errors";
+import { logger } from "../logger";
+
+const createNoteSchema = z.object({
+	title: z.string().min(1),
+	subjectId: z.string().uuid(),
+	description: z.string().min(1).optional(),
+	keywords: z.array(z.string()),
+	cues: z.array(
+		z.object({
+			cue: z.string().min(1),
+			details: z.string().min(1),
+		})
+	),
+});
+
+export const createNote = authActionClient
+	.inputSchema(createNoteSchema)
+	.action(async ({ parsedInput, ctx }) => {
+		const { cues, ...noteData } = parsedInput;
+
+		const note = await prisma.note
+			.create({
+				data: {
+					...noteData,
+					userId: ctx.user.id,
+					cues: { create: cues },
+				},
+				include: { cues: true },
+			})
+			.catch((error) => {
+				throw new DbError("Failed to create note", error);
+			});
+
+		logger.info("Note created", { noteId: note.id });
+
+		waitUntil(ingestNoteChunks({ noteId: note.id, cues: note.cues }));
+
+		return { message: "Note created" };
 	});
-	const data = notesSchema.parse(raw);
-	return data;
-};
 
-export const getNote = async (id: string) => {
-	const response = await getDoc(doc(db, entities.notes, id));
-	const object: any = response.data();
-	const raw = {
-		...object,
-		id: response.id,
-	};
-	const data = noteSchema.parse(raw);
-	return data;
-};
+const suggestCueSchema = z.object({
+	detail: z.string().min(1),
+});
 
-export const createNote = async (values: z.infer<typeof noteFormSchema>) => {
-	try {
-		const user = await getCurrentUser();
-		const updated = new Date().toLocaleString("en-US", {
-			month: "short",
-			day: "2-digit",
-			year: "numeric",
-			hour: "2-digit",
-			minute: "2-digit",
-			hour12: true,
-		});
-		await addDoc(collection(db, entities.notes), {
-			...values,
-			authorId: user.id,
-			updated: updated,
-		});
+export const suggestCueAction = authActionClient
+	.inputSchema(suggestCueSchema)
+	.action(async ({ parsedInput }) => {
+		const { suggestCue } = await import("../services/note");
+		const result = await suggestCue(parsedInput.detail);
+		if ("error" in result) throw new Error(result.error);
+		return result;
+	});
 
-		return true;
-	} catch (error) {
-		throw new Error("Sorry! Couldnt create new note", { cause: error });
-	}
-};
+const getNotesSchema = z.object({
+	cursor: z.string().uuid().optional(),
+	subjectId: z.string().uuid().optional(),
+	title: z.string().optional(),
+	keywords: z.array(z.string()).optional(),
+});
 
-export const deleteNote = async (id: string) => {
-	try {
-		await deleteDoc(doc(db, entities.notes, id));
-		return Response.json({
-			success: true,
-			message: `Note Id ${id} deleted successfully`,
-		});
-	} catch (error) {
-		throw new Error(`Sorry! Couldnt delete note id ${id}`, { cause: error });
-	}
-};
+export const getNotes = authActionClient
+	.inputSchema(getNotesSchema)
+	.action(async ({ parsedInput, ctx }) => {
+		const { cursor, subjectId, title, keywords } = parsedInput;
+
+		const notes = await prisma.note
+			.findMany({
+				where: {
+					userId: ctx.user.id,
+					...(subjectId && { subjectId }),
+					...(title && { title: { contains: title, mode: "insensitive" } }),
+					...(keywords && keywords.length > 0 && { keywords: { hasSome: keywords } }),
+				},
+				orderBy: { id: "desc" },
+				take: 20,
+				...(cursor && { skip: 1, cursor: { id: cursor } }),
+			})
+			.catch((error) => {
+				throw new DbError("Failed to fetch notes", error);
+			});
+
+		const nextCursor = notes.length === 20 ? notes[notes.length - 1].id : null;
+
+		return { notes, nextCursor };
+	});

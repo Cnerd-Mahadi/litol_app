@@ -1,104 +1,104 @@
-import { getCurrentUser } from "@/lib/firebase";
-import { db, storage } from "@/lib/firebase/client";
-import { summariesSchema, summarySchema } from "@/types";
-import { summaryFormSchema } from "@/types/forms";
-import { entities } from "@/utils";
-import {
-	addDoc,
-	collection,
-	deleteDoc,
-	doc,
-	getDoc,
-	getDocs,
-	query,
-	where,
-} from "firebase/firestore";
-import {
-	deleteObject,
-	getDownloadURL,
-	ref,
-	uploadBytes,
-} from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
-import * as z from "zod";
-import { compressImage } from ".";
+"use server";
 
-export const createSummary = async (
-	values: z.infer<typeof summaryFormSchema>
-) => {
-	try {
-		const imageRaw: File = values.image[0];
-		const imageExtension = imageRaw.name.split(".").pop();
-		const imageName = `summary_${uuidv4()}.${imageExtension}`;
-		const user = await getCurrentUser();
-		const updated = new Date().toLocaleString("en-US", {
-			month: "short",
-			day: "2-digit",
-			year: "numeric",
-			hour: "2-digit",
-			minute: "2-digit",
-			hour12: true,
+import { z } from "zod";
+import { authActionClient } from "../safe-action";
+import { prisma } from "../prisma";
+import { DbError } from "../errors";
+import { logger } from "../logger";
+import { generateSummary } from "../services/summary";
+
+const createSummarySchema = z.object({
+	title: z.string().min(1),
+	description: z.string().min(1).optional(),
+	keywords: z.array(z.string()),
+	content: z.string().min(1),
+	subjectId: z.string().uuid().optional(),
+	noteIds: z.array(z.string().uuid()).optional(),
+});
+
+export const createSummary = authActionClient
+	.inputSchema(createSummarySchema)
+	.action(async ({ parsedInput, ctx }) => {
+		const { noteIds, ...rest } = parsedInput;
+
+		const summary = await prisma.summary
+			.create({
+				data: {
+					...rest,
+					userId: ctx.user.id,
+					...(noteIds && noteIds.length > 0 && { notes: { connect: noteIds.map((id) => ({ id })) } }),
+				},
+			})
+			.catch((error) => {
+				throw new DbError("Failed to create summary", error);
+			});
+
+		logger.info("Summary created", { summaryId: summary.id });
+
+		return { message: "Summary created" };
+	});
+
+const generateSummarySchema = z.object({
+	noteIds: z.array(z.string().uuid()).min(1),
+	maxWords: z.number().int().min(100).max(2000).optional(),
+});
+
+export const generateSummaryAction = authActionClient
+	.inputSchema(generateSummarySchema)
+	.action(async ({ parsedInput, ctx }) => {
+		logger.info("Summary generation started", {
+			userId: ctx.user.id,
+			noteIds: parsedInput.noteIds,
 		});
-		const image: Blob = await compressImage(imageRaw);
-		await uploadBytes(ref(storage, `summaries/${imageName}`), image);
-		await addDoc(collection(db, entities.summaries), {
-			...values,
-			image: imageName,
-			authorId: user.id,
-			updated: updated,
+
+		const result = await generateSummary({
+			noteIds: parsedInput.noteIds,
+			maxWords: parsedInput.maxWords ?? 500,
 		});
-		return true;
-	} catch (error) {
-		throw new Error("Sorry! Couldnt create new summary", { cause: error });
-	}
-};
 
-export const getSummaries = async (id: string) => {
-	const summaryQuery = query(
-		collection(db, entities.summaries),
-		where("authorId", "==", id)
-	);
-	const response = await getDocs(summaryQuery);
-	const raw = await Promise.all(
-		response.docs.map(async (item) => {
-			const imageUrl = await getDownloadURL(
-				ref(storage, `summaries/${item.data().image}`)
-			);
-			return {
-				...item.data(),
-				imageUrl: imageUrl,
-				id: item.id,
-			};
-		})
-	);
-	const data = summariesSchema.parse(raw);
-	return data;
-};
+		if (result.error) {
+			logger.warn("Summary generation failed", { userId: ctx.user.id, error: result.error });
+			throw new Error(result.error);
+		}
 
-export const getSummary = async (id: string) => {
-	const response = await getDoc(doc(db, entities.summaries, id));
-	const object: any = response.data();
-	const imageUrl = await getDownloadURL(
-		ref(storage, `summaries/${object.image}`)
-	);
-	const raw = {
-		...object,
-		imageUrl: imageUrl,
-		id: response.id,
-	};
-	const data = summarySchema.parse(raw);
-	return data;
-};
+		if (!result.summary) {
+			throw new Error("Summary generation returned no content.");
+		}
 
-export const deleteSummary = async (id: string, imageId: string) => {
-	try {
-		await deleteDoc(doc(db, entities.summaries, id));
-		await deleteObject(ref(storage, `summaries/${imageId}`));
-		return Response.json({
-			success: true,
-			message: `Summary Id ${id} deleted successfully`,
-		});
-	} catch (error) {
-		throw new Error(`Sorry! Couldnt delete summary id ${id}`, { cause: error });
-	}
-};
+		logger.info("Summary generation complete", { userId: ctx.user.id });
+
+		return { summary: result.summary };
+	});
+
+const getSummariesSchema = z.object({
+	cursor: z.string().uuid().optional(),
+	subjectId: z.string().uuid().optional(),
+	title: z.string().optional(),
+	keywords: z.array(z.string()).optional(),
+});
+
+export const getSummaries = authActionClient
+	.inputSchema(getSummariesSchema)
+	.action(async ({ parsedInput, ctx }) => {
+		const { cursor, subjectId, title, keywords } = parsedInput;
+
+		const summaries = await prisma.summary
+			.findMany({
+				where: {
+					userId: ctx.user.id,
+					...(subjectId && { subjectId }),
+					...(title && { title: { contains: title, mode: "insensitive" } }),
+					...(keywords && keywords.length > 0 && { keywords: { hasSome: keywords } }),
+				},
+				orderBy: { id: "desc" },
+				take: 20,
+				...(cursor && { skip: 1, cursor: { id: cursor } }),
+			})
+			.catch((error) => {
+				throw new DbError("Failed to fetch summaries", error);
+			});
+
+		const nextCursor = summaries.length === 20 ? summaries[summaries.length - 1].id : null;
+
+		return { summaries, nextCursor };
+	});

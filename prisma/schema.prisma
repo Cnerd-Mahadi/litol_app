@@ -99,10 +99,11 @@ model Note {
   title       String
   subjectId   String   @db.Uuid
   subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  description String
+  description String?
   keywords    String[]
   cues        Cue[]
   chunks      Chunk[]
+  summaries   Summary[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -131,11 +132,12 @@ model Summary {
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String
-  description String
+  description String?
   keywords    String[]
   content     String
   subjectId   String?  @db.Uuid
   subject     Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  notes       Note[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -151,7 +153,7 @@ model Chunk {
   cueId     String                      @db.Uuid
   cue       Cue                         @relation(fields: [cueId, noteId], references: [id, noteId], onDelete: Cascade)
   content   String
-  embedding Unsupported("vector(1536)")
+  embedding Unsupported("vector(3072)")
   createdAt DateTime                    @default(now())
   updatedAt DateTime                    @updatedAt
 
