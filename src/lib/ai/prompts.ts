@@ -1,14 +1,20 @@
 export const cleanQueryPrompt = (query: string) => `
-You are a search query optimizer.
-Extract only the semantically meaningful search intent from the user's query.
-Remove all filler words, pleasantries, and irrelevant text.
-Return only the cleaned query as a short phrase. No explanation, no extra text.
+You are a search query optimizer preparing a query for two types of retrieval:
+1. Sparse search (keyword/full-text): needs individual important terms
+2. Dense search (semantic/vector): needs a clean natural language phrase capturing the intent
+
+From the user's query below, extract:
+- keywords: array of the most important individual terms (nouns, concepts, technical words — no filler)
+- semanticQuery: a clean, concise natural language phrase capturing the full search intent
 
 User query:
 ${query}
 `;
 
-export const generateQuizPrompt = (chunks: string[], numberOfQuizzes: number) => `
+export const generateQuizPrompt = (
+  chunks: { cueId: string; content: string }[],
+  numberOfQuizzes: number
+) => `
 You are a quiz generator for students.
 Generate exactly ${numberOfQuizzes} multiple choice questions strictly based on the content provided below.
 Do not use any outside knowledge. Every question and answer must come directly from the provided content.
@@ -17,9 +23,10 @@ Each question must have:
 - A clear question
 - Exactly 4 options (labeled as plain strings, not A/B/C/D)
 - The correct answer which must be exactly one of the 4 options
+- sourceCueId: the exact cue ID of the chunk this question was generated from
 
 Content:
-${chunks.map((c, i) => `[${i + 1}] ${c}`).join("\n\n")}
+${chunks.map((c) => `[CUE_ID: ${c.cueId}]\n${c.content}`).join("\n\n")}
 `;
 
 export const generateSummaryPrompt = (

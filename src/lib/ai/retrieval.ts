@@ -7,41 +7,61 @@ type ChunkRow = {
   cueId: string;
 };
 
+type VectorChunkRaw = ChunkRow & { distance: number };
+
+const DISTANCE_THRESHOLD = 0.5;
+
+function fuseAndRank(
+  fulltextChunks: ChunkRow[],
+  vectorChunks: VectorChunkRaw[]
+): ChunkRow[] {
+  const seen = new Set<string>();
+  const result: ChunkRow[] = [];
+
+  for (const chunk of fulltextChunks) {
+    seen.add(chunk.id);
+    result.push(chunk);
+  }
+
+  for (const chunk of vectorChunks) {
+    if (chunk.distance <= DISTANCE_THRESHOLD && !seen.has(chunk.id)) {
+      seen.add(chunk.id);
+      result.push(chunk);
+    }
+  }
+
+  return result;
+}
+
 export async function retrieveChunks({
   noteIds,
-  cleanedQuery,
+  keywords,
   queryEmbedding,
 }: {
   noteIds: string[];
-  cleanedQuery: string;
+  keywords: string[];
   queryEmbedding: number[];
 }): Promise<ChunkRow[]> {
   const vectorStr = `[${queryEmbedding.join(",")}]`;
+  const keywordQuery = keywords.join(" ");
 
-  const [deterministicChunks, fulltextChunks, vectorChunks] = await Promise.all([
+  const [fulltextChunks, vectorChunks] = await Promise.all([
     prisma.$queryRaw<ChunkRow[]>`
-      SELECT id, content, "noteId", "cueId" FROM "chunk"
+      SELECT id, content, "noteId", "cueId"
+      FROM "chunk"
       WHERE "noteId" = ANY(${noteIds}::uuid[])
-      LIMIT 10
+      AND to_tsvector('english', content) @@ plainto_tsquery('english', ${keywordQuery})
+      LIMIT 20
     `,
-    prisma.$queryRaw<ChunkRow[]>`
-      SELECT id, content, "noteId", "cueId" FROM "chunk"
+    prisma.$queryRaw<VectorChunkRaw[]>`
+      SELECT id, content, "noteId", "cueId",
+        embedding <=> ${vectorStr}::vector AS distance
+      FROM "chunk"
       WHERE "noteId" = ANY(${noteIds}::uuid[])
-      AND to_tsvector('english', content) @@ plainto_tsquery('english', ${cleanedQuery})
-      LIMIT 10
-    `,
-    prisma.$queryRaw<ChunkRow[]>`
-      SELECT id, content, "noteId", "cueId" FROM "chunk"
-      WHERE "noteId" = ANY(${noteIds}::uuid[])
-      ORDER BY embedding <=> ${vectorStr}::vector
-      LIMIT 10
+      ORDER BY distance ASC
+      LIMIT 20
     `,
   ]);
 
-  const seen = new Set<string>();
-  return [...deterministicChunks, ...fulltextChunks, ...vectorChunks].filter((chunk) => {
-    if (seen.has(chunk.id)) return false;
-    seen.add(chunk.id);
-    return true;
-  });
+  return fuseAndRank(fulltextChunks, vectorChunks);
 }
