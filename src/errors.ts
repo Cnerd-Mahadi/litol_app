@@ -1,18 +1,19 @@
-import { logger } from "./logger";
-
 abstract class BaseError extends Error {
 	readonly label: string;
 	readonly clientMessage: string;
 	readonly cause?: unknown;
 
-	constructor(label: string, message: string, clientMessage: string, cause?: unknown) {
+	constructor(
+		label: string,
+		message: string,
+		clientMessage: string,
+		cause?: unknown,
+	) {
 		super(message);
 		this.name = this.constructor.name;
 		this.label = label;
 		this.clientMessage = clientMessage;
 		this.cause = cause;
-
-		logger.error(`[${label}] ${message}`, { cause, stack: this.stack });
 	}
 }
 

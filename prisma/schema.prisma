@@ -25,6 +25,7 @@ model User {
   subjects      Subject[]
   notes         Note[]
   summaries     Summary[]
+  quizzesTaken  Int       @default(0)
 
   @@unique([email])
   @@map("user")

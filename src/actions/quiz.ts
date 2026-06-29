@@ -1,16 +1,10 @@
 "use server";
 
-import { z } from "zod";
 import { authActionClient } from "../safe-action";
 import { generateQuiz } from "../services/quiz";
 import { logger } from "../logger";
-
-const generateQuizSchema = z.object({
-  noteIds: z.array(z.string().uuid()).min(1),
-  subjectId: z.string().uuid(),
-  numberOfQuizzes: z.number().int().min(1).max(20),
-  query: z.string().min(1),
-});
+import { prisma } from "../prisma";
+import { generateQuizSchema } from "../schemas/quiz";
 
 export const generateQuizAction = authActionClient
   .inputSchema(generateQuizSchema)
@@ -21,21 +15,17 @@ export const generateQuizAction = authActionClient
       numberOfQuizzes: parsedInput.numberOfQuizzes,
     });
 
-    const result = await generateQuiz(parsedInput);
+    const quizzes = await generateQuiz(parsedInput);
 
-    if (result.error) {
-      logger.warn("Quiz generation failed", { userId: ctx.user.id, error: result.error });
-      throw new Error(result.error);
-    }
-
-    if (!result.quizzes) {
-      throw new Error("Quiz generation returned no quizzes.");
-    }
+    await prisma.user.update({
+      where: { id: ctx.user.id },
+      data: { quizzesTaken: { increment: 1 } },
+    });
 
     logger.info("Quiz generation complete", {
       userId: ctx.user.id,
-      count: result.quizzes.length,
+      count: quizzes.length,
     });
 
-    return { quizzes: result.quizzes };
+    return { quizzes };
   });

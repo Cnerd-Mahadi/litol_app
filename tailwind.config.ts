@@ -25,7 +25,12 @@ const config = {
 			},
 		},
 		extend: {
+			fontFamily: {
+				sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+				mono: ["ui-monospace", "SFMono-Regular", "monospace"],
+			},
 			colors: {
+				/* ── ShadCN tokens ── */
 				border: "hsl(var(--border))",
 				input: "hsl(var(--input))",
 				ring: "hsl(var(--ring))",
@@ -59,30 +64,40 @@ const config = {
 					DEFAULT: "hsl(var(--card))",
 					foreground: "hsl(var(--card-foreground))",
 				},
+				/* ── Design system tokens ── */
+				surface: "var(--surface)",
+				cardBg: "var(--card-bg)",
+				cardHover: "var(--card-hover)",
+				elevated: "var(--elevated)",
+				elevated2: "var(--elevated2)",
+				hairline: "var(--line)",
+				line2: "var(--line2)",
+				fill1: "var(--fill1)",
+				fill2: "var(--fill2)",
+				fill3: "var(--fill3)",
+				accentSoft: "var(--accent-soft)",
+				accentFg: "var(--accent-fg)",
+				ink: {
+					100: "var(--t1)",
+					300: "var(--t3)",
+					400: "var(--t4)",
+					500: "var(--t5)",
+					600: "var(--t6)",
+					700: "var(--t7)",
+				},
+				feat: {
+					summary: "#a78bfa",
+					qa: "#38bdf8",
+					quiz: "#fbbf24",
+					map: "#34d399",
+				},
 			},
 			borderRadius: {
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)",
-			},
-			keyframes: {
-				"accordion-down": {
-					from: { height: "0" },
-					to: { height: "var(--radix-accordion-content-height)" },
-				},
-				"accordion-up": {
-					from: { height: "var(--radix-accordion-content-height)" },
-					to: { height: "0" },
-				},
-				expand: {
-					from: { height: "0" },
-					to: { height: "400" },
-				},
-			},
-			animation: {
-				"accordion-down": "accordion-down 0.2s ease-out",
-				"accordion-up": "accordion-up 0.2s ease-out",
-				expand: "expand 0.2s ease-out",
+				"2xl": "16px",
+				"3xl": "20px",
 			},
 		},
 	},

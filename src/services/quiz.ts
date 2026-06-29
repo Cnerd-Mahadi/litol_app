@@ -1,5 +1,6 @@
 import { embed, generateText, Output } from "ai";
 import { z } from "zod";
+import { AppError } from "../errors";
 import { llm, embedder } from "../lib/ai/config";
 import { cleanQueryPrompt, generateQuizPrompt } from "../lib/ai/prompts";
 import { retrieveChunks } from "../lib/ai/retrieval";
@@ -30,17 +31,10 @@ export type Quiz = Pick<
   "question" | "options" | "answer"
 >;
 
-export type QuizResult = { quizzes?: Quiz[]; error?: string };
-
 export async function generateQuiz(
   input: z.infer<typeof inputSchema>
-): Promise<QuizResult> {
-  const parsed = inputSchema.safeParse(input);
-  if (!parsed.success) {
-    return { error: parsed.error.errors[0].message };
-  }
-
-  const { noteIds, numberOfQuizzes, query } = parsed.data;
+): Promise<Quiz[]> {
+  const { noteIds, numberOfQuizzes, query } = input;
 
   logger.info("Quiz generation started", { noteIds, numberOfQuizzes, query });
 
@@ -73,8 +67,7 @@ export async function generateQuiz(
   logger.info("Chunks retrieved", { count: chunks.length });
 
   if (chunks.length < numberOfQuizzes) {
-    logger.warn("Not enough chunks", { chunks: chunks.length, requested: numberOfQuizzes });
-    return { error: "Not enough content to generate the requested number of questions." };
+    throw new AppError("Not enough content to generate the requested number of questions.");
   }
 
   const topChunks = chunks.slice(0, TOP_K);
@@ -97,5 +90,5 @@ export async function generateQuiz(
 
   logger.info("Quiz grounding complete", { generated: output.quizzes.length, grounded: groundedQuizzes.length });
 
-  return { quizzes: groundedQuizzes };
+  return groundedQuizzes;
 }

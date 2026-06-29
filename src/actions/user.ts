@@ -1,14 +1,11 @@
 "use server";
 
-import { z } from "zod";
 import { DbError } from "../errors";
 import { logger } from "../logger";
 import { prisma } from "../prisma";
 import { authActionClient } from "../safe-action";
-
-const createSubjectSchema = z.object({
-	name: z.string().min(1),
-});
+import { z } from "zod";
+import { createSubjectSchema, getSubjectsSchema } from "../schemas/user";
 
 export const createSubject = authActionClient
 	.inputSchema(createSubjectSchema)
@@ -29,15 +26,10 @@ export const createSubject = authActionClient
 		return { message: "Subject created" };
 	});
 
-const getSubjectsSchema = z.object({
-	cursor: z.string().uuid().optional(),
-	name: z.string().optional(),
-});
-
 export const getSubjects = authActionClient
 	.inputSchema(getSubjectsSchema)
 	.action(async ({ parsedInput, ctx }) => {
-		const { cursor, name } = parsedInput;
+		const { name } = parsedInput;
 
 		const subjects = await prisma.subject
 			.findMany({
@@ -46,15 +38,60 @@ export const getSubjects = authActionClient
 					...(name && { name: { contains: name, mode: "insensitive" } }),
 				},
 				orderBy: { id: "desc" },
-				take: 20,
-				...(cursor && { skip: 1, cursor: { id: cursor } }),
+				take: 30,
 			})
 			.catch((error) => {
 				throw new DbError("Failed to fetch subjects", error);
 			});
 
-		const nextCursor =
-			subjects.length === 20 ? subjects[subjects.length - 1].id : null;
+		logger.info("Subjects fetched", { count: subjects.length });
 
-		return { subjects, nextCursor };
+		return { subjects };
+	});
+
+export const getDashboardData = authActionClient
+	.inputSchema(z.object({}))
+	.action(async ({ ctx }) => {
+		const userId = ctx.user.id;
+
+		const [noteCount, summaryCount, subjectCount, user, recentNotes, recentSummaries] =
+			await Promise.all([
+				prisma.note.count({ where: { userId } }),
+				prisma.summary.count({ where: { userId } }),
+				prisma.subject.count({ where: { userId } }),
+				prisma.user.findUnique({
+					where: { id: userId },
+					select: { quizzesTaken: true },
+				}),
+				prisma.note.findMany({
+					where: { userId },
+					select: { id: true, title: true, createdAt: true },
+					orderBy: { createdAt: "desc" },
+					take: 3,
+				}),
+				prisma.summary.findMany({
+					where: { userId },
+					select: { id: true, title: true, createdAt: true },
+					orderBy: { createdAt: "desc" },
+					take: 3,
+				}),
+			]).catch((error) => {
+				throw new DbError("Failed to fetch dashboard data", error);
+			});
+
+		const recentActivity = [
+			...recentNotes.map((n) => ({ type: "note" as const, id: n.id, title: n.title, createdAt: n.createdAt })),
+			...recentSummaries.map((s) => ({ type: "summary" as const, id: s.id, title: s.title, createdAt: s.createdAt })),
+		]
+			.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+		logger.info("Dashboard data fetched", { userId });
+
+		return {
+			noteCount,
+			summaryCount,
+			subjectCount,
+			quizzesTaken: user?.quizzesTaken ?? 0,
+			recentActivity,
+		};
 	});

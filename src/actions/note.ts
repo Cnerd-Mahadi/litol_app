@@ -1,25 +1,12 @@
 "use server";
 
 import { waitUntil } from "@vercel/functions";
-import { z } from "zod";
 import { ingestNoteChunks } from "../lib/ai/ingestion";
 import { authActionClient } from "../safe-action";
 import { prisma } from "../prisma";
 import { DbError } from "../errors";
 import { logger } from "../logger";
-
-const createNoteSchema = z.object({
-	title: z.string().min(1),
-	subjectId: z.string().uuid(),
-	description: z.string().min(1).optional(),
-	keywords: z.array(z.string()),
-	cues: z.array(
-		z.object({
-			cue: z.string().min(1),
-			details: z.string().min(1),
-		})
-	),
-});
+import { createNoteSchema, suggestCueSchema, getNotesSchema, getNoteByIdSchema } from "../schemas/note";
 
 export const createNote = authActionClient
 	.inputSchema(createNoteSchema)
@@ -43,12 +30,8 @@ export const createNote = authActionClient
 
 		waitUntil(ingestNoteChunks({ noteId: note.id, cues: note.cues }));
 
-		return { message: "Note created" };
+		return { noteId: note.id };
 	});
-
-const suggestCueSchema = z.object({
-	detail: z.string().min(1),
-});
 
 export const suggestCueAction = authActionClient
 	.inputSchema(suggestCueSchema)
@@ -59,35 +42,52 @@ export const suggestCueAction = authActionClient
 		return result;
 	});
 
-const getNotesSchema = z.object({
-	cursor: z.string().uuid().optional(),
-	subjectId: z.string().uuid().optional(),
-	title: z.string().optional(),
-	keywords: z.array(z.string()).optional(),
-});
-
 export const getNotes = authActionClient
 	.inputSchema(getNotesSchema)
 	.action(async ({ parsedInput, ctx }) => {
-		const { cursor, subjectId, title, keywords } = parsedInput;
+		const { cursor, title } = parsedInput;
 
 		const notes = await prisma.note
 			.findMany({
 				where: {
 					userId: ctx.user.id,
-					...(subjectId && { subjectId }),
 					...(title && { title: { contains: title, mode: "insensitive" } }),
-					...(keywords && keywords.length > 0 && { keywords: { hasSome: keywords } }),
+				},
+				select: {
+					id: true,
+					title: true,
+					subjectId: true,
+					keywords: true,
+					createdAt: true,
+					updatedAt: true,
+					_count: { select: { cues: true } },
 				},
 				orderBy: { id: "desc" },
-				take: 20,
+				take: 21,
 				...(cursor && { skip: 1, cursor: { id: cursor } }),
 			})
 			.catch((error) => {
 				throw new DbError("Failed to fetch notes", error);
 			});
 
-		const nextCursor = notes.length === 20 ? notes[notes.length - 1].id : null;
+		const hasNextPage = notes.length === 21;
+		const page = hasNextPage ? notes.slice(0, 20) : notes;
+		const nextCursor = hasNextPage ? page[page.length - 1].id : null;
 
-		return { notes, nextCursor };
+		return { notes: page, nextCursor };
+	});
+
+export const getNoteById = authActionClient
+	.inputSchema(getNoteByIdSchema)
+	.action(async ({ parsedInput, ctx }) => {
+		const note = await prisma.note
+			.findUnique({
+				where: { id: parsedInput.id, userId: ctx.user.id },
+				include: { cues: true, subject: true },
+			})
+			.catch((error) => {
+				throw new DbError("Failed to fetch note", error);
+			});
+
+		return { note };
 	});

@@ -1,41 +1,29 @@
-import LoadingBoxes from "@/components/layout/loading/boxes";
-import { CreateNote } from "@/components/layout/note/create";
-import { NoteGallery } from "@/components/layout/note/list";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Suspense } from "react";
+import { Icons } from "@/components/ui/icons"
+import { NotesTabs } from "@/ui/note/notes-tabs"
 
-export const dynamic = "force-dynamic";
+const F_COLOR = "#38bdf8"
+
+export const dynamic = "force-dynamic"
 
 export default function NotePage() {
-	return (
-		<main className="py-8 h-screen">
-			<Tabs defaultValue="create" className="pl-4 h-full">
-				<TabsList className="flex bg-white mx-auto p-0 border border-blue-500 w-full max-w-sm text-blue-600">
-					<TabsTrigger
-						value="create"
-						className="bg-transparent data-[state=active]:bg-blue-500 data-[state=active]:shadow-none py-3 rounded-r-none w-full data-[state=active]:text-white">
-						Create
-					</TabsTrigger>
-					<TabsTrigger
-						value="gallery"
-						className="bg-transparent data-[state=active]:bg-blue-500 data-[state=active]:shadow-none py-3 rounded-l-none w-full data-[state=active]:text-white">
-						Gallery
-					</TabsTrigger>
-				</TabsList>
-				<TabsContent value="create" className="py-4">
-					<ScrollArea className="h-screen">
-						<CreateNote />
-					</ScrollArea>
-				</TabsContent>
-				<TabsContent value="gallery" className="py-4">
-					<ScrollArea className="h-screen">
-						<Suspense fallback={<LoadingBoxes boxHeight="h-32" />}>
-							<NoteGallery />
-						</Suspense>
-					</ScrollArea>
-				</TabsContent>
-			</Tabs>
-		</main>
-	);
+  return (
+    <div className="py-9 px-8 xl:px-12 max-w-[1180px] mx-auto">
+      <div className="flex items-start gap-3.5 mb-7">
+        <div className="grid place-items-center rounded-xl shrink-0"
+          style={{ width: 44, height: 44, background: F_COLOR + "14", border: `1px solid ${F_COLOR}2e`, color: F_COLOR }}>
+          <Icons.doc size={20} />
+        </div>
+        <div>
+          <div className="font-mono text-[11px] uppercase tracking-[.2em] mb-1.5 whitespace-nowrap" style={{ color: F_COLOR }}>
+            Notes
+          </div>
+          <h1 className="text-[26px] font-semibold tracking-tight text-ink-100 leading-none">Notes</h1>
+          <p className="text-[14px] text-ink-400 mt-2 max-w-xl leading-relaxed">
+            Write notes with cues. Click any note to read through it and review your cues.
+          </p>
+        </div>
+      </div>
+      <NotesTabs />
+    </div>
+  )
 }

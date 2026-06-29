@@ -7,10 +7,11 @@ import { logger } from "./logger";
 export const actionClient = createSafeActionClient({
 	handleServerError(error) {
 		if (error instanceof AppError || error instanceof DbError || error instanceof ExternalServerError) {
+			logger.error(`[${error.label}] ${error.message}`, { cause: error.cause });
 			return error.clientMessage;
 		}
 
-		logger.error(`[UNHANDLED_ERROR] ${error.message}`, { stack: error.stack });
+		logger.error(`[UNHANDLED_ERROR] ${error.message}`, { cause: error });
 		return "Something went wrong";
 	},
 });

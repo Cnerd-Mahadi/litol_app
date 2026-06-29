@@ -18,7 +18,7 @@ export async function ingestNoteChunks({
   cues: Cue[];
 }) {
   if (!cues.length) {
-    logger.warn("ingestNoteChunks called with no cues", { noteId });
+    logger.warn("Note ingestion skipped — no cues provided", { noteId });
     return;
   }
 
@@ -31,7 +31,7 @@ export async function ingestNoteChunks({
     values: contents,
   });
 
-  await Promise.all(
+  await prisma.$transaction(
     cues.map((cue, i) => {
       const id = uuidv7();
       const vector = `[${embeddings[i].join(",")}]`;

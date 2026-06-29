@@ -1,3 +1,4 @@
+import { DbError } from "../../errors";
 import { prisma } from "../../prisma";
 
 type ChunkRow = {
@@ -52,7 +53,7 @@ export async function retrieveChunks({
       WHERE "noteId" = ANY(${noteIds}::uuid[])
       AND to_tsvector('english', content) @@ plainto_tsquery('english', ${keywordQuery})
       LIMIT 20
-    `,
+    `.catch((error) => { throw new DbError("Fulltext chunk retrieval failed", error) }),
     prisma.$queryRaw<VectorChunkRaw[]>`
       SELECT id, content, "noteId", "cueId",
         embedding <=> ${vectorStr}::vector AS distance
@@ -60,7 +61,7 @@ export async function retrieveChunks({
       WHERE "noteId" = ANY(${noteIds}::uuid[])
       ORDER BY distance ASC
       LIMIT 20
-    `,
+    `.catch((error) => { throw new DbError("Vector chunk retrieval failed", error) }),
   ]);
 
   return fuseAndRank(fulltextChunks, vectorChunks);
