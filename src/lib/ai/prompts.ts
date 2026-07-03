@@ -36,7 +36,10 @@ export const generateSummaryPrompt = (
 You are creating a last-minute revision summary for a student.
 Given the notes below, write a concise summary under ${maxWords} words.
 The summary should capture the core essence of every topic so a student can quickly refresh their memory before an exam — no fluff, no filler, just the key ideas explained clearly.
-Also suggest a short title and a list of keywords for the summary.
+Also suggest a short title and up to 5 keywords for the summary — only the most relevant ones, ordered from most to least relevant.
+
+Write the content as plain text. You may use "-" for bullet points and "1." style numbering for ordered lists, and normal paragraph breaks — these are fine since they read naturally as plain text.
+Do not use markdown formatting that requires rendering to make sense: no bold ("**"), no headings ("#"), no tables, no images, no code blocks, no links, no horizontal rules.
 
 Notes:
 ${notes

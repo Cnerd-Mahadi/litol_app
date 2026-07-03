@@ -1,29 +1,28 @@
-import { Icons } from "@/components/ui/icons"
-import { SummaryTabs } from "@/ui/summary/summary-tabs"
+import { IconChip } from "@/ui/shared/icon-chip";
+import { SummaryTabs } from "@/ui/summary/summary-tabs";
+import { Sparkles } from "lucide-react";
 
-const F_COLOR = "#a78bfa"
-
-export const dynamic = "force-dynamic"
+export const dynamic = "force-dynamic";
 
 export default function SummaryPage() {
-  return (
-    <div className="py-9 px-8 xl:px-12 max-w-[1180px] mx-auto">
-      <div className="flex items-start gap-3.5 mb-7">
-        <div className="grid place-items-center rounded-xl shrink-0"
-          style={{ width: 44, height: 44, background: F_COLOR + "14", border: `1px solid ${F_COLOR}2e`, color: F_COLOR }}>
-          <Icons.sparkles size={20} />
-        </div>
-        <div>
-          <div className="font-mono text-[11px] uppercase tracking-[.2em] mb-1.5 whitespace-nowrap" style={{ color: F_COLOR }}>
-            AI Summarizer
-          </div>
-          <h1 className="text-[26px] font-semibold tracking-tight text-ink-100 leading-none">Summarizer</h1>
-          <p className="text-[14px] text-ink-400 mt-2 max-w-xl leading-relaxed">
-            Pick your notes, let AI generate a structured summary, review and edit, then save to your gallery.
-          </p>
-        </div>
-      </div>
-      <SummaryTabs />
-    </div>
-  )
+	return (
+		<div className="mx-auto max-w-[1180px] px-4 py-6 sm:px-6 xl:px-12">
+			<div className="mb-6 flex items-start gap-3.5">
+				<IconChip Icon={Sparkles} color="violet" size={44} tone="accent" />
+				<div>
+					<div className="mb-1.5 text-[11px] uppercase tracking-[0.04em] text-foreground-faint">
+						AI summarizer
+					</div>
+					<h1 className="text-[20px] font-semibold leading-none tracking-[-0.01em] text-foreground sm:text-[24px]">
+						Summarizer
+					</h1>
+					<p className="mt-2 max-w-xl text-[14px] leading-relaxed text-muted-foreground">
+						Pick your notes, let AI generate a structured summary, review and
+						edit, then save to your gallery.
+					</p>
+				</div>
+			</div>
+			<SummaryTabs />
+		</div>
+	);
 }

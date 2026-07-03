@@ -4,7 +4,6 @@ import { DbError } from "../errors";
 import { logger } from "../logger";
 import { prisma } from "../prisma";
 import { authActionClient } from "../safe-action";
-import { z } from "zod";
 import { createSubjectSchema, getSubjectsSchema } from "../schemas/user";
 
 export const createSubject = authActionClient
@@ -50,34 +49,36 @@ export const getSubjects = authActionClient
 	});
 
 export const getDashboardData = authActionClient
-	.inputSchema(z.object({}))
 	.action(async ({ ctx }) => {
 		const userId = ctx.user.id;
 
-		const [noteCount, summaryCount, subjectCount, user, recentNotes, recentSummaries] =
-			await Promise.all([
-				prisma.note.count({ where: { userId } }),
-				prisma.summary.count({ where: { userId } }),
-				prisma.subject.count({ where: { userId } }),
-				prisma.user.findUnique({
-					where: { id: userId },
-					select: { quizzesTaken: true },
-				}),
-				prisma.note.findMany({
-					where: { userId },
-					select: { id: true, title: true, createdAt: true },
-					orderBy: { createdAt: "desc" },
-					take: 3,
-				}),
-				prisma.summary.findMany({
-					where: { userId },
-					select: { id: true, title: true, createdAt: true },
-					orderBy: { createdAt: "desc" },
-					take: 3,
-				}),
-			]).catch((error) => {
-				throw new DbError("Failed to fetch dashboard data", error);
-			});
+		const [
+			noteCount,
+			summaryCount,
+			subjectCount,
+			quizzesTaken,
+			recentNotes,
+			recentSummaries,
+		] = await Promise.all([
+			prisma.note.count({ where: { userId } }),
+			prisma.summary.count({ where: { userId } }),
+			prisma.subject.count({ where: { userId } }),
+			prisma.quizAttempt.count({ where: { userId } }),
+			prisma.note.findMany({
+				where: { userId },
+				select: { id: true, title: true, createdAt: true },
+				orderBy: { createdAt: "desc" },
+				take: 3,
+			}),
+			prisma.summary.findMany({
+				where: { userId },
+				select: { id: true, title: true, createdAt: true },
+				orderBy: { createdAt: "desc" },
+				take: 3,
+			}),
+		]).catch((error) => {
+			throw new DbError("Failed to fetch dashboard data", error);
+		});
 
 		const recentActivity = [
 			...recentNotes.map((n) => ({ type: "note" as const, id: n.id, title: n.title, createdAt: n.createdAt })),
@@ -91,7 +92,7 @@ export const getDashboardData = authActionClient
 			noteCount,
 			summaryCount,
 			subjectCount,
-			quizzesTaken: user?.quizzesTaken ?? 0,
+			quizzesTaken,
 			recentActivity,
 		};
 	});

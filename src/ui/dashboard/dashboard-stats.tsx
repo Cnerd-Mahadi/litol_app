@@ -1,39 +1,64 @@
-"use client"
+"use client";
 
-import { Icons } from "@/components/ui/icons"
-import { useDashboard } from "@/lib/swr/use-dashboard"
+import { useDashboard } from "@/lib/swr/use-dashboard";
+import { FileText, GraduationCap, Layers, Sparkles } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-const STATS = [
-  { key: "noteCount",     label: "Notes",        Icon: Icons.doc,      color: "#38bdf8" },
-  { key: "summaryCount",  label: "Summaries",    Icon: Icons.sparkles, color: "#a78bfa" },
-  { key: "subjectCount",  label: "Subjects",     Icon: Icons.chat,     color: "#34d399" },
-  { key: "quizzesTaken",  label: "Quizzes taken", Icon: Icons.quiz,    color: "#fbbf24" },
-] as const
+type Hue = "blue" | "violet" | "emerald" | "amber";
+
+const HUE: Record<Hue, { tile: string; hover: string }> = {
+	blue: { tile: "bg-hue-blue-bg text-hue-blue-fg", hover: "hover:border-hue-blue-fg/40" },
+	violet: { tile: "bg-hue-violet-bg text-hue-violet-fg", hover: "hover:border-hue-violet-fg/40" },
+	emerald: { tile: "bg-hue-emerald-bg text-hue-emerald-fg", hover: "hover:border-hue-emerald-fg/40" },
+	amber: { tile: "bg-hue-amber-bg text-hue-amber-fg", hover: "hover:border-hue-amber-fg/40" },
+};
+
+const STATS: {
+	key: "noteCount" | "summaryCount" | "subjectCount" | "quizzesTaken";
+	label: string;
+	Icon: LucideIcon;
+	hue: Hue;
+}[] = [
+	{ key: "noteCount", label: "Notes", Icon: FileText, hue: "blue" },
+	{ key: "summaryCount", label: "Summaries", Icon: Sparkles, hue: "violet" },
+	{ key: "subjectCount", label: "Subjects", Icon: Layers, hue: "emerald" },
+	{ key: "quizzesTaken", label: "Quizzes taken", Icon: GraduationCap, hue: "amber" },
+];
 
 function StatSkeleton() {
-  return <div className="rounded-2xl h-[110px] shimmer bg-fill2" />
+	return (
+		<div className="shimmer h-20 rounded-xl border border-border bg-card" />
+	);
 }
 
 export function DashboardStats() {
-  const { data, isLoading } = useDashboard()
+	const { data, isLoading } = useDashboard();
 
-  return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {isLoading
-        ? STATS.map((s) => <StatSkeleton key={s.key} />)
-        : STATS.map(({ key, label, Icon, color }) => (
-          <div key={key} className="rounded-2xl p-5 border"
-            style={{ background: "var(--card-bg)", borderColor: "var(--line)" }}>
-            <div className="grid place-items-center rounded-xl mb-4"
-              style={{ width: 38, height: 38, background: color + "14", border: `1px solid ${color}2e`, color }}>
-              <Icon size={18} />
-            </div>
-            <div className="text-[30px] font-semibold tracking-tight text-ink-100 tabular-nums leading-none">
-              {data?.[key] ?? 0}
-            </div>
-            <div className="text-[13px] text-ink-500 mt-1.5">{label}</div>
-          </div>
-        ))}
-    </div>
-  )
+	return (
+		<div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+			{isLoading
+				? STATS.map((s) => <StatSkeleton key={s.key} />)
+				: STATS.map(({ key, label, Icon, hue }) => {
+						const value = data?.[key] ?? 0;
+						return (
+							<div
+								key={key}
+								className={`lift flex items-center justify-between gap-3 rounded-xl border border-border bg-card p-4 sm:p-5 ${HUE[hue].hover}`}>
+								<div className="min-w-0">
+									<div className="truncate text-[12px] font-medium text-muted-foreground">
+										{label}
+									</div>
+									<div className="mt-1.5 text-[20px] font-semibold leading-none tabular-nums text-foreground">
+										{value}
+									</div>
+								</div>
+								<span
+									className={`grid size-10 shrink-0 place-items-center rounded-xl ${HUE[hue].tile}`}>
+									<Icon size={19} strokeWidth={1.75} aria-hidden />
+								</span>
+							</div>
+						);
+					})}
+		</div>
+	);
 }

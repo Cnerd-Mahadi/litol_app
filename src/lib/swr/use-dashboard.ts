@@ -20,7 +20,7 @@ export type DashboardData = {
 
 export function useDashboard() {
   return useSWR<DashboardData | null>("dashboard", async () => {
-    const result = await getDashboardData({})
+    const result = await getDashboardData()
     if (result?.serverError) throw new Error(result.serverError)
     return result?.data ?? null
   })

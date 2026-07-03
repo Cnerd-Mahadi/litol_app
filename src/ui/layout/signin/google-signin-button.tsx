@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { authClient } from "@/lib/auth-client";
 import { useToast } from "@/hooks/use-toast";
+import { authClient } from "@/lib/auth-client";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 export const GoogleSignInButton = () => {
 	const [loading, setLoading] = useState(false);
@@ -10,10 +11,17 @@ export const GoogleSignInButton = () => {
 
 	const signIn = async () => {
 		setLoading(true);
-		const { error } = await authClient.signIn.social({ provider: "google", callbackURL: "/" });
+		const { error } = await authClient.signIn.social({
+			provider: "google",
+			callbackURL: "/",
+		});
 		if (error) {
 			setLoading(false);
-			toast({ title: "Sign in failed", description: error.message, variant: "destructive" });
+			toast({
+				title: "Sign in failed",
+				description: error.message,
+				variant: "destructive",
+			});
 		}
 	};
 
@@ -21,22 +29,11 @@ export const GoogleSignInButton = () => {
 		<button
 			onClick={signIn}
 			disabled={loading}
-			className="w-full flex items-center justify-center gap-3 h-11 rounded-xl border font-medium text-[14px] text-ink-200 transition hover:bg-fill2 disabled:opacity-50 disabled:cursor-not-allowed"
-			style={{ borderColor: "var(--line)", background: "var(--surface)" }}>
+			className="flex h-11 w-full items-center justify-center gap-3 rounded-md border border-border bg-card text-[14px] font-medium text-foreground shadow-(--shadow-card) transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50">
 			{loading ? (
-				<svg
-					className="animate-spin"
-					width={18}
-					height={18}
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					strokeWidth={2}
-					strokeLinecap="round">
-					<path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-				</svg>
+				<Loader2 size={18} className="animate-spin" aria-hidden />
 			) : (
-				<svg width={18} height={18} viewBox="0 0 24 24">
+				<svg width={18} height={18} viewBox="0 0 24 24" aria-hidden>
 					<path
 						d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
 						fill="#4285F4"
@@ -55,7 +52,7 @@ export const GoogleSignInButton = () => {
 					/>
 				</svg>
 			)}
-			{loading ? "Signing in…" : "Continue with Google"}
+			{loading ? "Signing in" : "Continue with Google"}
 		</button>
 	);
 };

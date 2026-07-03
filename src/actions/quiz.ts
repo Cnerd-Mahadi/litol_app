@@ -17,9 +17,8 @@ export const generateQuizAction = authActionClient
 
     const quizzes = await generateQuiz(parsedInput);
 
-    await prisma.user.update({
-      where: { id: ctx.user.id },
-      data: { quizzesTaken: { increment: 1 } },
+    await prisma.quizAttempt.create({
+      data: { userId: ctx.user.id },
     });
 
     logger.info("Quiz generation complete", {

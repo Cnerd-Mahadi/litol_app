@@ -1,69 +1,80 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Icons } from "@/components/ui/icons"
-import { useDashboard } from "@/lib/swr/use-dashboard"
-
-function timeAgo(d: Date) {
-  const diff = Date.now() - new Date(d).getTime()
-  const h = Math.floor(diff / 3_600_000)
-  if (h < 1) return "Just now"
-  if (h < 24) return `${h}h ago`
-  const days = Math.floor(h / 24)
-  if (days === 1) return "Yesterday"
-  return `${days} days ago`
-}
+import { useDashboard } from "@/lib/swr/use-dashboard";
+import { timeAgo } from "@/lib/time";
+import { FileText, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export function DashboardRecent() {
-  const { data, isLoading } = useDashboard()
+	const { data, isLoading, error, mutate } = useDashboard();
 
-  if (isLoading) {
-    return (
-      <div className="rounded-2xl border p-2 space-y-1"
-        style={{ background: "var(--card-bg)", borderColor: "var(--line)" }}>
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="h-[52px] rounded-xl shimmer bg-fill2" />
-        ))}
-      </div>
-    )
-  }
+	if (isLoading) {
+		return (
+			<div className="space-y-1 rounded-lg border border-border bg-card p-2">
+				{[1, 2, 3, 4].map((i) => (
+					<div key={i} className="shimmer h-11 rounded-md bg-muted" />
+				))}
+			</div>
+		);
+	}
 
-  const activity = data?.recentActivity ?? []
+	if (error) {
+		return (
+			<div className="rounded-lg border border-danger-border bg-danger-bg p-5">
+				<p className="text-[13px] text-danger-text">
+					Couldn&apos;t load your activity. Check your connection and try again.
+				</p>
+				<button
+					onClick={() => mutate()}
+					className="mt-3 rounded-md border border-border bg-secondary px-3 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+					Retry
+				</button>
+			</div>
+		);
+	}
 
-  if (activity.length === 0) {
-    return (
-      <div className="rounded-2xl border p-10 text-center text-[13px] text-ink-500"
-        style={{ background: "var(--card-bg)", borderColor: "var(--line)" }}>
-        No activity yet.
-      </div>
-    )
-  }
+	const activity = data?.recentActivity ?? [];
 
-  return (
-    <div className="rounded-2xl border p-2"
-      style={{ background: "var(--card-bg)", borderColor: "var(--line)" }}>
-      {activity.map((a) => {
-        const isNote = a.type === "note"
-        const color = isNote ? "#38bdf8" : "#a78bfa"
-        const href = isNote ? `/note/${a.id}` : `/summary/${a.id}`
-        const Icon = isNote ? Icons.doc : Icons.sparkles
-        return (
-          <Link key={a.id} href={href}
-            className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-fill2 transition group">
-            <div className="grid place-items-center rounded-xl shrink-0"
-              style={{ width: 32, height: 32, background: color + "14", border: `1px solid ${color}2e`, color }}>
-              <Icon size={15} />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="text-[13px] text-ink-300 truncate">{a.title}</div>
-              <div className="font-mono text-[10.5px] text-ink-600 mt-0.5">{timeAgo(a.createdAt)}</div>
-            </div>
-            <span className="opacity-0 group-hover:opacity-100 text-ink-600 transition">
-              <Icons.arrowR size={14} />
-            </span>
-          </Link>
-        )
-      })}
-    </div>
-  )
+	if (activity.length === 0) {
+		return (
+			<div className="rounded-lg border border-border bg-card p-8 text-center">
+				<p className="text-[13px] text-muted-foreground">
+					Your recent notes and summaries show up here.
+				</p>
+			</div>
+		);
+	}
+
+	return (
+		<div className="rounded-lg border border-border bg-card">
+			{activity.map((a, i) => {
+				const isNote = a.type === "note";
+				const href = isNote ? `/note/${a.id}` : `/summary/${a.id}`;
+				const Icon = isNote ? FileText : Sparkles;
+				return (
+					<Link
+						key={a.id}
+						href={href}
+						className={`group flex items-center gap-3 px-3.5 py-3 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${
+							i > 0 ? "border-t border-border" : ""
+						}`}>
+						<Icon
+							size={16}
+							strokeWidth={1.5}
+							aria-hidden
+							className={`shrink-0 ${isNote ? "text-hue-blue-fg" : "text-hue-violet-fg"}`}
+						/>
+						<div className="min-w-0 flex-1">
+							<div className="truncate text-[13.5px] text-foreground">
+								{a.title}
+							</div>
+						</div>
+						<span className="shrink-0 text-[12px] tabular-nums text-foreground-faint">
+							{timeAgo(a.createdAt)}
+						</span>
+					</Link>
+				);
+			})}
+		</div>
+	);
 }

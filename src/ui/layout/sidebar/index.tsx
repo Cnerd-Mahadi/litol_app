@@ -1,99 +1,86 @@
 "use client";
 
-import { Icons } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
-import { navItems } from "@/utils";
-import { useEffect, useState } from "react";
+import { navItems, themeOptions } from "@/utils";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useActiveTheme } from "@/hooks/use-active-theme";
+import { Check, PanelLeft } from "lucide-react";
+import { useState } from "react";
 import { Logo } from "./logo";
 import { LogoutButton } from "./logout-button";
 import { NavItem } from "./nav-item";
 
-function ThemeToggle({ expanded }: { expanded: boolean }) {
-	const [theme, setTheme] = useState<"dark" | "light">("dark");
-
-	useEffect(() => {
-		const stored = localStorage.getItem("litol_theme") as
-			| "dark"
-			| "light"
-			| null;
-		const initial =
-			stored ??
-			(document.documentElement.classList.contains("light") ? "light" : "dark");
-		setTheme(initial);
-		document.documentElement.classList.remove("dark", "light");
-		document.documentElement.classList.add(initial);
-	}, []);
-
-	const flip = () => {
-		const next = theme === "dark" ? "light" : "dark";
-		document.documentElement.classList.remove("dark", "light");
-		document.documentElement.classList.add(next);
-		localStorage.setItem("litol_theme", next);
-		setTheme(next);
-	};
-
-	const IcoTheme = theme === "dark" ? Icons.moon : Icons.sun;
+function ThemeToggle({
+	expanded,
+	onOpenChange,
+}: {
+	expanded: boolean;
+	onOpenChange: (open: boolean) => void;
+}) {
+	const { activeTheme, setTheme } = useActiveTheme();
+	const current = themeOptions.find((o) => o.value === activeTheme) ?? themeOptions[2];
 
 	return (
-		<button
-			onClick={flip}
-			className={cn(
-				"w-full flex items-center h-9 rounded-lg text-ink-500 hover:text-ink-200 hover:bg-fill2 transition",
-				expanded ? "px-3" : "justify-center",
-			)}>
-			<span className="shrink-0">
-				<IcoTheme size={15} />
-			</span>
-			<span
-				className={cn(
-					"ml-2.5 text-[12px] whitespace-nowrap transition-opacity flex-1 text-left",
-					expanded ? "opacity-100" : "opacity-0 w-0",
-				)}>
-				{theme === "dark" ? "Dark" : "Light"} mode
-			</span>
-			{expanded && (
-				<span
-					className="relative shrink-0 rounded-full transition-colors"
-					style={{
-						height: 18,
-						width: 32,
-						background: theme === "light" ? "#8b5cf6" : "var(--line2)",
-					}}>
+		<DropdownMenu onOpenChange={onOpenChange}>
+			<DropdownMenuTrigger asChild>
+				<button
+					aria-label="Change theme"
+					className={cn(
+						"flex h-9 w-full items-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+						expanded ? "px-3" : "justify-center",
+					)}>
+					<span className="shrink-0">
+						<current.Icon size={16} strokeWidth={1.5} aria-hidden />
+					</span>
 					<span
-						className="absolute top-1/2 -translate-y-1/2 h-3.5 w-3.5 rounded-full bg-white transition-all"
-						style={{ left: theme === "light" ? 16 : 2 }}
-					/>
-				</span>
-			)}
-		</button>
+						className={cn(
+							"whitespace-nowrap text-left text-[13.5px] transition-opacity",
+							expanded ? "flex-1 ml-2.5 opacity-100" : "ml-0 w-0 overflow-hidden opacity-0",
+						)}>
+						{current.label} mode
+					</span>
+				</button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="start" side="top">
+				{themeOptions.map(({ value, label, Icon }) => (
+					<DropdownMenuItem key={value} onClick={() => setTheme(value)}>
+						<Icon size={15} strokeWidth={1.5} aria-hidden />
+						<span className="flex-1">{label}</span>
+						{activeTheme === value && <Check size={14} strokeWidth={2} aria-hidden />}
+					</DropdownMenuItem>
+				))}
+			</DropdownMenuContent>
+		</DropdownMenu>
 	);
 }
 
 export const SideBar = () => {
 	const [hover, setHover] = useState(false);
 	const [pinned, setPinned] = useState(false);
-	const expanded = hover || pinned;
+	const [menuOpen, setMenuOpen] = useState(false);
+	const expanded = hover || pinned || menuOpen;
 
 	return (
 		<aside
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}
-			className="fixed left-0 top-0 bottom-0 z-40 flex flex-col border-r transition-[width] duration-300 ease-[cubic-bezier(.22,1,.36,1)]"
-			style={{
-				width: expanded ? 220 : 64,
-				background: "var(--surface)",
-				borderColor: "var(--line)",
-			}}>
+			className="bg-background fixed bottom-0 left-0 top-0 z-40 hidden flex-col border-r border-border transition-[width] duration-300 ease-[cubic-bezier(.2,0,0,1)] lg:flex"
+			style={{ width: expanded ? 220 : 64 }}>
 			{/* Logo */}
-			<div className="h-16 flex items-center px-3.5 shrink-0">
+			<div className="flex h-16 shrink-0 items-center px-3.5">
 				<Logo expanded={expanded} />
 			</div>
 
 			{/* Nav */}
-			<nav className="flex-1 px-2.5 pt-2 flex flex-col gap-1 overflow-hidden">
+			<nav className="flex flex-1 flex-col gap-1 overflow-hidden px-2.5 pt-2">
 				<div
 					className={cn(
-						"px-2.5 mb-1 font-mono text-[9px] uppercase tracking-[.22em] text-ink-700 transition-opacity whitespace-nowrap",
+						"mb-1 whitespace-nowrap px-2.5 text-[11px] uppercase tracking-[0.16em] text-foreground-faint transition-opacity",
 						expanded ? "opacity-100" : "opacity-0",
 					)}>
 					Workspace
@@ -109,29 +96,33 @@ export const SideBar = () => {
 				))}
 			</nav>
 
-			{/* Logout */}
-			<div className="px-2.5 pb-0 flex flex-col">
-				<LogoutButton expanded={expanded} />
-			</div>
-
-			{/* Theme + Pin */}
-			<div className="px-2.5 pb-1.5 flex flex-col gap-0.5">
-				<ThemeToggle expanded={expanded} />
+			{/* Footer controls */}
+			<div className="flex flex-col gap-0.5 px-2.5 pb-2">
+				<ThemeToggle expanded={expanded} onOpenChange={setMenuOpen} />
 				<button
 					onClick={() => setPinned((p) => !p)}
+					aria-label={pinned ? "Unpin sidebar" : "Keep sidebar open"}
+					aria-pressed={pinned}
 					className={cn(
-						"w-full flex items-center h-9 rounded-lg text-ink-600 hover:text-ink-300 hover:bg-fill2 transition",
+						"flex h-9 w-full items-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 						expanded ? "px-3" : "justify-center",
 					)}>
-					<Icons.pin size={15} className={pinned ? "text-accentFg" : ""} />
+					<PanelLeft
+						size={16}
+						strokeWidth={1.5}
+						className={pinned ? "text-accent-foreground" : ""}
+						aria-hidden
+					/>
 					<span
 						className={cn(
-							"ml-2.5 text-[12px] whitespace-nowrap transition-opacity",
-							expanded ? "opacity-100" : "opacity-0 w-0",
+							"whitespace-nowrap text-[13.5px] transition-opacity",
+							expanded ? "ml-2.5 opacity-100" : "ml-0 w-0 opacity-0",
 						)}>
 						{pinned ? "Unpin sidebar" : "Keep open"}
 					</span>
 				</button>
+				<div className="my-1 h-px bg-border" />
+				<LogoutButton expanded={expanded} />
 			</div>
 		</aside>
 	);

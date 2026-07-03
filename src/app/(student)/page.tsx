@@ -1,75 +1,151 @@
-import { FEATURES, FeatureKey } from "@/lib/dummy-data"
-import { Icons } from "@/components/ui/icons"
-import Link from "next/link"
-import { DashboardStats } from "@/ui/dashboard/dashboard-stats"
-import { DashboardRecent } from "@/ui/dashboard/dashboard-recent"
+import { FEATURES, FeatureKey } from "@/lib/dummy-data";
+import { DashboardRecent } from "@/ui/dashboard/dashboard-recent";
+import { DashboardStats } from "@/ui/dashboard/dashboard-stats";
+import { RecallCard } from "@/ui/dashboard/recall-card";
+import {
+	ArrowUpRight,
+	Clock,
+	FileText,
+	GraduationCap,
+	Plus,
+	Sparkles,
+	Zap,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
 
-export const dynamic = "force-dynamic"
+export const dynamic = "force-dynamic";
 
-const ICON_MAP = {
-  sparkles: Icons.sparkles,
-  chat: Icons.chat,
-  quiz: Icons.quiz,
-  home: Icons.home,
-} as const
+const ACTION_ICON: Record<string, LucideIcon> = {
+	sparkles: Sparkles,
+	chat: FileText,
+	quiz: GraduationCap,
+};
+
+// Each feature gets a functional hue — chrome stays blue, content gets identity.
+const ACTION_HUE: Record<FeatureKey, { tile: string; hover: string }> = {
+	summary: {
+		tile: "bg-hue-violet-bg text-hue-violet-fg",
+		hover: "group-hover:text-hue-violet-fg",
+	},
+	qa: {
+		tile: "bg-hue-blue-bg text-hue-blue-fg",
+		hover: "group-hover:text-hue-blue-fg",
+	},
+	quiz: {
+		tile: "bg-hue-amber-bg text-hue-amber-fg",
+		hover: "group-hover:text-hue-amber-fg",
+	},
+};
 
 export default function DashPage() {
-  const hour = new Date().getHours()
-  const greet = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening"
-  const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })
+	const hour = new Date().getHours();
+	const greet =
+		hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+	const today = new Date().toLocaleDateString("en-US", {
+		weekday: "long",
+		month: "long",
+		day: "numeric",
+	});
 
-  return (
-    <div className="py-9 px-8 xl:px-12 max-w-[1180px] mx-auto animate-fade-up">
-      {/* Greeting */}
-      <div className="mb-8">
-        <div className="font-mono text-[11px] uppercase tracking-[.2em] text-ink-600 mb-2">{today}</div>
-        <h1 className="text-[32px] font-semibold tracking-tight text-ink-100 leading-none">{greet}.</h1>
-      </div>
+	return (
+		<div className="animate-fade-up">
+			{/* Hero */}
+			<div>
+				<div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-4 px-4 py-7 sm:px-6 sm:py-8 xl:px-12">
+					<div>
+						<div className="mb-1.5 text-[12px] font-medium uppercase tracking-[0.06em] text-foreground-faint">
+							{today}
+						</div>
+						<h1 className="text-[24px] font-semibold leading-tight tracking-tight text-foreground sm:text-[26px]">
+							{greet}
+						</h1>
+						<p className="mt-1 text-[14px] text-muted-foreground">
+							Pick up where you left off, or start something new.
+						</p>
+					</div>
+					<div className="flex shrink-0 items-center gap-2.5">
+						<Link
+							href="/quiz"
+							className="inline-flex h-10 items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 text-[13.5px] font-medium text-foreground transition-colors hover:border-border-strong hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+							<GraduationCap size={16} strokeWidth={1.75} aria-hidden />
+							Take a quiz
+						</Link>
+						<Link
+							href="/note"
+							className="inline-flex h-10 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-[13.5px] font-medium text-primary-foreground shadow-(--shadow-btn) transition-[filter] hover:brightness-110 active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+							<Plus size={16} strokeWidth={2} aria-hidden />
+							New note
+						</Link>
+					</div>
+				</div>
+			</div>
 
-      {/* Stat cards */}
-      <DashboardStats />
+			<div className="mx-auto max-w-[1180px] px-4 pb-8 pt-2 sm:px-6 sm:pb-10 xl:px-12">
+				{/* Stats */}
+				<DashboardStats />
 
-      {/* Quick actions + Recent activity */}
-      <div className="grid lg:grid-cols-[1.55fr_1fr] gap-5 mt-9">
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Icons.bolt size={15} className="text-ink-500" />
-            <h2 className="text-[13px] font-mono uppercase tracking-[.18em] text-ink-500 whitespace-nowrap">Start something</h2>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {(["summary", "qa", "quiz"] as FeatureKey[]).map((key) => {
-              const f = FEATURES[key]
-              const Ico = ICON_MAP[f.icon as keyof typeof ICON_MAP]
-              return (
-                <Link key={key} href={f.route} className="group">
-                  <div className="rounded-2xl p-5 h-full flex flex-col border transition-all hover:border-line2"
-                    style={{ background: "var(--card-bg)", borderColor: "var(--line)" }}>
-                    <div className="flex items-center justify-between">
-                      <div className="grid place-items-center rounded-xl"
-                        style={{ width: 40, height: 40, background: f.color + "14", border: `1px solid ${f.color}2e`, color: f.color }}>
-                        {Ico && <Ico size={19} />}
-                      </div>
-                      <span className="h-8 w-8 grid place-items-center rounded-lg text-ink-600 group-hover:text-ink-200 group-hover:bg-fill3 transition-all group-hover:translate-x-0.5">
-                        <Icons.arrowR size={16} />
-                      </span>
-                    </div>
-                    <div className="mt-4 text-[15px] font-semibold text-ink-100">{f.title}</div>
-                    <div className="text-[13px] text-ink-500 mt-1 leading-relaxed">{f.desc}</div>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
+				{/* Recall + recent */}
+				<div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
+					<div className="min-w-0">
+						<h2 className="mb-3.5 text-[12px] font-medium uppercase tracking-[0.06em] text-foreground-faint">
+							Quick recall
+						</h2>
+						<RecallCard />
+					</div>
+					<div className="min-w-0">
+						<div className="mb-3.5 flex items-center gap-1.5 text-foreground-faint">
+							<Clock size={13} strokeWidth={1.5} aria-hidden />
+							<h2 className="text-[12px] font-medium uppercase tracking-[0.06em]">
+								Recent activity
+							</h2>
+						</div>
+						<DashboardRecent />
+					</div>
+				</div>
 
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Icons.clock size={15} className="text-ink-500" />
-            <h2 className="text-[13px] font-mono uppercase tracking-[.18em] text-ink-500 whitespace-nowrap">Recent activity</h2>
-          </div>
-          <DashboardRecent />
-        </div>
-      </div>
-    </div>
-  )
+				{/* Quick actions */}
+				<section className="mt-12">
+					<div className="mb-3.5 flex items-center gap-1.5 text-foreground-faint">
+						<Zap size={13} strokeWidth={1.5} aria-hidden />
+						<h2 className="text-[12px] font-medium uppercase tracking-[0.06em]">
+							Start something
+						</h2>
+					</div>
+					<div className="grid gap-4 sm:grid-cols-3">
+						{(["summary", "qa", "quiz"] as FeatureKey[]).map((key) => {
+							const f = FEATURES[key];
+							const Icon = ACTION_ICON[f.icon];
+							const hue = ACTION_HUE[key];
+							return (
+								<Link
+									key={key}
+									href={f.route}
+									className="lift group flex h-full flex-col rounded-xl border border-border bg-card p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+									<div className="flex items-center justify-between">
+										<span
+											className={`grid size-11 place-items-center rounded-xl ${hue.tile}`}>
+											<Icon size={22} strokeWidth={1.75} aria-hidden />
+										</span>
+										<ArrowUpRight
+											size={17}
+											strokeWidth={1.75}
+											aria-hidden
+											className={`text-foreground-faint transition-colors ${hue.hover}`}
+										/>
+									</div>
+									<div className="mt-5 text-[16px] font-medium text-foreground">
+										{f.title}
+									</div>
+									<div className="mt-1 text-[13.5px] leading-relaxed text-muted-foreground">
+										{f.desc}
+									</div>
+								</Link>
+							);
+						})}
+					</div>
+				</section>
+			</div>
+		</div>
+	);
 }

@@ -25,7 +25,7 @@ model User {
   subjects      Subject[]
   notes         Note[]
   summaries     Summary[]
-  quizzesTaken  Int       @default(0)
+  quizAttempts  QuizAttempt[]
 
   @@unique([email])
   @@map("user")
@@ -161,4 +161,14 @@ model Chunk {
   @@index([noteId])
   @@index([cueId])
   @@map("chunk")
+}
+
+model QuizAttempt {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("quiz_attempt")
 }

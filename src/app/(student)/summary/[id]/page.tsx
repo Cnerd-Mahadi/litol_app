@@ -14,7 +14,7 @@ export default async function SummaryDetailPage({ params }: { params: { id: stri
   const summary = result.data.summary as SummaryItem
 
   return (
-    <div className="py-9 px-8 xl:px-12 max-w-[1180px] mx-auto">
+    <div className="mx-auto max-w-[1180px] px-4 py-6 sm:px-6 xl:px-12">
       <SummaryReader s={summary} />
     </div>
   )

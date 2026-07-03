@@ -14,7 +14,7 @@ export default async function NoteDetailPage({ params }: { params: { noteId: str
   const note = result.data.note as NoteItem
 
   return (
-    <div className="py-9 px-8 xl:px-12 max-w-[1180px] mx-auto">
+    <div className="mx-auto max-w-[1180px] px-4 py-6 sm:px-6 xl:px-12">
       <NoteReader note={note} />
     </div>
   )

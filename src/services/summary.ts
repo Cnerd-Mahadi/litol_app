@@ -5,6 +5,7 @@ import { generateSummaryPrompt } from "../lib/ai/prompts";
 import { prisma } from "../prisma";
 import { logger } from "../logger";
 import { AppError, DbError } from "../errors";
+import { stripMarkdown } from "../utils";
 
 const summaryOutputSchema = z.object({
   title: z.string(),
@@ -42,5 +43,9 @@ export async function generateSummary(input: {
     ),
   });
 
-  return output;
+  return {
+    ...output,
+    keywords: output.keywords.slice(0, 5),
+    content: stripMarkdown(output.content),
+  };
 }

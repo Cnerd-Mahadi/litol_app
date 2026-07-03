@@ -1,6 +1,6 @@
 export const FEATURES = {
   summary: { key: "summary", label: "Summary", route: "/summary", color: "#a78bfa", icon: "sparkles", title: "AI Summarizer", desc: "Turn any text into a structured, recall-ready summary." },
-  qa:      { key: "qa",      label: "Notes",   route: "/note",    color: "#38bdf8", icon: "chat",     title: "Notes & Q&A",   desc: "Write notes with cues, then chat with them — answers stay grounded in your source." },
+  qa:      { key: "qa",      label: "Notes",   route: "/note",    color: "#38bdf8", icon: "chat",     title: "Notes & Q&A",   desc: "Write notes with cues, then chat with them. Answers stay grounded in your source." },
   quiz:    { key: "quiz",    label: "Quiz",    route: "/quiz",    color: "#fbbf24", icon: "quiz",     title: "AI Quiz",       desc: "Generate a quiz from any topic and test your recall." },
 } as const;
 

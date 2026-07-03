@@ -91,3 +91,19 @@ export const getNoteById = authActionClient
 
 		return { note };
 	});
+
+export const getReviewNotes = authActionClient
+	.action(async ({ ctx }) => {
+		const notes = await prisma.note
+			.findMany({
+				where: { userId: ctx.user.id, cues: { some: {} } },
+				include: { cues: true },
+				orderBy: { id: "desc" },
+				take: 4,
+			})
+			.catch((error) => {
+				throw new DbError("Failed to fetch review notes", error);
+			});
+
+		return { notes };
+	});

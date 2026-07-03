@@ -1,210 +1,310 @@
-@layer tailwind-base, primereact, tailwind-utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
 
-@layer tailwind-base {
-	@tailwind base;
+@custom-variant dark (&:is(.dark *));
+
+/* ── Theme bridge (Tailwind v4 → CSS vars) ──────────────────── */
+@theme inline {
+	--font-sans: var(--font-inter), system-ui, sans-serif;
+	--font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+
+	/* shadcn tokens */
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-foreground-faint: var(--foreground-faint);
+	--color-link: var(--link);
+	--color-border-strong: var(--border-strong);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+
+	/* semantic status */
+	--color-success: var(--success);
+	--color-success-foreground: var(--success-foreground);
+	--color-success-text: var(--success-text);
+	--color-success-bg: var(--success-bg);
+	--color-success-border: var(--success-border);
+	--color-warning-text: var(--warning-text);
+	--color-warning-bg: var(--warning-bg);
+	--color-warning-border: var(--warning-border);
+	--color-danger-text: var(--danger-text);
+	--color-danger-bg: var(--danger-bg);
+	--color-danger-border: var(--danger-border);
+
+	/* functional category hues (icon tiles, chips, stat cards) */
+	--color-hue-blue-bg: var(--hue-blue-bg);
+	--color-hue-blue-fg: var(--hue-blue-fg);
+	--color-hue-indigo-bg: var(--hue-indigo-bg);
+	--color-hue-indigo-fg: var(--hue-indigo-fg);
+	--color-hue-violet-bg: var(--hue-violet-bg);
+	--color-hue-violet-fg: var(--hue-violet-fg);
+	--color-hue-amber-bg: var(--hue-amber-bg);
+	--color-hue-amber-fg: var(--hue-amber-fg);
+	--color-hue-emerald-bg: var(--hue-emerald-bg);
+	--color-hue-emerald-fg: var(--hue-emerald-fg);
+
+	/* legacy bridge (stragglers still compile) */
+	--color-surface: var(--card);
+	--color-cardBg: var(--card);
+	--color-cardHover: var(--secondary);
+	--color-elevated: var(--popover);
+	--color-hairline: var(--border);
+	--color-line2: var(--border-strong);
+	--color-fill1: var(--fill1);
+	--color-fill2: var(--fill2);
+	--color-fill3: var(--fill3);
+	--color-accentSoft: var(--accent);
+	--color-accentFg: var(--accent-foreground);
+	--color-ink-100: var(--foreground);
+	--color-ink-200: var(--foreground);
+	--color-ink-300: var(--muted-foreground);
+	--color-ink-400: var(--muted-foreground);
+	--color-ink-500: var(--foreground-faint);
+	--color-ink-600: var(--foreground-faint);
+	--color-ink-700: var(--border-strong);
 }
 
-@layer tailwind-utilities {
-	@tailwind components;
-	@tailwind utilities;
+/* ── Light ──────────────────────────────────────────────────── */
+:root {
+	--background: #eef3fb;
+	--foreground: #0a0a0a;
+	--foreground-faint: #6b7280;
+	--card: #f9fbfe;
+	--card-foreground: #0a0a0a;
+	--popover: #ffffff;
+	--popover-foreground: #0a0a0a;
+	--primary: #1447e6;
+	--primary-foreground: #fafafa;
+	--secondary: #e6ecf8;
+	--secondary-foreground: #171717;
+	--muted: #e6ecf8;
+	--muted-foreground: #737373;
+	--accent: #dde6f6;
+	--accent-foreground: #171717;
+	--destructive: #e7000b;
+	--destructive-foreground: #ffffff;
+	--border: #e5e5e5;
+	--border-strong: #d2d8e3;
+	--input: #e5e5e5;
+	--ring: #1447e6;
+	--link: #3b82f6;
+	--radius: 0.625rem;
+
+	--success: #1a7f37;
+	--success-foreground: #ffffff;
+	--success-text: #1a7f37;
+	--success-bg: #e6f5ec;
+	--success-border: #b7e0c4;
+	--warning-text: #9a6700;
+	--warning-bg: #fff7e0;
+	--warning-border: #efd89b;
+	--danger-text: #d7263d;
+	--danger-bg: #fdecee;
+	--danger-border: #f4c2c6;
+
+	--shadow-card: none;
+	--shadow-hover: 0 8px 24px -4px rgba(16, 24, 40, 0.12);
+	--shadow-pop: 0 12px 32px rgba(16, 24, 40, 0.16);
+	/* flat primary button: solid color carries it, no shadow */
+	--shadow-btn: none;
+
+	/* hero glow + background dot texture */
+	--hero-glow: rgba(59, 130, 246, 0.06);
+	--dot: rgba(28, 28, 31, 0.022);
+	--bg-glow: rgba(214, 230, 255, 0.45);
+
+	/* category chips (cool 4-set) */
+	--hue-blue-bg: #e8f4fd;
+	--hue-blue-fg: #3f6aa8;
+	--hue-indigo-bg: #eef1fe;
+	--hue-indigo-fg: #5560b0;
+	--hue-violet-bg: #f1ecfe;
+	--hue-violet-fg: #6b5a9c;
+	--hue-emerald-bg: #e6f6f1;
+	--hue-emerald-fg: #237056;
+	--hue-amber-bg: #fdf1dd;
+	--hue-amber-fg: #8c6128;
+
+	--fill1: rgba(15, 20, 25, 0.025);
+	--fill2: rgba(15, 20, 25, 0.045);
+	--fill3: rgba(15, 20, 25, 0.07);
+	--shimmer: rgba(15, 20, 25, 0.05);
 }
 
-/* ── Design tokens ──────────────────────────────────────────── */
-:root,
-html.dark {
-	/* Layout surfaces */
-	--bg: 10 10 10;
-	--surface: #131314;
-	--card-bg: #161618;
-	--card-hover: #1a1a1d;
-	--elevated: #1c1c1f;
-	--elevated2: #222226;
+/* ── Dark (default) ─────────────────────────────────────────── */
+.dark {
+	--background: #121b2e;
+	--foreground: #fafafa;
+	--foreground-faint: #8e8e98;
+	--card: #182232;
+	--card-foreground: #fafafa;
+	--popover: #202b3a;
+	--popover-foreground: #fafafa;
+	--primary: #2b7fff;
+	--primary-foreground: #fafafa;
+	--secondary: #232f3e;
+	--secondary-foreground: #fafafa;
+	--muted: #242d3b;
+	--muted-foreground: #9099a6;
+	--accent: #2b394b;
+	--accent-foreground: #fafafa;
+	--destructive: #ff6467;
+	--destructive-foreground: #fafafa;
+	--border: #293442;
+	--border-strong: #353944;
+	--input: #2b3646;
+	--ring: #2b7fff;
+	--link: #7ab0ff;
+	--radius: 0.625rem;
 
-	/* Borders */
-	--line: rgba(255, 255, 255, 0.08);
-	--line2: rgba(255, 255, 255, 0.2);
+	--success: #2bbe6e;
+	--success-foreground: #ffffff;
+	--success-text: #46d98a;
+	--success-bg: #0e2a1c;
+	--success-border: #1c4a33;
+	--warning-text: #e3b341;
+	--warning-bg: #2a2410;
+	--warning-border: #574a1c;
+	--danger-text: #ff6b72;
+	--danger-bg: #2d1416;
+	--danger-border: #5c2228;
 
-	/* Fill layers */
+	--shadow-card: none;
+	--shadow-hover: 0 10px 28px -6px rgba(0, 0, 0, 0.55);
+	--shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.55);
+	--shadow-btn: none;
+
+	--hero-glow: rgba(59, 130, 246, 0.12);
+	--dot: rgba(120, 180, 255, 0.05);
+	--bg-glow: rgba(58, 88, 150, 0.22);
+
+	--hue-blue-bg: #0f2233;
+	--hue-blue-fg: #8fb3dd;
+	--hue-indigo-bg: #181b3a;
+	--hue-indigo-fg: #9aa8d6;
+	--hue-violet-bg: #221a3a;
+	--hue-violet-fg: #b09ddb;
+	--hue-emerald-bg: #0e2a1c;
+	--hue-emerald-fg: #6bb894;
+	--hue-amber-bg: #322610;
+	--hue-amber-fg: #cba565;
+
 	--fill1: rgba(255, 255, 255, 0.03);
 	--fill2: rgba(255, 255, 255, 0.05);
-	--fill3: rgba(255, 255, 255, 0.075);
-
-	/* Text hierarchy */
-	--t1: #fafafa;
-	--t3: #d4d4d8;
-	--t4: #a1a1aa;
-	--t5: #71717a;
-	--t6: #52525b;
-	--t7: #3f3f46;
-
-	/* Accent */
-	--accent-soft: rgba(139, 92, 246, 0.14);
-	--accent-fg: #c4b5fd;
-
-	/* Decorative */
-	--grid: rgba(255, 255, 255, 0.045);
-	--stripe: rgba(255, 255, 255, 0.025);
-	--glass: rgba(20, 20, 22, 0.72);
+	--fill3: rgba(255, 255, 255, 0.07);
 	--shimmer: rgba(255, 255, 255, 0.05);
-
-	/* ShadCN compat — dark */
-	--background: 0 0% 4%;
-	--foreground: 0 0% 98%;
-	--card: 0 0% 8.5%;
-	--card-foreground: 0 0% 98%;
-	--popover: 240 4% 11%;
-	--popover-foreground: 0 0% 98%;
-	--primary: 262 83% 58%;
-	--primary-foreground: 0 0% 98%;
-	--secondary: 240 4% 12%;
-	--secondary-foreground: 0 0% 90%;
-	--muted: 240 4% 12%;
-	--muted-foreground: 240 5% 64%;
-	--accent: 240 4% 12%;
-	--accent-foreground: 0 0% 98%;
-	--destructive: 0 63% 31%;
-	--destructive-foreground: 0 0% 98%;
-	--border: 240 4% 12%;
-	--input: 240 4% 12%;
-	--ring: 262 83% 58%;
-	--radius: 0.75rem;
-}
-
-html.light {
-	/* Layout surfaces */
-	--bg: 247 247 248;
-	--surface: #ffffff;
-	--card-bg: #ffffff;
-	--card-hover: #f4f4f5;
-	--elevated: #ffffff;
-	--elevated2: #f0f0f1;
-
-	/* Borders */
-	--line: rgba(0, 0, 0, 0.09);
-	--line2: rgba(0, 0, 0, 0.18);
-
-	/* Fill layers */
-	--fill1: rgba(0, 0, 0, 0.025);
-	--fill2: rgba(0, 0, 0, 0.045);
-	--fill3: rgba(0, 0, 0, 0.07);
-
-	/* Text hierarchy */
-	--t1: #18181b;
-	--t3: #3f3f46;
-	--t4: #52525b;
-	--t5: #71717a;
-	--t6: #a1a1aa;
-	--t7: #c4c4cc;
-
-	/* Accent */
-	--accent-soft: rgba(139, 92, 246, 0.12);
-	--accent-fg: #6d28d9;
-
-	/* Decorative */
-	--grid: rgba(0, 0, 0, 0.05);
-	--stripe: rgba(0, 0, 0, 0.022);
-	--glass: rgba(255, 255, 255, 0.78);
-	--shimmer: rgba(0, 0, 0, 0.045);
-
-	/* ShadCN compat — light */
-	--background: 0 0% 100%;
-	--foreground: 222.2 84% 4.9%;
-	--card: 0 0% 100%;
-	--card-foreground: 222.2 84% 4.9%;
-	--popover: 0 0% 100%;
-	--popover-foreground: 222.2 84% 4.9%;
-	--primary: 262 83% 58%;
-	--primary-foreground: 0 0% 98%;
-	--secondary: 210 40% 96.1%;
-	--secondary-foreground: 222.2 47.4% 11.2%;
-	--muted: 210 40% 96.1%;
-	--muted-foreground: 215.4 16.3% 46.9%;
-	--accent: 210 40% 96.1%;
-	--accent-foreground: 222.2 47.4% 11.2%;
-	--destructive: 0 84.2% 60.2%;
-	--destructive-foreground: 0 0% 98%;
-	--border: 214.3 31.8% 91.4%;
-	--input: 214.3 31.8% 91.4%;
-	--ring: 262 83% 58%;
-	--radius: 0.75rem;
 }
 
 /* ── Base ───────────────────────────────────────────────────── */
-html,
-body {
-	height: 100%;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	font-feature-settings: "cv01", "ss01";
-}
-
-body {
-	background: rgb(var(--bg));
-	color: var(--t1);
-	transition:
-		background 0.25s ease,
-		color 0.25s ease;
-}
-
-::selection {
-	background: rgba(139, 92, 246, 0.3);
+@layer base {
+	* {
+		border-color: var(--border);
+	}
+	/* Tailwind v4 drops the default pointer cursor on buttons — restore it for
+	   anything interactive. Disabled controls keep the default arrow. */
+	button:not(:disabled),
+	[role="button"]:not([aria-disabled="true"]),
+	[role="tab"],
+	[role="switch"],
+	[role="option"],
+	label[for],
+	summary {
+		cursor: pointer;
+	}
+	button:disabled,
+	[aria-disabled="true"] {
+		cursor: default;
+	}
+	html,
+	body {
+		height: 100%;
+		overflow-x: hidden;
+	}
+	body {
+		min-height: 100%;
+		background-color: var(--background);
+		color: var(--foreground);
+		font-size: 14px;
+		line-height: 1.5;
+		/* Inter stylistic sets for the crisper Linear-style glyphs */
+		font-feature-settings:
+			"cv11" 1,
+			"ss01" 1,
+			"calt" 1;
+	}
+	h1,
+	h2 {
+		letter-spacing: normal;
+		line-height: 1.2;
+	}
+	h3,
+	h4 {
+		letter-spacing: normal;
+	}
+	::selection {
+		background: color-mix(in srgb, var(--ring) 26%, transparent);
+	}
 }
 
 /* ── Scrollbars ─────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-	width: 8px;
-	height: 8px;
+	width: 9px;
+	height: 9px;
 }
 ::-webkit-scrollbar-track {
 	background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-	background: var(--line);
+	background: var(--border-strong);
 	border-radius: 99px;
 	border: 3px solid transparent;
 	background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-	background: var(--line2);
+	background: var(--muted-foreground);
 	background-clip: padding-box;
 }
 * {
 	scrollbar-width: thin;
-	scrollbar-color: var(--line) transparent;
+	scrollbar-color: var(--border-strong) transparent;
 }
 
 /* ── Animations ─────────────────────────────────────────────── */
 @keyframes litolFadeUp {
 	from {
+		opacity: 0;
 		transform: translateY(10px);
 	}
 	to {
+		opacity: 1;
 		transform: none;
 	}
 }
 @keyframes litolFadeIn {
 	from {
-		transform: translateY(6px);
+		opacity: 0;
 	}
 	to {
-		transform: none;
-	}
-}
-@keyframes litolScaleIn {
-	from {
-		transform: scale(0.975);
-	}
-	to {
-		transform: none;
-	}
-}
-@keyframes litolPulseSoft {
-	0%,
-	100% {
 		opacity: 1;
-	}
-	50% {
-		opacity: 0.45;
 	}
 }
 @keyframes litolShimmer {
@@ -212,77 +312,36 @@ body {
 		transform: translateX(100%);
 	}
 }
-@keyframes accordion-down {
-	from {
-		height: 0;
-	}
-	to {
-		height: var(--radix-accordion-content-height);
-	}
-}
-@keyframes accordion-up {
-	from {
-		height: var(--radix-accordion-content-height);
-	}
-	to {
-		height: 0;
-	}
-}
 
 .animate-fade-up {
-	animation: litolFadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+	animation: litolFadeUp 0.45s cubic-bezier(0.2, 0, 0, 1) both;
 }
 .animate-fade-in {
-	animation: litolFadeIn 0.4s ease both;
+	animation: litolFadeIn 0.32s ease both;
 }
 .animate-scale-in {
-	animation: litolScaleIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.animate-pulse-soft {
-	animation: litolPulseSoft 1.6s ease-in-out infinite;
-}
-.animate-accordion-down {
-	animation: accordion-down 0.2s ease-out;
-}
-.animate-accordion-up {
-	animation: accordion-up 0.2s ease-out;
+	animation: litolFadeUp 0.32s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
+	*,
 	.animate-fade-up,
 	.animate-fade-in,
 	.animate-scale-in {
 		animation: none !important;
+		transition: none !important;
 	}
 }
 
-/* ── Utility classes ────────────────────────────────────────── */
-.grid-bg {
-	background-image: radial-gradient(var(--grid) 1px, transparent 1px);
-	background-size: 22px 22px;
-}
-
-.glass {
-	background: var(--glass);
-	backdrop-filter: blur(16px) saturate(140%);
-}
-
-.blur-reveal {
-	filter: blur(7px);
-	transition: filter 0.5s ease;
-	user-select: none;
-}
-
-.blur-reveal.is-revealed {
-	filter: blur(0);
-	user-select: auto;
+/* ── Utilities ──────────────────────────────────────────────── */
+.lift {
+	transition: border-color 0.18s ease;
 }
 
 .shimmer {
 	position: relative;
 	overflow: hidden;
 }
-
 .shimmer::after {
 	content: "";
 	position: absolute;
@@ -292,9 +351,12 @@ body {
 	animation: litolShimmer 1.4s infinite;
 }
 
-[data-elevate] {
-	transition:
-		transform 0.18s ease,
-		border-color 0.18s ease,
-		background 0.18s ease;
+.blur-reveal {
+	filter: blur(7px);
+	transition: filter 0.4s ease;
+	user-select: none;
+}
+.blur-reveal.is-revealed {
+	filter: blur(0);
+	user-select: auto;
 }
