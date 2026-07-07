@@ -1,23 +1,139 @@
-# Welcome to LITOL APP
+# Litol
 
-An implementation of a web app based on a thesis on active learning methods catering the student demography. Implements features like Summarization, Cornell Note Taking, Mind Mapping and Feynman Technique. Used by more than 60+ users.
+An AI-powered study companion that helps students take notes with recall cues, generate summaries, and test themselves with quizzes — all grounded in their own material.
 
-### N.B: 🚀 App is still going through incremental development phase. And currently only available for pc.
+**Live:** https://litol.vercel.app
 
-## Technologies
-
-NextJS, TailwindCSS, ShadCN, ReactFlow, ReactQuery, Firebase Tools, Contentful
+---
 
 ## Features
 
-🚀 <b>Learn Section:</b> This section is provided as an extension with Feynman section. In this section students can learn the provided topics from range of subjects. And if they have difficulties in understanding any of the topic they can ask for help from other students using Feynman request button provided in the bottom.
+- **Notes with Cues** — Write notes and attach Q&A cue pairs. Cues are embedded into a vector store for semantic retrieval.
+- **Recall Deck** — Dashboard card that surfaces your cues as a flip-card review deck.
+- **AI Summarizer** — Generate structured summaries from selected notes using Gemini, or write them manually.
+- **AI Quiz** — Generate grounded multiple-choice questions from your notes. Tracks attempt history with scores.
+- **Subjects** — Organise notes and summaries by subject. Create and manage subjects inline.
+- **Google OAuth** — Sign in with Google via Better Auth.
+- **Dark / Light theme** — System-aware with manual toggle.
 
-🚀 <b>Summary:</b> Users can summarize about a topic or content they have learned. The speciality of this feature is it contains keys. Keys are basically keyword related to the topic. The strategy is the details of the topic would be hidden to students for them to recall while studying. Only the keys will be shown. Students will try to recall the material using the hint of the content. If they are unable to do that there is a show button to reveal the content.
+---
 
-🚀 <b>Note:</b> This section is specially designed for taking class notes. Students can take notes during class using Cornell Note Taking strategy. It contains cues. Cues are consist of key and details. It is used to structure the material in a question answer manner. Where the key is a question and the detail is the answer. It helps students to take structured note based on question-answer in the classroom.
+## Tech Stack
 
-🚀 <b>Mind Map:</b> Students can create mind map in a drawing board. It contains title, nodes and edges. It is just like traditional mind mapping technique but for online. Massively helpful for brainstorming and analysis.
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 |
+| UI Components | shadcn/ui + Radix UI |
+| Auth | Better Auth (Google OAuth) |
+| Database | PostgreSQL (with pgvector) |
+| ORM | Prisma 7 |
+| AI SDK | Vercel AI SDK v6 |
+| AI Model | Google Gemini (via `@ai-sdk/google`) |
+| Server Actions | next-safe-action v7 |
+| Client Fetching | SWR |
+| Forms | React Hook Form + Zod |
+| Deployment | Vercel |
+| Runtime | Bun |
 
-🚀 <b>Feyman Gallery:</b> When a student requests a topic to be discussed in the learn section, that request will be stored in the Feynman section for other students to see. If a student wants to teach that topic to students who have requested it, they can invite them to a session using a Google Meet link. A session can contain up to 4 students. This technique is based on the principle articulated by Richard Feynman that "teaching is to learn twice." When a student conducts a Feynman session, they will better understand the topic by teaching it, and the other students will learn the topics from them.
+---
 
-<br><br>
+## AI Pipeline
+
+### Ingestion (on note save)
+1. Each cue pair (`cue` + `details`) is concatenated into a single text chunk.
+2. All chunks are batch-embedded using Gemini's embedding model via Vercel AI SDK (`embedMany`).
+3. Embeddings (3072-dim vectors) are written to the `chunk` table in PostgreSQL using `pgvector`.
+4. Runs inside a Prisma transaction — all chunks commit atomically.
+
+### Retrieval (for quiz generation)
+1. Relevant chunks are retrieved via cosine similarity search against the `chunk` table.
+2. Retrieved context is injected into the quiz generation prompt.
+3. Gemini generates grounded multiple-choice questions from the retrieved material.
+
+### Summary Generation
+1. Selected notes (full content + cues) are passed directly to Gemini.
+2. Gemini returns a structured summary with title, content, and extracted keywords.
+3. User reviews and edits before saving.
+
+---
+
+## Data Model
+
+```
+User
+ ├── Subject (organises notes & summaries)
+ ├── Note
+ │    ├── Cue[]          (Q&A pairs)
+ │    └── Chunk[]        (vector embeddings of cues)
+ ├── Summary
+ └── QuizAttempt        (score history)
+```
+
+---
+
+## Folder Structure
+
+```
+src/
+├── actions/          # next-safe-action server actions (note, quiz, summary, user)
+├── app/
+│   ├── (public)/     # Sign-in page (unauthenticated)
+│   └── (student)/    # Protected app pages (dashboard, note, summary, quiz)
+├── components/ui/    # shadcn/ui base components
+├── lib/
+│   ├── ai/           # AI pipeline: config, ingestion, retrieval, prompts
+│   ├── auth.ts       # Better Auth server config
+│   ├── auth-client.ts
+│   └── swr/          # SWR data-fetching hooks
+├── schemas/          # Zod input schemas
+├── services/         # DB query logic (called from actions)
+├── ui/               # Feature UI components (note, summary, quiz, dashboard, layout)
+└── prisma.ts         # Prisma client singleton
+prisma/
+└── schema.prisma     # DB schema (User, Note, Cue, Chunk, Summary, QuizAttempt)
+```
+
+---
+
+## Running Locally
+
+### Prerequisites
+- [Bun](https://bun.sh) installed
+- PostgreSQL instance with `pgvector` extension enabled
+- Google OAuth credentials
+- Google Gemini API key
+
+### Setup
+
+```bash
+# 1. Clone and install
+git clone <repo-url>
+cd litol_app
+bun install
+
+# 2. Copy env file and fill in values
+cp .env.example .env
+
+# 3. Run database migrations
+bunx prisma migrate dev
+
+# 4. Start dev server
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+### Environment Variables
+
+| Variable | Description |
+|---|---|
+| `BETTER_AUTH_SECRET` | Random secret for Better Auth session signing |
+| `BETTER_AUTH_URL` | App base URL (e.g. `http://localhost:3000`) |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | Gemini API key |
+
+> Enable the `pgvector` extension on your database before running migrations: `CREATE EXTENSION vector;`
