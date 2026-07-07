@@ -130,8 +130,8 @@ export function NoteForm({
 		suggestCueAction,
 		{
 			onSuccess: ({ data }) => {
-				if (suggesting !== null && data.cue)
-					setValue(`cues.${suggesting}.cue`, data.cue);
+				if (suggesting !== null && data?.cue)
+					setValue(`cues.${suggesting}.cue`, data?.cue ?? "");
 				setSuggesting(null);
 			},
 			onError: ({ error: e }) => {

@@ -10,7 +10,7 @@ import { logger } from "../logger";
 import { createNoteSchema, suggestCueSchema, getNotesSchema, getNoteByIdSchema, updateNoteSchema, deleteNoteSchema } from "../schemas/note";
 
 export const createNote = authActionClient
-	.inputSchema(createNoteSchema)
+	.schema(createNoteSchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const { cues, ...noteData } = parsedInput;
 
@@ -35,7 +35,7 @@ export const createNote = authActionClient
 	});
 
 export const updateNote = authActionClient
-	.inputSchema(updateNoteSchema)
+	.schema(updateNoteSchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const { id, cues, ...noteData } = parsedInput;
 
@@ -80,7 +80,7 @@ export const updateNote = authActionClient
 	});
 
 export const deleteNote = authActionClient
-	.inputSchema(deleteNoteSchema)
+	.schema(deleteNoteSchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const note = await prisma.note
 			.findFirst({
@@ -105,7 +105,7 @@ export const deleteNote = authActionClient
 	});
 
 export const suggestCueAction = authActionClient
-	.inputSchema(suggestCueSchema)
+	.schema(suggestCueSchema)
 	.action(async ({ parsedInput }) => {
 		const result = await suggestCue(parsedInput.detail);
 		if ("error" in result) throw new Error(result.error);
@@ -113,7 +113,7 @@ export const suggestCueAction = authActionClient
 	});
 
 export const getNotes = authActionClient
-	.inputSchema(getNotesSchema)
+	.schema(getNotesSchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const { cursor, title } = parsedInput;
 
@@ -148,7 +148,7 @@ export const getNotes = authActionClient
 	});
 
 export const getNoteById = authActionClient
-	.inputSchema(getNoteByIdSchema)
+	.schema(getNoteByIdSchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const note = await prisma.note
 			.findUnique({

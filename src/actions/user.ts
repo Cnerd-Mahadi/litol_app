@@ -7,7 +7,7 @@ import { authActionClient } from "../safe-action";
 import { createSubjectSchema, getSubjectsSchema, updateSubjectSchema, deleteSubjectSchema } from "../schemas/user";
 
 export const createSubject = authActionClient
-	.inputSchema(createSubjectSchema)
+	.schema(createSubjectSchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const subject = await prisma.subject
 			.create({
@@ -26,7 +26,7 @@ export const createSubject = authActionClient
 	});
 
 export const updateSubject = authActionClient
-	.inputSchema(updateSubjectSchema)
+	.schema(updateSubjectSchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const { id, name } = parsedInput;
 
@@ -53,7 +53,7 @@ export const updateSubject = authActionClient
 	});
 
 export const deleteSubject = authActionClient
-	.inputSchema(deleteSubjectSchema)
+	.schema(deleteSubjectSchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const owned = await prisma.subject
 			.findFirst({
@@ -78,7 +78,7 @@ export const deleteSubject = authActionClient
 	});
 
 export const getSubjects = authActionClient
-	.inputSchema(getSubjectsSchema)
+	.schema(getSubjectsSchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const { name } = parsedInput;
 

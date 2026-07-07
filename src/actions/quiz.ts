@@ -8,7 +8,7 @@ import { AppError, DbError } from "../errors";
 import { generateQuizSchema, submitQuizResultSchema } from "../schemas/quiz";
 
 export const generateQuizAction = authActionClient
-  .inputSchema(generateQuizSchema)
+  .schema(generateQuizSchema)
   .action(async ({ parsedInput, ctx }) => {
     logger.info("Quiz generation started", {
       userId: ctx.user.id,
@@ -36,7 +36,7 @@ export const generateQuizAction = authActionClient
   });
 
 export const submitQuizResult = authActionClient
-  .inputSchema(submitQuizResultSchema)
+  .schema(submitQuizResultSchema)
   .action(async ({ parsedInput, ctx }) => {
     const { attemptId, score, total } = parsedInput;
 

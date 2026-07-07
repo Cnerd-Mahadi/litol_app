@@ -71,6 +71,7 @@ export function SubjectSelector({
 						type="button"
 						role="combobox"
 						aria-expanded={open}
+						aria-controls="subject-selector-list"
 						disabled={isLoading}
 						className={cn(
 							"flex h-8 w-full items-center justify-between gap-1.5 text-sm text-muted-foreground outline-none disabled:cursor-not-allowed disabled:opacity-50",
@@ -102,7 +103,7 @@ export function SubjectSelector({
 							onValueChange={setSearch}
 							placeholder="Search or type to create…"
 						/>
-						<CommandList>
+						<CommandList id="subject-selector-list">
 							{filtered.length === 0 && !term && (
 								<CommandEmpty>No subjects yet.</CommandEmpty>
 							)}

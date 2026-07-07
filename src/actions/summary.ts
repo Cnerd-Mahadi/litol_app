@@ -8,7 +8,7 @@ import { generateSummary } from "../services/summary";
 import { createSummarySchema, generateSummarySchema, getSummariesSchema, getSummaryByIdSchema, deleteSummarySchema, updateSummarySchema } from "../schemas/summary";
 
 export const createSummary = authActionClient
-	.inputSchema(createSummarySchema)
+	.schema(createSummarySchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const { noteIds, ...rest } = parsedInput;
 
@@ -30,7 +30,7 @@ export const createSummary = authActionClient
 	});
 
 export const updateSummary = authActionClient
-	.inputSchema(updateSummarySchema)
+	.schema(updateSummarySchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const { id, ...rest } = parsedInput;
 
@@ -60,7 +60,7 @@ export const updateSummary = authActionClient
 	});
 
 export const generateSummaryAction = authActionClient
-	.inputSchema(generateSummarySchema)
+	.schema(generateSummarySchema)
 	.action(async ({ parsedInput, ctx }) => {
 		logger.info("Summary generation started", {
 			userId: ctx.user.id,
@@ -78,7 +78,7 @@ export const generateSummaryAction = authActionClient
 	});
 
 export const deleteSummary = authActionClient
-	.inputSchema(deleteSummarySchema)
+	.schema(deleteSummarySchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const summary = await prisma.summary
 			.findFirst({
@@ -103,7 +103,7 @@ export const deleteSummary = authActionClient
 	});
 
 export const getSummaries = authActionClient
-	.inputSchema(getSummariesSchema)
+	.schema(getSummariesSchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const { cursor, title } = parsedInput;
 
@@ -136,7 +136,7 @@ export const getSummaries = authActionClient
 	});
 
 export const getSummaryById = authActionClient
-	.inputSchema(getSummaryByIdSchema)
+	.schema(getSummaryByIdSchema)
 	.action(async ({ parsedInput, ctx }) => {
 		const summary = await prisma.summary
 			.findUnique({
