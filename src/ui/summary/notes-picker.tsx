@@ -4,21 +4,35 @@ import { useNotes } from "@/lib/swr/use-notes";
 import type { NoteListItem } from "@/lib/swr/use-notes";
 import { cn } from "@/lib/utils";
 import { fmtDate } from "@/lib/time";
-import { Check } from "lucide-react";
+import { CheckIcon, NoteIcon } from "@/ui/shared/icons";
 
 export function NotesPicker({
+	subjectId,
 	selectedIds,
 	onToggle,
 }: {
+	subjectId: string;
 	selectedIds: string[];
 	onToggle: (id: string) => void;
 }) {
 	const { data, isLoading } = useNotes();
-	const notes: NoteListItem[] = data?.notes ?? [];
+
+	if (!subjectId) {
+		return (
+			<div className="flex min-h-64 flex-col items-center justify-center gap-2 text-center text-[13px] text-muted-foreground">
+				<NoteIcon size={20} strokeWidth={1.5} className="text-foreground-faint" />
+				Pick a subject to see its notes.
+			</div>
+		);
+	}
+
+	const notes: NoteListItem[] = (data?.notes ?? []).filter(
+		(n) => n.subjectId === subjectId,
+	);
 
 	if (isLoading) {
 		return (
-			<div className="space-y-2">
+			<div className="min-h-64 space-y-2">
 				{[1, 2, 3].map((i) => (
 					<div key={i} className="shimmer h-14 rounded-lg bg-muted" />
 				))}
@@ -28,14 +42,14 @@ export function NotesPicker({
 
 	if (notes.length === 0) {
 		return (
-			<div className="py-8 text-center text-[13px] text-muted-foreground">
-				No notes yet. Create some on the Notes page first.
+			<div className="flex min-h-64 items-center justify-center text-center text-[13px] text-muted-foreground">
+				No notes for this subject yet.
 			</div>
 		);
 	}
 
 	return (
-		<div className="max-h-72 space-y-2 overflow-auto">
+		<div className="grid min-h-64 max-h-96 grid-cols-1 content-start gap-2.5 overflow-auto sm:grid-cols-2 xl:grid-cols-3">
 			{notes.map((n) => {
 				const sel = selectedIds.includes(n.id);
 				return (
@@ -45,10 +59,10 @@ export function NotesPicker({
 						onClick={() => onToggle(n.id)}
 						aria-pressed={sel}
 						className={cn(
-							"flex w-full items-center gap-3 rounded-lg border p-3.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+							"flex items-center gap-3 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 							sel
-								? "border-primary bg-accent"
-								: "border-border bg-card hover:bg-muted",
+								? "border-primary bg-accent/40"
+								: "border-border-strong hover:bg-accent/25",
 						)}>
 						<span
 							className={cn(
@@ -57,7 +71,7 @@ export function NotesPicker({
 									? "border-primary bg-primary text-primary-foreground"
 									: "border-border",
 							)}>
-							{sel && <Check size={12} strokeWidth={2.5} />}
+							{sel && <CheckIcon size={12} strokeWidth={2.5} />}
 						</span>
 						<div className="min-w-0 flex-1">
 							<div className="truncate text-[13.5px] font-medium text-foreground">

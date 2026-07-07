@@ -2,7 +2,7 @@
 
 import { useToast } from "@/hooks/use-toast";
 import { authClient } from "@/lib/auth-client";
-import { Loader2 } from "lucide-react";
+import { SpinnerIcon } from "@/ui/shared/icons";
 import { useState } from "react";
 
 export const GoogleSignInButton = () => {
@@ -18,8 +18,7 @@ export const GoogleSignInButton = () => {
 		if (error) {
 			setLoading(false);
 			toast({
-				title: "Sign in failed",
-				description: error.message,
+				title: error.message || "Sign in failed",
 				variant: "destructive",
 			});
 		}
@@ -31,7 +30,7 @@ export const GoogleSignInButton = () => {
 			disabled={loading}
 			className="flex h-11 w-full items-center justify-center gap-3 rounded-md border border-border bg-card text-[14px] font-medium text-foreground shadow-(--shadow-card) transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50">
 			{loading ? (
-				<Loader2 size={18} className="animate-spin" aria-hidden />
+				<SpinnerIcon size={18} className="animate-spin" aria-hidden />
 			) : (
 				<svg width={18} height={18} viewBox="0 0 24 24" aria-hidden>
 					<path

@@ -1,7 +1,7 @@
 "use client";
 
 import { GeneratingPanel } from "@/ui/shared/generating-panel";
-import { GraduationCap } from "lucide-react";
+import { QuizIcon } from "@/ui/shared/icons";
 
 const STEPS = [
 	"Analyzing notes",
@@ -13,7 +13,7 @@ const STEPS = [
 export function QuizGenerating({ label }: { label: string }) {
 	return (
 		<GeneratingPanel
-			Icon={GraduationCap}
+			Icon={QuizIcon}
 			color="indigo"
 			heading="Building your quiz"
 			subtitle={

@@ -7,7 +7,6 @@ export default function PublicLayout({
 }) {
 	return (
 		<div className="grid min-h-screen lg:grid-cols-[1.1fr_1fr]">
-			{/* Brand panel - grid surface, no glow, no illustration */}
 			<div className="relative hidden flex-col border-r border-border p-12 lg:flex">
 				<Logo iconSize={20} boxClassName="size-10" />
 
@@ -36,7 +35,6 @@ export default function PublicLayout({
 				</div>
 			</div>
 
-			{/* Auth panel */}
 			<div className="flex items-center justify-center p-6">
 				<div className="w-full max-w-[380px] animate-fade-up">
 					<div className="mb-10 flex justify-center lg:hidden">

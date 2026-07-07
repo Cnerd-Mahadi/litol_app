@@ -1,8 +1,9 @@
 "use client";
 
+import { Card } from "@/components/ui/card";
 import { useDashboard } from "@/lib/swr/use-dashboard";
 import { timeAgo } from "@/lib/time";
-import { FileText, Sparkles } from "lucide-react";
+import { NoteIcon, SummaryIcon } from "@/ui/shared/icons";
 import Link from "next/link";
 
 export function DashboardRecent() {
@@ -10,23 +11,23 @@ export function DashboardRecent() {
 
 	if (isLoading) {
 		return (
-			<div className="space-y-1 rounded-lg border border-border bg-card p-2">
+			<Card className="space-y-1 p-2">
 				{[1, 2, 3, 4].map((i) => (
 					<div key={i} className="shimmer h-11 rounded-md bg-muted" />
 				))}
-			</div>
+			</Card>
 		);
 	}
 
 	if (error) {
 		return (
-			<div className="rounded-lg border border-danger-border bg-danger-bg p-5">
+			<div className="flex min-h-80 flex-col justify-center rounded-lg border border-danger-border bg-danger-bg p-5">
 				<p className="text-[13px] text-danger-text">
 					Couldn&apos;t load your activity. Check your connection and try again.
 				</p>
 				<button
 					onClick={() => mutate()}
-					className="mt-3 rounded-md border border-border bg-secondary px-3 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+					className="mt-3 w-fit rounded-md border border-border bg-secondary px-3 py-1.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
 					Retry
 				</button>
 			</div>
@@ -37,20 +38,20 @@ export function DashboardRecent() {
 
 	if (activity.length === 0) {
 		return (
-			<div className="rounded-lg border border-border bg-card p-8 text-center">
+			<Card className="flex min-h-80 flex-col items-center justify-center p-8 text-center">
 				<p className="text-[13px] text-muted-foreground">
 					Your recent notes and summaries show up here.
 				</p>
-			</div>
+			</Card>
 		);
 	}
 
 	return (
-		<div className="rounded-lg border border-border bg-card">
+		<Card className="min-h-80">
 			{activity.map((a, i) => {
 				const isNote = a.type === "note";
 				const href = isNote ? `/note/${a.id}` : `/summary/${a.id}`;
-				const Icon = isNote ? FileText : Sparkles;
+				const Icon = isNote ? NoteIcon : SummaryIcon;
 				return (
 					<Link
 						key={a.id}
@@ -75,6 +76,6 @@ export function DashboardRecent() {
 					</Link>
 				);
 			})}
-		</div>
+		</Card>
 	);
 }

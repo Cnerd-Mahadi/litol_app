@@ -1,16 +1,24 @@
-import { FileText, GraduationCap, Home, Monitor, Moon, Sparkles, Sun } from "lucide-react";
+import {
+  HomeIcon,
+  SummaryIcon,
+  NoteIcon,
+  QuizIcon,
+  LightThemeIcon,
+  DarkThemeIcon,
+  SystemThemeIcon,
+} from "@/ui/shared/icons";
 
 export const navItems = [
-  { name: "Home",    route: "/",        Icon: Home },
-  { name: "Summary", route: "/summary", Icon: Sparkles },
-  { name: "Notes",   route: "/note",    Icon: FileText },
-  { name: "Quiz",    route: "/quiz",    Icon: GraduationCap },
+  { name: "Home",    route: "/",        Icon: HomeIcon },
+  { name: "Summary", route: "/summary", Icon: SummaryIcon },
+  { name: "Notes",   route: "/note",    Icon: NoteIcon },
+  { name: "Quiz",    route: "/quiz",    Icon: QuizIcon },
 ];
 
 export const themeOptions = [
-  { value: "light",  label: "Light",  Icon: Sun },
-  { value: "dark",   label: "Dark",   Icon: Moon },
-  { value: "system", label: "System", Icon: Monitor },
+  { value: "light",  label: "Light",  Icon: LightThemeIcon },
+  { value: "dark",   label: "Dark",   Icon: DarkThemeIcon },
+  { value: "system", label: "System", Icon: SystemThemeIcon },
 ] as const;
 
 export function stripMarkdown(text: string): string {

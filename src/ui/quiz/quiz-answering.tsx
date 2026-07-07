@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Check, X } from "lucide-react";
+import { CheckIcon, CloseIcon, SubmitIcon } from "@/ui/shared/icons";
 import { useState } from "react";
 
 export type QuizQuestion = {
@@ -46,10 +46,10 @@ export function QuizAnswering({
 		const isCorrect = q.options[i] === q.answer;
 		const isPicked = picked === i;
 		if (picked === null)
-			return "border-border bg-card hover:bg-muted";
+			return "border-border-strong bg-card hover:bg-muted";
 		if (isCorrect) return "border-success-border bg-success-bg";
 		if (isPicked) return "border-danger-border bg-danger-bg";
-		return "border-border opacity-50";
+		return "border-border-strong opacity-50";
 	};
 
 	return (
@@ -70,82 +70,72 @@ export function QuizAnswering({
 				/>
 			</div>
 
-			<div
-				key={idx}
-				className="rounded-lg border border-border bg-card p-5 shadow-(--shadow-card) sm:p-7">
-				<div className="animate-fade-up">
-					<h2 className="text-[18px] font-semibold leading-snug text-foreground sm:text-[20px]">
-						{q.question}
-					</h2>
-					<div className="mt-6 space-y-2.5">
-						{q.options.map((opt, i) => {
-							const isCorrect = q.options[i] === q.answer;
-							const isPicked = picked === i;
-							const showCorrect = picked !== null && isCorrect;
-							const showWrong = picked !== null && isPicked && !isCorrect;
-							return (
-								<button
-									key={i}
-									onClick={() => choose(i)}
-									disabled={picked !== null}
+			<div key={idx} className="animate-fade-up">
+				<h2 className="text-[22px] font-semibold leading-snug tracking-tight text-foreground">
+					{q.question}
+				</h2>
+				<div className="mt-6 space-y-2">
+					{q.options.map((opt, i) => {
+						const isCorrect = q.options[i] === q.answer;
+						const isPicked = picked === i;
+						const showCorrect = picked !== null && isCorrect;
+						const showWrong = picked !== null && isPicked && !isCorrect;
+						return (
+							<button
+								key={i}
+								onClick={() => choose(i)}
+								disabled={picked !== null}
+								className={cn(
+									"flex w-full items-center gap-3.5 rounded-lg border p-4 text-left text-[14px] text-foreground transition-colors",
+									optionState(i),
+								)}>
+								<span
 									className={cn(
-										"flex w-full items-center gap-3.5 rounded-lg border p-4 text-left text-[14px] text-foreground transition-colors",
-										optionState(i),
+										"grid size-7 shrink-0 place-items-center rounded-md border text-[12px]",
+										showCorrect
+											? "border-success-border text-success-text"
+											: showWrong
+												? "border-danger-border text-danger-text"
+												: "border-border-strong text-muted-foreground",
 									)}>
-									<span
-										className={cn(
-											"grid size-7 shrink-0 place-items-center rounded-md border text-[12px]",
-											showCorrect
-												? "border-success-border text-success-text"
-												: showWrong
-													? "border-danger-border text-danger-text"
-													: "border-border text-muted-foreground",
-										)}>
-										{showCorrect ? (
-											<Check size={14} strokeWidth={2.5} />
-										) : showWrong ? (
-											<X size={13} strokeWidth={2.5} />
-										) : (
-											String.fromCharCode(65 + i)
-										)}
-									</span>
-									{opt}
-								</button>
-							);
-						})}
-					</div>
-
-					{picked !== null && (
-						<div className="mt-5 animate-fade-up rounded-lg border border-border bg-card p-4">
-							<div className="flex items-center gap-2">
-								{q.options[picked] === q.answer ? (
-									<Check
-										size={15}
-										strokeWidth={2.5}
-										className="text-success-text"
-									/>
-								) : (
-									<X size={14} strokeWidth={2.5} className="text-danger-text" />
-								)}
-								<span className="text-[13px] font-medium text-foreground">
-									{q.options[picked] === q.answer
-										? "Correct"
-										: `Not quite. Answer: ${q.answer}`}
+									{showCorrect ? (
+										<CheckIcon size={14} strokeWidth={2.5} />
+									) : showWrong ? (
+										<CloseIcon size={13} strokeWidth={2.5} />
+									) : (
+										String.fromCharCode(65 + i)
+									)}
 								</span>
-							</div>
-						</div>
-					)}
+								{opt}
+							</button>
+						);
+					})}
 				</div>
+
+				{picked !== null && (
+					<div className="mt-5 flex animate-fade-up items-center gap-2 text-[13px] font-medium">
+						{q.options[picked] === q.answer ? (
+							<CheckIcon size={15} strokeWidth={2.5} className="text-success-text" />
+						) : (
+							<CloseIcon size={14} strokeWidth={2.5} className="text-danger-text" />
+						)}
+						<span className="text-foreground">
+							{q.options[picked] === q.answer
+								? "Correct"
+								: `Not quite. Answer: ${q.answer}`}
+						</span>
+					</div>
+				)}
 			</div>
 
-			<div className="mt-5 flex justify-end">
+			<div className="mt-6 flex justify-end">
 				<Button
 					onClick={next}
 					disabled={picked === null}
 					size="lg"
 					className="h-12 text-[15px]">
 					{idx + 1 >= questions.length ? "See results" : "Next question"}
-					<ArrowRight size={16} strokeWidth={2} />
+					<SubmitIcon size={16} strokeWidth={2} />
 				</Button>
 			</div>
 		</div>

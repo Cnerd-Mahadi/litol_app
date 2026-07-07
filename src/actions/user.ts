@@ -1,10 +1,10 @@
 "use server";
 
-import { DbError } from "../errors";
+import { AppError, DbError } from "../errors";
 import { logger } from "../logger";
 import { prisma } from "../prisma";
 import { authActionClient } from "../safe-action";
-import { createSubjectSchema, getSubjectsSchema } from "../schemas/user";
+import { createSubjectSchema, getSubjectsSchema, updateSubjectSchema, deleteSubjectSchema } from "../schemas/user";
 
 export const createSubject = authActionClient
 	.inputSchema(createSubjectSchema)
@@ -22,7 +22,59 @@ export const createSubject = authActionClient
 
 		logger.info("Subject created", { subjectId: subject.id });
 
-		return { message: "Subject created" };
+		return { subjectId: subject.id };
+	});
+
+export const updateSubject = authActionClient
+	.inputSchema(updateSubjectSchema)
+	.action(async ({ parsedInput, ctx }) => {
+		const { id, name } = parsedInput;
+
+		const owned = await prisma.subject
+			.findFirst({
+				where: { id, userId: ctx.user.id },
+				select: { id: true },
+			})
+			.catch((error) => {
+				throw new DbError("Failed to fetch subject", error);
+			});
+
+		if (!owned) throw new AppError("Subject not found");
+
+		await prisma.subject
+			.update({ where: { id }, data: { name } })
+			.catch((error) => {
+				throw new DbError("Failed to update subject", error);
+			});
+
+		logger.info("Subject updated", { subjectId: id });
+
+		return { subjectId: id };
+	});
+
+export const deleteSubject = authActionClient
+	.inputSchema(deleteSubjectSchema)
+	.action(async ({ parsedInput, ctx }) => {
+		const owned = await prisma.subject
+			.findFirst({
+				where: { id: parsedInput.id, userId: ctx.user.id },
+				select: { id: true },
+			})
+			.catch((error) => {
+				throw new DbError("Failed to fetch subject", error);
+			});
+
+		if (!owned) throw new AppError("Subject not found");
+
+		await prisma.subject
+			.delete({ where: { id: owned.id } })
+			.catch((error) => {
+				throw new DbError("Failed to delete subject", error);
+			});
+
+		logger.info("Subject deleted", { subjectId: owned.id });
+
+		return { subjectId: owned.id };
 	});
 
 export const getSubjects = authActionClient

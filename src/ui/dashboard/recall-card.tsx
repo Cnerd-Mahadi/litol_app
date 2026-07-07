@@ -1,17 +1,18 @@
 "use client";
 
+import { Card } from "@/components/ui/card";
 import { useReviewDeck } from "@/lib/swr/use-review-deck";
 import { useSubjects } from "@/lib/swr/use-subjects";
 import { cn } from "@/lib/utils";
 import {
-	ChevronLeft,
-	ChevronRight,
-	Layers,
-	RotateCw,
-	Sparkles,
-} from "lucide-react";
+	ChevronLeftIcon,
+	DeckIcon,
+	FlipIcon,
+	NextIcon,
+	SummaryIcon,
+} from "@/ui/shared/icons";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export function RecallCard() {
 	const { data: deck, isLoading } = useReviewDeck();
@@ -20,7 +21,6 @@ export function RecallCard() {
 
 	const [idx, setIdx] = useState(0);
 	const [flipped, setFlipped] = useState(false);
-	const ref = useRef<HTMLDivElement>(null);
 
 	const total = deck?.length ?? 0;
 	const cue = deck?.[idx];
@@ -54,15 +54,13 @@ export function RecallCard() {
 	}, [total, idx]);
 
 	if (isLoading) {
-		return (
-			<div className="shimmer h-[320px] rounded-lg border border-border bg-card" />
-		);
+		return <Card className="shimmer h-80" />;
 	}
 
 	if (!cue) {
 		return (
-			<div className="flex h-[320px] flex-col items-center justify-center rounded-lg border border-border bg-card p-8 text-center">
-				<Sparkles
+			<Card className="flex h-80 flex-col items-center justify-center p-8 text-center">
+				<SummaryIcon
 					size={26}
 					strokeWidth={1.5}
 					aria-hidden
@@ -80,7 +78,7 @@ export function RecallCard() {
 					className="mt-5 inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-4 text-[13px] font-medium text-primary-foreground transition-[filter] hover:brightness-110">
 					Write a note
 				</Link>
-			</div>
+			</Card>
 		);
 	}
 
@@ -90,18 +88,16 @@ export function RecallCard() {
 	const pct = total ? ((idx + 1) / total) * 100 : 0;
 
 	return (
-		<div
-			ref={ref}
+		<Card
 			role="button"
 			tabIndex={0}
 			aria-label="Recall card. Press space to flip, arrows to move between cues."
 			onKeyDown={onKey}
 			onClick={() => setFlipped((f) => !f)}
-			className="group relative flex h-[320px] cursor-pointer flex-col overflow-hidden rounded-lg border border-border bg-card outline-none transition-colors hover:border-border-strong focus-visible:ring-2 focus-visible:ring-ring">
-			{/* header */}
+			className="group relative flex h-80 cursor-pointer flex-col overflow-hidden outline-none transition-colors hover:border-border-strong focus-visible:ring-2 focus-visible:ring-ring">
 			<div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3 sm:px-5">
 				<div className="flex min-w-0 items-center gap-2.5">
-					<Layers
+					<DeckIcon
 						size={16}
 						strokeWidth={1.5}
 						aria-hidden
@@ -121,7 +117,6 @@ export function RecallCard() {
 				</span>
 			</div>
 
-			{/* flip stage */}
 			<div className="flex flex-1 items-center justify-center px-5 py-5 sm:px-7 [perspective:1200px]">
 				<div
 					className={cn(
@@ -147,7 +142,6 @@ export function RecallCard() {
 				</div>
 			</div>
 
-			{/* progress + controls */}
 			<div className="border-t border-border px-5 py-3">
 				<div className="mb-2.5 h-0.5 overflow-hidden rounded-full bg-secondary">
 					<div
@@ -157,7 +151,7 @@ export function RecallCard() {
 				</div>
 				<div className="flex items-center justify-between">
 					<span className="flex items-center gap-1.5 text-[12px] text-foreground-faint">
-						<RotateCw size={13} strokeWidth={1.5} aria-hidden />
+						<FlipIcon size={13} strokeWidth={1.5} aria-hidden />
 						<span className="sm:hidden">Tap to flip</span>
 						<span className="hidden sm:inline">Press space to flip</span>
 					</span>
@@ -170,7 +164,7 @@ export function RecallCard() {
 								go(-1);
 							}}
 							className="grid size-7 place-items-center rounded-md text-foreground-faint transition-colors hover:bg-muted hover:text-foreground">
-							<ChevronLeft size={16} strokeWidth={1.75} />
+							<ChevronLeftIcon size={16} strokeWidth={1.75} />
 						</button>
 						<button
 							type="button"
@@ -180,11 +174,11 @@ export function RecallCard() {
 								go(1);
 							}}
 							className="grid size-7 place-items-center rounded-md text-foreground-faint transition-colors hover:bg-muted hover:text-foreground">
-							<ChevronRight size={16} strokeWidth={1.75} />
+							<NextIcon size={16} strokeWidth={1.75} />
 						</button>
 					</div>
 				</div>
 			</div>
-		</div>
+		</Card>
 	);
 }

@@ -30,7 +30,7 @@ export function QuizFlow() {
       setQuizState("answering")
     },
     onError: ({ error: e }) => {
-      toast({ title: "Failed to generate quiz", description: e.serverError, variant: "destructive" })
+      toast({ title: e.serverError, variant: "destructive" })
       setQuizState("input")
     },
   })

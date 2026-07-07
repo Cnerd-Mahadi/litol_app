@@ -1,7 +1,8 @@
 "use client";
 
+import { Card } from "@/components/ui/card";
 import { useDashboard } from "@/lib/swr/use-dashboard";
-import { FileText, GraduationCap, Layers, Sparkles } from "lucide-react";
+import { DeckIcon, NoteIcon, QuizIcon, SummaryIcon } from "@/ui/shared/icons";
 import type { LucideIcon } from "lucide-react";
 
 type Hue = "blue" | "violet" | "emerald" | "amber";
@@ -19,16 +20,14 @@ const STATS: {
 	Icon: LucideIcon;
 	hue: Hue;
 }[] = [
-	{ key: "noteCount", label: "Notes", Icon: FileText, hue: "blue" },
-	{ key: "summaryCount", label: "Summaries", Icon: Sparkles, hue: "violet" },
-	{ key: "subjectCount", label: "Subjects", Icon: Layers, hue: "emerald" },
-	{ key: "quizzesTaken", label: "Quizzes taken", Icon: GraduationCap, hue: "amber" },
+	{ key: "noteCount", label: "Notes", Icon: NoteIcon, hue: "blue" },
+	{ key: "summaryCount", label: "Summaries", Icon: SummaryIcon, hue: "violet" },
+	{ key: "subjectCount", label: "Subjects", Icon: DeckIcon, hue: "emerald" },
+	{ key: "quizzesTaken", label: "Quizzes taken", Icon: QuizIcon, hue: "amber" },
 ];
 
 function StatSkeleton() {
-	return (
-		<div className="shimmer h-20 rounded-xl border border-border bg-card" />
-	);
+	return <Card className="shimmer h-20 rounded-xl" />;
 }
 
 export function DashboardStats() {
@@ -41,9 +40,9 @@ export function DashboardStats() {
 				: STATS.map(({ key, label, Icon, hue }) => {
 						const value = data?.[key] ?? 0;
 						return (
-							<div
+							<Card
 								key={key}
-								className={`lift flex items-center justify-between gap-3 rounded-xl border border-border bg-card p-4 sm:p-5 ${HUE[hue].hover}`}>
+								className={`lift flex items-center justify-between gap-3 rounded-xl p-4 sm:p-5 ${HUE[hue].hover}`}>
 								<div className="min-w-0">
 									<div className="truncate text-[12px] font-medium text-muted-foreground">
 										{label}
@@ -56,7 +55,7 @@ export function DashboardStats() {
 									className={`grid size-10 shrink-0 place-items-center rounded-xl ${HUE[hue].tile}`}>
 									<Icon size={19} strokeWidth={1.75} aria-hidden />
 								</span>
-							</div>
+							</Card>
 						);
 					})}
 		</div>

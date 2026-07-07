@@ -23,7 +23,21 @@ export const getSummaryByIdSchema = z.object({
   id: z.string().uuid(),
 })
 
+export const deleteSummarySchema = z.object({
+  id: z.string().uuid(),
+})
+
+export const updateSummarySchema = z.object({
+  id: z.string().uuid(),
+  title: z.string().min(1),
+  description: z.string().min(1).nullable(),
+  keywords: z.array(z.string()),
+  content: z.string().min(1),
+})
+
 export type CreateSummaryInput = z.infer<typeof createSummarySchema>
 export type GenerateSummaryInput = z.infer<typeof generateSummarySchema>
 export type GetSummariesParams = z.infer<typeof getSummariesSchema>
 export type GetSummaryByIdInput = z.infer<typeof getSummaryByIdSchema>
+export type DeleteSummaryInput = z.infer<typeof deleteSummarySchema>
+export type UpdateSummaryInput = z.infer<typeof updateSummarySchema>

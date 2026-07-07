@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Sparkles } from "lucide-react";
+import { SummaryIcon } from "@/ui/shared/icons";
 
 export interface LogoProps {
 	expanded?: boolean;
@@ -21,7 +21,7 @@ export const Logo = ({
 					"grid shrink-0 place-items-center rounded-md bg-primary text-primary-foreground",
 					boxClassName,
 				)}>
-				<Sparkles size={iconSize} strokeWidth={1.5} aria-hidden />
+				<SummaryIcon size={iconSize} strokeWidth={1.5} aria-hidden />
 			</div>
 			<div
 				className={cn(

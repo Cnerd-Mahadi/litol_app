@@ -2,10 +2,10 @@
 
 import { authActionClient } from "../safe-action";
 import { prisma } from "../prisma";
-import { DbError } from "../errors";
+import { AppError, DbError } from "../errors";
 import { logger } from "../logger";
 import { generateSummary } from "../services/summary";
-import { createSummarySchema, generateSummarySchema, getSummariesSchema, getSummaryByIdSchema } from "../schemas/summary";
+import { createSummarySchema, generateSummarySchema, getSummariesSchema, getSummaryByIdSchema, deleteSummarySchema, updateSummarySchema } from "../schemas/summary";
 
 export const createSummary = authActionClient
 	.inputSchema(createSummarySchema)
@@ -29,6 +29,36 @@ export const createSummary = authActionClient
 		return { summaryId: summary.id };
 	});
 
+export const updateSummary = authActionClient
+	.inputSchema(updateSummarySchema)
+	.action(async ({ parsedInput, ctx }) => {
+		const { id, ...rest } = parsedInput;
+
+		const owned = await prisma.summary
+			.findFirst({
+				where: { id, userId: ctx.user.id },
+				select: { id: true },
+			})
+			.catch((error) => {
+				throw new DbError("Failed to fetch summary", error);
+			});
+
+		if (!owned) throw new AppError("Summary not found");
+
+		await prisma.summary
+			.update({
+				where: { id },
+				data: rest,
+			})
+			.catch((error) => {
+				throw new DbError("Failed to update summary", error);
+			});
+
+		logger.info("Summary updated", { summaryId: id });
+
+		return { summaryId: id };
+	});
+
 export const generateSummaryAction = authActionClient
 	.inputSchema(generateSummarySchema)
 	.action(async ({ parsedInput, ctx }) => {
@@ -45,6 +75,31 @@ export const generateSummaryAction = authActionClient
 		logger.info("Summary generation complete", { userId: ctx.user.id });
 
 		return { summary };
+	});
+
+export const deleteSummary = authActionClient
+	.inputSchema(deleteSummarySchema)
+	.action(async ({ parsedInput, ctx }) => {
+		const summary = await prisma.summary
+			.findFirst({
+				where: { id: parsedInput.id, userId: ctx.user.id },
+				select: { id: true },
+			})
+			.catch((error) => {
+				throw new DbError("Failed to fetch summary", error);
+			});
+
+		if (!summary) throw new AppError("Summary not found");
+
+		await prisma.summary
+			.delete({ where: { id: summary.id } })
+			.catch((error) => {
+				throw new DbError("Failed to delete summary", error);
+			});
+
+		logger.info("Summary deleted", { summaryId: summary.id });
+
+		return { summaryId: summary.id };
 	});
 
 export const getSummaries = authActionClient

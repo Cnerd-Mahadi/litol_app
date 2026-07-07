@@ -1,25 +1,24 @@
 import { FEATURES, FeatureKey } from "@/lib/dummy-data";
+import { DashboardGreeting } from "@/ui/dashboard/dashboard-greeting";
 import { DashboardRecent } from "@/ui/dashboard/dashboard-recent";
 import { DashboardStats } from "@/ui/dashboard/dashboard-stats";
 import { RecallCard } from "@/ui/dashboard/recall-card";
 import {
-	ArrowUpRight,
-	Clock,
-	FileText,
-	GraduationCap,
-	Plus,
-	Sparkles,
-	Zap,
-} from "lucide-react";
+	AddIcon,
+	ClockIcon,
+	ExternalIcon,
+	NoteIcon,
+	QuizIcon,
+	SummaryIcon,
+	ZapIcon,
+} from "@/ui/shared/icons";
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
-
 const ACTION_ICON: Record<string, LucideIcon> = {
-	sparkles: Sparkles,
-	chat: FileText,
-	quiz: GraduationCap,
+	sparkles: SummaryIcon,
+	chat: NoteIcon,
+	quiz: QuizIcon,
 };
 
 // Each feature gets a functional hue — chrome stays blue, content gets identity.
@@ -39,27 +38,12 @@ const ACTION_HUE: Record<FeatureKey, { tile: string; hover: string }> = {
 };
 
 export default function DashPage() {
-	const hour = new Date().getHours();
-	const greet =
-		hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-	const today = new Date().toLocaleDateString("en-US", {
-		weekday: "long",
-		month: "long",
-		day: "numeric",
-	});
-
 	return (
 		<div className="animate-fade-up">
-			{/* Hero */}
 			<div>
 				<div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-4 px-4 py-7 sm:px-6 sm:py-8 xl:px-12">
 					<div>
-						<div className="mb-1.5 text-[12px] font-medium uppercase tracking-[0.06em] text-foreground-faint">
-							{today}
-						</div>
-						<h1 className="text-[24px] font-semibold leading-tight tracking-tight text-foreground sm:text-[26px]">
-							{greet}
-						</h1>
+						<DashboardGreeting />
 						<p className="mt-1 text-[14px] text-muted-foreground">
 							Pick up where you left off, or start something new.
 						</p>
@@ -68,13 +52,13 @@ export default function DashPage() {
 						<Link
 							href="/quiz"
 							className="inline-flex h-10 items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 text-[13.5px] font-medium text-foreground transition-colors hover:border-border-strong hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-							<GraduationCap size={16} strokeWidth={1.75} aria-hidden />
+							<QuizIcon size={16} strokeWidth={1.75} aria-hidden />
 							Take a quiz
 						</Link>
 						<Link
-							href="/note"
+							href="/note/new"
 							className="inline-flex h-10 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-[13.5px] font-medium text-primary-foreground shadow-(--shadow-btn) transition-[filter] hover:brightness-110 active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-							<Plus size={16} strokeWidth={2} aria-hidden />
+							<AddIcon size={16} strokeWidth={2} aria-hidden />
 							New note
 						</Link>
 					</div>
@@ -82,10 +66,8 @@ export default function DashPage() {
 			</div>
 
 			<div className="mx-auto max-w-[1180px] px-4 pb-8 pt-2 sm:px-6 sm:pb-10 xl:px-12">
-				{/* Stats */}
 				<DashboardStats />
 
-				{/* Recall + recent */}
 				<div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
 					<div className="min-w-0">
 						<h2 className="mb-3.5 text-[12px] font-medium uppercase tracking-[0.06em] text-foreground-faint">
@@ -95,7 +77,7 @@ export default function DashPage() {
 					</div>
 					<div className="min-w-0">
 						<div className="mb-3.5 flex items-center gap-1.5 text-foreground-faint">
-							<Clock size={13} strokeWidth={1.5} aria-hidden />
+							<ClockIcon size={13} strokeWidth={1.5} aria-hidden />
 							<h2 className="text-[12px] font-medium uppercase tracking-[0.06em]">
 								Recent activity
 							</h2>
@@ -104,10 +86,9 @@ export default function DashPage() {
 					</div>
 				</div>
 
-				{/* Quick actions */}
 				<section className="mt-12">
 					<div className="mb-3.5 flex items-center gap-1.5 text-foreground-faint">
-						<Zap size={13} strokeWidth={1.5} aria-hidden />
+						<ZapIcon size={13} strokeWidth={1.5} aria-hidden />
 						<h2 className="text-[12px] font-medium uppercase tracking-[0.06em]">
 							Start something
 						</h2>
@@ -127,7 +108,7 @@ export default function DashPage() {
 											className={`grid size-11 place-items-center rounded-xl ${hue.tile}`}>
 											<Icon size={22} strokeWidth={1.75} aria-hidden />
 										</span>
-										<ArrowUpRight
+										<ExternalIcon
 											size={17}
 											strokeWidth={1.75}
 											aria-hidden

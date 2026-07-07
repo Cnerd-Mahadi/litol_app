@@ -23,9 +23,8 @@ export const NavItem = ({ route, title, Icon, expanded }: NavItemProps) => {
 			href={route}
 			aria-current={isActive ? "page" : undefined}
 			className={cn(
-				"group relative flex h-10 items-center overflow-hidden rounded-lg transition-colors",
+				"group relative flex h-10 items-center overflow-hidden rounded-lg px-3 transition-colors",
 				"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-				expanded ? "px-3" : "justify-center",
 				isActive
 					? "bg-accent text-accent-foreground"
 					: "text-muted-foreground hover:bg-secondary hover:text-foreground",
@@ -34,7 +33,7 @@ export const NavItem = ({ route, title, Icon, expanded }: NavItemProps) => {
 				<span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-primary" />
 			)}
 			<span className="grid w-5 shrink-0 place-items-center">
-				<Icon size={19} strokeWidth={2} aria-hidden />
+				<Icon size={17} strokeWidth={1.75} aria-hidden />
 			</span>
 			<span
 				className={cn(

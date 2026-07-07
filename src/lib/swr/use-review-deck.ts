@@ -12,9 +12,6 @@ export type ReviewCue = {
 	subjectId: string;
 };
 
-// Pulls real cues from the user's most recent notes to seed the review deck.
-// Spaced-repetition scheduling (due dates) can replace this fetch later without
-// touching the UI — the card just consumes ReviewCue[].
 export function useReviewDeck() {
 	return useSWR<ReviewCue[]>("review-deck", async () => {
 		const res = await getReviewNotes();

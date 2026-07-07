@@ -26,7 +26,28 @@ export const getNoteByIdSchema = z.object({
   id: z.string().uuid(),
 })
 
+export const updateNoteSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string().min(1),
+  subjectId: z.string().uuid(),
+  description: z.string().min(1).nullable(),
+  keywords: z.array(z.string()),
+  cues: z.array(
+    z.object({
+      id: z.string().uuid().optional(),
+      cue: z.string().min(1),
+      details: z.string().min(1),
+    })
+  ),
+})
+
+export const deleteNoteSchema = z.object({
+  id: z.string().uuid(),
+})
+
 export type CreateNoteInput = z.infer<typeof createNoteSchema>
 export type SuggestCueInput = z.infer<typeof suggestCueSchema>
 export type GetNotesParams = z.infer<typeof getNotesSchema>
 export type GetNoteByIdInput = z.infer<typeof getNoteByIdSchema>
+export type UpdateNoteInput = z.infer<typeof updateNoteSchema>
+export type DeleteNoteInput = z.infer<typeof deleteNoteSchema>

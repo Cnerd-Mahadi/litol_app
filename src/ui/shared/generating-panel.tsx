@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import type { ChipColor } from "@/ui/shared/icon-chip";
 import { IconChip } from "@/ui/shared/icon-chip";
-import { Check } from "lucide-react";
+import { CheckIcon } from "@/ui/shared/icons";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -20,15 +20,11 @@ export function GeneratingPanel({
 	heading: string;
 	subtitle: React.ReactNode;
 	steps: string[];
-	/** Dwell time (ms) per step before advancing. The last step is the holding
-	 * step — it stays pulsing until the real result arrives, so it has no
-	 * entry here (dwell.length === steps.length - 1). */
 	dwell: number[];
 }) {
 	const [step, setStep] = useState(0);
 
 	useEffect(() => {
-		// Jitter keeps the pacing from feeling scripted.
 		const timers: ReturnType<typeof setTimeout>[] = [];
 		let acc = 0;
 		dwell.forEach((d, i) => {
@@ -39,38 +35,42 @@ export function GeneratingPanel({
 	}, [dwell]);
 
 	return (
-		<div className="mx-auto max-w-md animate-fade-up pt-10 text-center">
-			<IconChip Icon={Icon} color={color} size={64} className="mx-auto mb-7" />
-			<div className="text-[17px] font-medium text-foreground">{heading}</div>
-			<div className="mt-1 text-[13px] text-muted-foreground">{subtitle}</div>
-			<div className="mx-auto mt-7 max-w-xs space-y-2.5 text-left">
-				{steps.map((s, i) => (
-					<div
-						key={i}
-						className={cn(
-							"flex items-center gap-2.5 text-[13px] transition-colors",
-							i <= step ? "text-foreground" : "text-foreground-faint",
-						)}>
-						<span
+		<div className="flex min-h-[60vh] items-center justify-center">
+			<div className="mx-auto max-w-sm animate-fade-up text-center">
+				<IconChip Icon={Icon} color={color} size={88} className="mx-auto mb-8" />
+				<div className="text-[22px] font-semibold tracking-tight text-foreground">
+					{heading}
+				</div>
+				<div className="mt-1.5 text-[14px] text-muted-foreground">{subtitle}</div>
+				<div className="mx-auto mt-9 max-w-70 space-y-3 text-left">
+					{steps.map((s, i) => (
+						<div
+							key={i}
 							className={cn(
-								"grid size-5 place-items-center rounded-full border transition-colors",
-								i < step
-									? "border-success bg-success text-success-foreground"
-									: i === step
-										? "border-primary"
-										: "border-border",
+								"flex items-center gap-3 text-[14px] transition-colors",
+								i <= step ? "text-foreground" : "text-foreground-faint",
 							)}>
-							{i < step ? (
-								<Check size={12} strokeWidth={2.5} />
-							) : i === step ? (
-								<span className="size-2 animate-pulse rounded-md bg-primary" />
-							) : (
-								<span className="size-1.5 rounded-full bg-foreground-faint" />
-							)}
-						</span>
-						{s}
-					</div>
-				))}
+							<span
+								className={cn(
+									"grid size-5 shrink-0 place-items-center rounded-full border transition-colors",
+									i < step
+										? "border-primary bg-primary text-primary-foreground"
+										: i === step
+											? "border-primary"
+											: "border-border-strong",
+								)}>
+								{i < step ? (
+									<CheckIcon size={12} strokeWidth={2.5} />
+								) : i === step ? (
+									<span className="size-2 animate-pulse rounded-full bg-primary" />
+								) : (
+									<span className="size-1.5 rounded-full bg-foreground-faint" />
+								)}
+							</span>
+							{s}
+						</div>
+					))}
+				</div>
 			</div>
 		</div>
 	);

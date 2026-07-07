@@ -9,38 +9,29 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useActiveTheme } from "@/hooks/use-active-theme";
-import { Check, PanelLeft } from "lucide-react";
+import { CheckIcon, CollapseIcon } from "@/ui/shared/icons";
 import { useState } from "react";
 import { Logo } from "./logo";
 import { LogoutButton } from "./logout-button";
 import { NavItem } from "./nav-item";
 
-function ThemeToggle({
-	expanded,
-	onOpenChange,
-}: {
-	expanded: boolean;
-	onOpenChange: (open: boolean) => void;
-}) {
+function ThemeToggle({ expanded }: { expanded: boolean }) {
 	const { activeTheme, setTheme } = useActiveTheme();
 	const current = themeOptions.find((o) => o.value === activeTheme) ?? themeOptions[2];
 
 	return (
-		<DropdownMenu onOpenChange={onOpenChange}>
+		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<button
 					aria-label="Change theme"
-					className={cn(
-						"flex h-9 w-full items-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-						expanded ? "px-3" : "justify-center",
-					)}>
+					className="flex h-9 w-full items-center rounded-md px-3 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
 					<span className="shrink-0">
 						<current.Icon size={16} strokeWidth={1.5} aria-hidden />
 					</span>
 					<span
 						className={cn(
-							"whitespace-nowrap text-left text-[13.5px] transition-opacity",
-							expanded ? "flex-1 ml-2.5 opacity-100" : "ml-0 w-0 overflow-hidden opacity-0",
+							"whitespace-nowrap overflow-hidden text-left text-[13.5px] transition-all duration-200",
+							expanded ? "flex-1 ml-2.5 opacity-100" : "ml-0 w-0 opacity-0",
 						)}>
 						{current.label} mode
 					</span>
@@ -51,7 +42,7 @@ function ThemeToggle({
 					<DropdownMenuItem key={value} onClick={() => setTheme(value)}>
 						<Icon size={15} strokeWidth={1.5} aria-hidden />
 						<span className="flex-1">{label}</span>
-						{activeTheme === value && <Check size={14} strokeWidth={2} aria-hidden />}
+						{activeTheme === value && <CheckIcon size={14} strokeWidth={2} aria-hidden />}
 					</DropdownMenuItem>
 				))}
 			</DropdownMenuContent>
@@ -60,23 +51,16 @@ function ThemeToggle({
 }
 
 export const SideBar = () => {
-	const [hover, setHover] = useState(false);
-	const [pinned, setPinned] = useState(false);
-	const [menuOpen, setMenuOpen] = useState(false);
-	const expanded = hover || pinned || menuOpen;
+	const [expanded, setExpanded] = useState(false);
 
 	return (
 		<aside
-			onMouseEnter={() => setHover(true)}
-			onMouseLeave={() => setHover(false)}
-			className="bg-background fixed bottom-0 left-0 top-0 z-40 hidden flex-col border-r border-border transition-[width] duration-300 ease-[cubic-bezier(.2,0,0,1)] lg:flex"
+			className="bg-card fixed bottom-0 left-0 top-0 z-40 hidden flex-col border-r border-border transition-[width] duration-300 ease-[cubic-bezier(.2,0,0,1)] lg:flex"
 			style={{ width: expanded ? 220 : 64 }}>
-			{/* Logo */}
 			<div className="flex h-16 shrink-0 items-center px-3.5">
 				<Logo expanded={expanded} />
 			</div>
 
-			{/* Nav */}
 			<nav className="flex flex-1 flex-col gap-1 overflow-hidden px-2.5 pt-2">
 				<div
 					className={cn(
@@ -96,29 +80,20 @@ export const SideBar = () => {
 				))}
 			</nav>
 
-			{/* Footer controls */}
 			<div className="flex flex-col gap-0.5 px-2.5 pb-2">
-				<ThemeToggle expanded={expanded} onOpenChange={setMenuOpen} />
+				<ThemeToggle expanded={expanded} />
 				<button
-					onClick={() => setPinned((p) => !p)}
-					aria-label={pinned ? "Unpin sidebar" : "Keep sidebar open"}
-					aria-pressed={pinned}
-					className={cn(
-						"flex h-9 w-full items-center rounded-md text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-						expanded ? "px-3" : "justify-center",
-					)}>
-					<PanelLeft
-						size={16}
-						strokeWidth={1.5}
-						className={pinned ? "text-accent-foreground" : ""}
-						aria-hidden
-					/>
+					onClick={() => setExpanded((e) => !e)}
+					aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
+					aria-pressed={expanded}
+					className="flex h-9 w-full items-center rounded-md px-3 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+					<CollapseIcon size={16} strokeWidth={1.5} aria-hidden />
 					<span
 						className={cn(
-							"whitespace-nowrap text-[13.5px] transition-opacity",
+							"whitespace-nowrap overflow-hidden text-[13.5px] transition-all duration-200",
 							expanded ? "ml-2.5 opacity-100" : "ml-0 w-0 opacity-0",
 						)}>
-						{pinned ? "Unpin sidebar" : "Keep open"}
+						Collapse
 					</span>
 				</button>
 				<div className="my-1 h-px bg-border" />

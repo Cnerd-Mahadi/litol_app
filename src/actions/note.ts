@@ -1,12 +1,13 @@
 "use server";
 
 import { waitUntil } from "@vercel/functions";
-import { ingestNoteChunks } from "../lib/ai/ingestion";
+import { embedTexts, ingestNoteChunks } from "../lib/ai/ingestion";
+import { diffNoteCues, suggestCue, syncCues } from "../services/note";
 import { authActionClient } from "../safe-action";
 import { prisma } from "../prisma";
-import { DbError } from "../errors";
+import { AppError, DbError } from "../errors";
 import { logger } from "../logger";
-import { createNoteSchema, suggestCueSchema, getNotesSchema, getNoteByIdSchema } from "../schemas/note";
+import { createNoteSchema, suggestCueSchema, getNotesSchema, getNoteByIdSchema, updateNoteSchema, deleteNoteSchema } from "../schemas/note";
 
 export const createNote = authActionClient
 	.inputSchema(createNoteSchema)
@@ -33,10 +34,79 @@ export const createNote = authActionClient
 		return { noteId: note.id };
 	});
 
+export const updateNote = authActionClient
+	.inputSchema(updateNoteSchema)
+	.action(async ({ parsedInput, ctx }) => {
+		const { id, cues, ...noteData } = parsedInput;
+
+		const existing = await prisma.note
+			.findFirst({
+				where: { id, userId: ctx.user.id },
+				select: {
+					id: true,
+					cues: { select: { id: true, cue: true, details: true } },
+				},
+			})
+			.catch((error) => {
+				throw new DbError("Failed to fetch note", error);
+			});
+
+		if (!existing) throw new AppError("Note not found");
+
+		const diff = diffNoteCues(cues, existing.cues);
+
+		const changed = [...diff.toCreate, ...diff.toUpdate];
+		const embeddings = changed.length
+			? await embedTexts(changed.map((c) => `${c.cue}\n${c.details}`))
+			: [];
+
+		await prisma
+			.$transaction(async (tx) => {
+				await tx.note.update({ where: { id }, data: noteData });
+				await syncCues(tx, id, diff, embeddings);
+			})
+			.catch((error) => {
+				throw new DbError("Failed to update note", error);
+			});
+
+		logger.info("Note updated", {
+			noteId: id,
+			created: diff.toCreate.length,
+			updated: diff.toUpdate.length,
+			deleted: diff.toDeleteIds.length,
+		});
+
+		return { noteId: id };
+	});
+
+export const deleteNote = authActionClient
+	.inputSchema(deleteNoteSchema)
+	.action(async ({ parsedInput, ctx }) => {
+		const note = await prisma.note
+			.findFirst({
+				where: { id: parsedInput.id, userId: ctx.user.id },
+				select: { id: true },
+			})
+			.catch((error) => {
+				throw new DbError("Failed to fetch note", error);
+			});
+
+		if (!note) throw new AppError("Note not found");
+
+		await prisma.note
+			.delete({ where: { id: note.id } })
+			.catch((error) => {
+				throw new DbError("Failed to delete note", error);
+			});
+
+		logger.info("Note deleted", { noteId: note.id });
+
+		return { noteId: note.id };
+	});
+
 export const suggestCueAction = authActionClient
 	.inputSchema(suggestCueSchema)
 	.action(async ({ parsedInput }) => {
-		const { suggestCue } = await import("../services/note");
 		const result = await suggestCue(parsedInput.detail);
 		if ("error" in result) throw new Error(result.error);
 		return result;

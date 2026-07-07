@@ -11,18 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useActiveTheme } from "@/hooks/use-active-theme";
 import { Logo } from "@/ui/layout/sidebar/logo";
+import { CheckIcon, LogoutIcon } from "@/ui/shared/icons";
+import { UserAvatar } from "@/ui/shared/user-avatar";
 import { themeOptions } from "@/utils";
-import { Check, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-function initials(name?: string | null, email?: string | null) {
-	const source = name?.trim() || email?.split("@")[0] || "";
-	const parts = source.split(/[\s._-]+/).filter(Boolean);
-	if (parts.length === 0) return "?";
-	if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-	return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
 
 export const MobileTopbar = () => {
 	const router = useRouter();
@@ -44,8 +37,13 @@ export const MobileTopbar = () => {
 				<DropdownMenuTrigger asChild>
 					<button
 						aria-label="Account menu"
-						className="grid h-7.5 w-7.5 place-items-center rounded-full border border-border bg-accent text-[11px] font-medium text-accent-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-						{initials(user?.name, user?.email)}
+						className="rounded-full transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+						<UserAvatar
+							name={user?.name}
+							email={user?.email}
+							image={user?.image}
+							size={30}
+						/>
 					</button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end" className="w-44">
@@ -57,7 +55,7 @@ export const MobileTopbar = () => {
 						<DropdownMenuItem key={value} onClick={() => setTheme(value)}>
 							<Icon size={14} strokeWidth={1.5} aria-hidden />
 							<span className="flex-1">{label}</span>
-							{activeTheme === value && <Check size={13} strokeWidth={2} aria-hidden />}
+							{activeTheme === value && <CheckIcon size={13} strokeWidth={2} aria-hidden />}
 						</DropdownMenuItem>
 					))}
 					<DropdownMenuSeparator />
@@ -65,7 +63,7 @@ export const MobileTopbar = () => {
 						variant="destructive"
 						disabled={loading}
 						onClick={handleLogout}>
-						<LogOut size={14} strokeWidth={1.5} aria-hidden />
+						<LogoutIcon size={14} strokeWidth={1.5} aria-hidden />
 						{loading ? "Signing out…" : "Log out"}
 					</DropdownMenuItem>
 				</DropdownMenuContent>

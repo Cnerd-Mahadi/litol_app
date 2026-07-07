@@ -7,4 +7,11 @@ export const generateQuizSchema = z.object({
   query: z.string().min(1),
 })
 
+export const submitQuizResultSchema = z.object({
+  attemptId: z.string().uuid(),
+  score: z.number().int().min(0),
+  total: z.number().int().min(1),
+})
+
 export type GenerateQuizInput = z.infer<typeof generateQuizSchema>
+export type SubmitQuizResultInput = z.infer<typeof submitQuizResultSchema>

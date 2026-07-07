@@ -1,8 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Check, Plus, RotateCcw, X } from "lucide-react";
+import { AddIcon, CheckIcon, CloseIcon, RetryIcon } from "@/ui/shared/icons";
 import { useEffect, useState } from "react";
 import type { QuizQuestion } from "./quiz-answering";
 
@@ -40,7 +41,7 @@ export function QuizResults({
 
 	return (
 		<div className="mx-auto max-w-2xl animate-fade-up">
-			<div className="rounded-lg border border-border bg-card p-6 text-center shadow-(--shadow-card) sm:p-8">
+			<Card className="p-6 text-center shadow-(--shadow-card) sm:p-8">
 				<div className="text-[11px] uppercase tracking-[0.04em] text-foreground-faint">
 					Quiz complete · {label}
 				</div>
@@ -88,15 +89,15 @@ export function QuizResults({
 				</div>
 				<div className="mt-6 flex justify-center gap-3">
 					<Button variant="secondary" onClick={onRetry}>
-						<RotateCcw size={15} strokeWidth={1.5} />
+						<RetryIcon size={15} strokeWidth={1.5} />
 						Retry quiz
 					</Button>
 					<Button onClick={onNew}>
-						<Plus size={15} strokeWidth={2} />
+						<AddIcon size={15} strokeWidth={2} />
 						New quiz
 					</Button>
 				</div>
-			</div>
+			</Card>
 
 			<div className="mt-5 space-y-2.5">
 				<div className="mb-1 text-[11px] uppercase tracking-[0.04em] text-foreground-faint">
@@ -105,9 +106,9 @@ export function QuizResults({
 				{questions.map((q, i) => {
 					const ok = q.options[answers[i]] === q.answer;
 					return (
-						<div
+						<Card
 							key={i}
-							className="flex items-start gap-3 rounded-lg border border-border bg-card p-4 shadow-(--shadow-card)">
+							className="flex items-start gap-3 p-4 shadow-(--shadow-card)">
 							<span
 								className={cn(
 									"mt-0.5 grid size-6 shrink-0 place-items-center rounded-md",
@@ -116,9 +117,9 @@ export function QuizResults({
 										: "bg-danger-bg text-danger-text",
 								)}>
 								{ok ? (
-									<Check size={13} strokeWidth={2.5} />
+									<CheckIcon size={13} strokeWidth={2.5} />
 								) : (
-									<X size={12} strokeWidth={2.5} />
+									<CloseIcon size={12} strokeWidth={2.5} />
 								)}
 							</span>
 							<div className="min-w-0 flex-1">
@@ -136,7 +137,7 @@ export function QuizResults({
 									)}
 								</div>
 							</div>
-						</div>
+						</Card>
 					);
 				})}
 			</div>

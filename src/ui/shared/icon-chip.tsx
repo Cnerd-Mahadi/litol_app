@@ -1,10 +1,7 @@
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 
-// Functional category hues. `color` renders a soft tinted tile; without it the
-// chip falls back to the neutral/accent treatment.
 export type ChipColor = "blue" | "indigo" | "violet" | "emerald" | "amber";
-// Distinct spread for hashed chips — indigo omitted (reads too close to blue).
 export const HUES: ChipColor[] = ["blue", "violet", "emerald", "amber"];
 
 const HUE_TILE: Record<ChipColor, string> = {
@@ -15,15 +12,26 @@ const HUE_TILE: Record<ChipColor, string> = {
 	amber: "bg-hue-amber-bg text-hue-amber-fg",
 };
 
+const HUE_DOT: Record<ChipColor, string> = {
+	blue: "bg-hue-blue-fg",
+	indigo: "bg-hue-indigo-fg",
+	violet: "bg-hue-violet-fg",
+	emerald: "bg-hue-emerald-fg",
+	amber: "bg-hue-amber-fg",
+};
+
 export function hueFor(seed: string): ChipColor {
 	let h = 0;
 	for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
 	return HUES[h % HUES.length];
 }
 
-/** Soft tint classes (bg + text) for a hue — shared by chips and pills. */
 export function hueChip(color: ChipColor): string {
 	return HUE_TILE[color];
+}
+
+export function hueDot(color: ChipColor): string {
+	return HUE_DOT[color];
 }
 
 export function IconChip({
