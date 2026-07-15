@@ -7,26 +7,8 @@ import { Dialog as DialogPrimitive } from "radix-ui"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
-function Dialog({
-  onOpenChange,
-  ...props
-}: React.ComponentProps<typeof DialogPrimitive.Root>) {
-  return (
-    <DialogPrimitive.Root
-      data-slot="dialog"
-      onOpenChange={(open) => {
-        onOpenChange?.(open)
-        if (!open) {
-          // same stuck `pointer-events: none` on <body> issue as Select —
-          // see components/ui/select.tsx for details.
-          setTimeout(() => {
-            document.body.style.pointerEvents = ""
-          }, 0)
-        }
-      }}
-      {...props}
-    />
-  )
+function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
+  return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
 
 function DialogTrigger({

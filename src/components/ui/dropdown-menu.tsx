@@ -7,22 +7,13 @@ import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui"
 import { cn } from "@/lib/utils"
 
 function DropdownMenu({
-  onOpenChange,
+  modal = false,
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
   return (
     <DropdownMenuPrimitive.Root
       data-slot="dropdown-menu"
-      onOpenChange={(open) => {
-        onOpenChange?.(open)
-        if (!open) {
-          // same stuck `pointer-events: none` on <body> issue as Select —
-          // see components/ui/select.tsx for details.
-          setTimeout(() => {
-            document.body.style.pointerEvents = ""
-          }, 0)
-        }
-      }}
+      modal={modal}
       {...props}
     />
   )
