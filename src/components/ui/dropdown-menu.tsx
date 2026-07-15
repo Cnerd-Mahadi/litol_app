@@ -11,11 +11,7 @@ function DropdownMenu({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
   return (
-    <DropdownMenuPrimitive.Root
-      data-slot="dropdown-menu"
-      modal={modal}
-      {...props}
-    />
+    <DropdownMenuPrimitive.Root data-slot="dropdown-menu" modal={modal} {...props} />
   )
 }
 

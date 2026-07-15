@@ -3,11 +3,11 @@
 import { deleteSubject, updateSubject } from "@/actions/user";
 import { Button } from "@/components/ui/button";
 import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
+	Modal,
+	ModalContent,
+	ModalHeader,
+	ModalTitle,
+} from "@/ui/shared/modal";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useSubjects } from "@/lib/swr/use-subjects";
@@ -176,9 +176,9 @@ export function SubjectsManageModal({
 	const subjects = data?.subjects ?? [];
 
 	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="flex max-h-[85vh] min-h-100 flex-col gap-0 overflow-hidden p-0 sm:max-w-md">
-				<DialogHeader className="shrink-0 px-4 pt-4 pb-4 text-left sm:px-6 sm:pt-6 sm:pb-5">
+		<Modal open={open} onOpenChange={onOpenChange}>
+			<ModalContent className="flex max-h-[85vh] min-h-100 flex-col gap-0 overflow-hidden p-0 sm:max-w-md">
+				<ModalHeader className="shrink-0 px-4 pt-4 pb-4 text-left sm:px-6 sm:pt-6 sm:pb-5">
 					<div className="flex items-center gap-3 sm:gap-3.5">
 						<span
 							className={cn(
@@ -188,16 +188,16 @@ export function SubjectsManageModal({
 							<SubjectIcon size={18} strokeWidth={1.75} aria-hidden />
 						</span>
 						<div>
-							<DialogTitle className="text-[16px] font-semibold sm:text-[19px]">
+							<ModalTitle className="text-[16px] font-semibold sm:text-[19px]">
 								Manage subjects
-							</DialogTitle>
+							</ModalTitle>
 							<p className="mt-0.5 text-[12.5px] text-muted-foreground sm:text-[13.5px]">
 								Rename or remove subjects. New subjects are created from the
 								subject picker.
 							</p>
 						</div>
 					</div>
-				</DialogHeader>
+				</ModalHeader>
 				<div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 sm:px-6 sm:pb-6">
 					<div>
 						{isLoading ? (
@@ -219,7 +219,7 @@ export function SubjectsManageModal({
 						)}
 					</div>
 				</div>
-			</DialogContent>
-		</Dialog>
+			</ModalContent>
+		</Modal>
 	);
 }

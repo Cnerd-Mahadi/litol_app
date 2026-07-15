@@ -301,7 +301,7 @@ export function SummaryCreateFlow({ onDone }: { onDone: () => void }) {
 								setSelectedNoteIds([]);
 							}}
 							placeholder="Select a subject"
-							manageable
+							manageable={false}
 							className="h-8 flex-1 justify-start gap-1.5 text-[13.5px] font-medium data-placeholder:text-foreground-faint"
 						/>
 					</div>

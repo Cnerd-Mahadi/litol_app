@@ -3,13 +3,13 @@
 import { deleteSummary } from "@/actions/summary";
 import { Button } from "@/components/ui/button";
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
+	Modal,
+	ModalContent,
+	ModalDescription,
+	ModalFooter,
+	ModalHeader,
+	ModalTitle,
+} from "@/ui/shared/modal";
 import { useToast } from "@/hooks/use-toast";
 import { SpinnerIcon } from "@/ui/shared/icons";
 import { useAction } from "next-safe-action/hooks";
@@ -43,15 +43,15 @@ export function DeleteSummaryDialog({
 	});
 
 	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-md">
-				<DialogHeader>
-					<DialogTitle>Delete summary</DialogTitle>
-					<DialogDescription>
+		<Modal open={open} onOpenChange={onOpenChange}>
+			<ModalContent className="sm:max-w-md">
+				<ModalHeader>
+					<ModalTitle>Delete summary</ModalTitle>
+					<ModalDescription>
 						“{title}” will be permanently deleted. This can’t be undone.
-					</DialogDescription>
-				</DialogHeader>
-				<DialogFooter>
+					</ModalDescription>
+				</ModalHeader>
+				<ModalFooter>
 					<Button variant="outline" onClick={() => onOpenChange(false)}>
 						Cancel
 					</Button>
@@ -61,8 +61,8 @@ export function DeleteSummaryDialog({
 						disabled={isPending}>
 						{isPending ? <SpinnerIcon size={16} className="animate-spin" /> : "Delete"}
 					</Button>
-				</DialogFooter>
-			</DialogContent>
-		</Dialog>
+				</ModalFooter>
+			</ModalContent>
+		</Modal>
 	);
 }

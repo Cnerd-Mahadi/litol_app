@@ -6,12 +6,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Menu } from "@/ui/shared/menu";
 import { hueDot, hueFor } from "@/ui/shared/icon-chip";
 import { BackIcon, DeleteIcon, EditIcon, MoreIcon } from "@/ui/shared/icons";
 import { fmtDate } from "@/lib/time";
@@ -66,27 +61,28 @@ function NoteReaderActions({ note }: { note: NoteItem }) {
 
 	return (
 		<>
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
+			<Menu
+				trigger={
 					<button
 						aria-label="Note actions"
 						className="grid size-8 place-items-center rounded-md text-foreground-faint transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
 						<MoreIcon size={18} strokeWidth={1.5} aria-hidden />
 					</button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent align="end">
-					<DropdownMenuItem onClick={() => router.push(`/note/${note.id}/edit`)}>
-						<EditIcon size={14} strokeWidth={1.5} aria-hidden />
-						Edit
-					</DropdownMenuItem>
-					<DropdownMenuItem
-						onClick={() => setDeleteOpen(true)}
-						className="text-destructive focus:text-destructive">
-						<DeleteIcon size={14} strokeWidth={1.5} aria-hidden />
-						Delete
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
+				}
+				items={[
+					{
+						label: "Edit",
+						icon: <EditIcon size={14} strokeWidth={1.5} aria-hidden />,
+						onClick: () => router.push(`/note/${note.id}/edit`),
+					},
+					{
+						label: "Delete",
+						icon: <DeleteIcon size={14} strokeWidth={1.5} aria-hidden />,
+						onClick: () => setDeleteOpen(true),
+						destructive: true,
+					},
+				]}
+			/>
 
 			<DeleteNoteDialog
 				open={deleteOpen}

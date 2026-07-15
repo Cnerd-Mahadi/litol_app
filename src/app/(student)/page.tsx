@@ -44,7 +44,7 @@ export default function DashPage() {
 				<div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-4 px-4 py-7 sm:px-6 sm:py-8 xl:px-12">
 					<div>
 						<DashboardGreeting />
-						<p className="mt-1 text-[14px] text-muted-foreground">
+						<p className="mt-1 hidden text-[14px] text-muted-foreground sm:block">
 							Pick up where you left off, or start something new.
 						</p>
 					</div>

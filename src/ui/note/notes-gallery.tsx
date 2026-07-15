@@ -1,12 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Menu } from "@/ui/shared/menu";
 import { useNotes } from "@/lib/swr/use-notes";
 import type { NoteListItem } from "@/lib/swr/use-notes";
 import { useSubjects } from "@/lib/swr/use-subjects";
@@ -30,27 +25,28 @@ function NoteCardMenu({ note }: { note: NoteListItem }) {
 
 	return (
 		<div className="relative z-10 shrink-0">
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
+			<Menu
+				trigger={
 					<button
 						aria-label="Note actions"
 						className="grid size-8 place-items-center rounded-md text-foreground-faint opacity-0 transition hover:bg-accent hover:text-foreground focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 max-lg:opacity-100">
 						<MoreIcon size={16} strokeWidth={1.5} aria-hidden />
 					</button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent align="end">
-					<DropdownMenuItem onClick={() => router.push(`/note/${note.id}/edit`)}>
-						<EditIcon size={14} strokeWidth={1.5} aria-hidden />
-						Edit
-					</DropdownMenuItem>
-					<DropdownMenuItem
-						onClick={() => setDeleteOpen(true)}
-						className="text-destructive focus:text-destructive">
-						<DeleteIcon size={14} strokeWidth={1.5} aria-hidden />
-						Delete
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
+				}
+				items={[
+					{
+						label: "Edit",
+						icon: <EditIcon size={14} strokeWidth={1.5} aria-hidden />,
+						onClick: () => router.push(`/note/${note.id}/edit`),
+					},
+					{
+						label: "Delete",
+						icon: <DeleteIcon size={14} strokeWidth={1.5} aria-hidden />,
+						onClick: () => setDeleteOpen(true),
+						destructive: true,
+					},
+				]}
+			/>
 
 			<DeleteNoteDialog
 				open={deleteOpen}
