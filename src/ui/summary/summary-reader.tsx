@@ -3,6 +3,7 @@
 import { Menu } from "@/ui/shared/menu";
 import { fmtDate } from "@/lib/time";
 import { BackIcon, DeleteIcon, EditIcon, MoreIcon } from "@/ui/shared/icons";
+import { useIsDemo } from "@/hooks/use-is-demo";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -22,6 +23,9 @@ export type SummaryItem = {
 function SummaryReaderActions({ s }: { s: SummaryItem }) {
 	const router = useRouter();
 	const [deleteOpen, setDeleteOpen] = useState(false);
+	const isDemo = useIsDemo();
+
+	if (isDemo) return null;
 
 	return (
 		<>

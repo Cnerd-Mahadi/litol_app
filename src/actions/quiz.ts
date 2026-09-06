@@ -1,13 +1,13 @@
 "use server";
 
-import { authActionClient } from "../safe-action";
+import { authActionClient, aiActionClient } from "../safe-action";
 import { generateQuiz } from "../services/quiz";
 import { logger } from "../logger";
 import { prisma } from "../prisma";
 import { AppError, DbError } from "../errors";
 import { generateQuizSchema, submitQuizResultSchema } from "../schemas/quiz";
 
-export const generateQuizAction = authActionClient
+export const generateQuizAction = aiActionClient
   .schema(generateQuizSchema)
   .action(async ({ parsedInput, ctx }) => {
     logger.info("Quiz generation started", {
@@ -38,6 +38,7 @@ export const generateQuizAction = authActionClient
 export const submitQuizResult = authActionClient
   .schema(submitQuizResultSchema)
   .action(async ({ parsedInput, ctx }) => {
+    if (ctx.isDemo) throw new AppError("Not available in demo mode.");
     const { attemptId, score, total } = parsedInput;
 
     const owned = await prisma.quizAttempt

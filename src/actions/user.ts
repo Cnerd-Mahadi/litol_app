@@ -9,6 +9,7 @@ import { createSubjectSchema, getSubjectsSchema, updateSubjectSchema, deleteSubj
 export const createSubject = authActionClient
 	.schema(createSubjectSchema)
 	.action(async ({ parsedInput, ctx }) => {
+		if (ctx.isDemo) throw new AppError("Not available in demo mode.");
 		const subject = await prisma.subject
 			.create({
 				data: {
@@ -28,6 +29,7 @@ export const createSubject = authActionClient
 export const updateSubject = authActionClient
 	.schema(updateSubjectSchema)
 	.action(async ({ parsedInput, ctx }) => {
+		if (ctx.isDemo) throw new AppError("Not available in demo mode.");
 		const { id, name } = parsedInput;
 
 		const owned = await prisma.subject
@@ -55,6 +57,7 @@ export const updateSubject = authActionClient
 export const deleteSubject = authActionClient
 	.schema(deleteSubjectSchema)
 	.action(async ({ parsedInput, ctx }) => {
+		if (ctx.isDemo) throw new AppError("Not available in demo mode.");
 		const owned = await prisma.subject
 			.findFirst({
 				where: { id: parsedInput.id, userId: ctx.user.id },

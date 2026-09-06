@@ -8,10 +8,19 @@ export const auth = betterAuth({
 		provider: "postgresql",
 	}),
 	baseURL: env.BETTER_AUTH_URL,
+	emailAndPassword: { enabled: true },
 	socialProviders: {
 		google: {
 			clientId: env.GOOGLE_CLIENT_ID,
 			clientSecret: env.GOOGLE_CLIENT_SECRET,
+		},
+	},
+	user: {
+		additionalFields: {
+			isDemo: {
+				type: "boolean",
+				defaultValue: false,
+			},
 		},
 	},
 });

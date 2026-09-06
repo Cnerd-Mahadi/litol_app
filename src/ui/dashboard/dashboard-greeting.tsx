@@ -1,6 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
+import { useIsDemo } from "@/hooks/use-is-demo";
 import { useEffect, useState } from "react";
 
 function greetingFor(hour: number) {
@@ -9,7 +10,8 @@ function greetingFor(hour: number) {
 
 export function DashboardGreeting() {
 	const { data, isPending } = authClient.useSession();
-	const firstName = data?.user?.name?.trim().split(/\s+/)[0];
+	const isDemo = useIsDemo();
+	const firstName = isDemo ? null : data?.user?.name?.trim().split(/\s+/)[0];
 	const [now, setNow] = useState<Date | null>(null);
 
 	useEffect(() => {

@@ -10,6 +10,7 @@ import { Menu } from "@/ui/shared/menu";
 import { hueDot, hueFor } from "@/ui/shared/icon-chip";
 import { BackIcon, DeleteIcon, EditIcon, MoreIcon } from "@/ui/shared/icons";
 import { fmtDate } from "@/lib/time";
+import { useIsDemo } from "@/hooks/use-is-demo";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -58,6 +59,9 @@ function CueRow({ cue, index }: { cue: NoteCue; index: number }) {
 function NoteReaderActions({ note }: { note: NoteItem }) {
 	const router = useRouter();
 	const [deleteOpen, setDeleteOpen] = useState(false);
+	const isDemo = useIsDemo();
+
+	if (isDemo) return null;
 
 	return (
 		<>

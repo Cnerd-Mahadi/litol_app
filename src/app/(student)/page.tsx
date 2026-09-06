@@ -1,10 +1,10 @@
 import { FEATURES, FeatureKey } from "@/lib/dummy-data";
 import { DashboardGreeting } from "@/ui/dashboard/dashboard-greeting";
+import { DashboardNewNoteButton } from "@/ui/dashboard/dashboard-new-note-button";
 import { DashboardRecent } from "@/ui/dashboard/dashboard-recent";
 import { DashboardStats } from "@/ui/dashboard/dashboard-stats";
 import { RecallCard } from "@/ui/dashboard/recall-card";
 import {
-	AddIcon,
 	ClockIcon,
 	ExternalIcon,
 	NoteIcon,
@@ -55,12 +55,7 @@ export default function DashPage() {
 							<QuizIcon size={16} strokeWidth={1.75} aria-hidden />
 							Take a quiz
 						</Link>
-						<Link
-							href="/note/new"
-							className="inline-flex h-10 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-[13.5px] font-medium text-primary-foreground shadow-(--shadow-btn) transition-[filter] hover:brightness-110 active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-							<AddIcon size={16} strokeWidth={2} aria-hidden />
-							New note
-						</Link>
+						<DashboardNewNoteButton />
 					</div>
 				</div>
 			</div>

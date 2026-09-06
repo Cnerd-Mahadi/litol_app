@@ -1,4 +1,5 @@
 import { GoogleSignInButton } from "@/ui/layout/signin/google-signin-button";
+import { DemoSignInButton } from "@/ui/layout/signin/demo-signin-button";
 
 export default function SignInPage() {
 	return (
@@ -9,18 +10,16 @@ export default function SignInPage() {
 			<p className="mt-2 text-[14px] text-muted-foreground">
 				Welcome back. Pick up where you left off.
 			</p>
-			<div className="mt-8">
+			<div className="mt-8 flex flex-col gap-3">
 				<GoogleSignInButton />
+				<DemoSignInButton />
+				<p className="text-center text-[12px] text-muted-foreground">
+					Demo is AI-only. Sign in to create content.
+				</p>
 			</div>
-			<div className="my-6 flex items-center gap-3">
-				<div className="h-px flex-1 bg-border" />
-				<span className="whitespace-nowrap text-[11px] uppercase tracking-[0.04em] text-foreground-faint">
-					Secure sign-in
-				</span>
-				<div className="h-px flex-1 bg-border" />
-			</div>
-			<p className="text-center text-[12px] text-muted-foreground">
-				Google sign-in only. No passwords to remember.
+			<div className="my-5 h-px bg-border" />
+			<p className="text-center text-[11px] text-foreground-faint">
+				Google sign-in only · No passwords to remember.
 			</p>
 		</>
 	);

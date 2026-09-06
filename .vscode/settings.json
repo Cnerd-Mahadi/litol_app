@@ -1,4 +1,5 @@
 {
 	"claudeCode.preferredLocation": "panel",
-	"workbench.browser.openLocalhostLinks": false
+	"workbench.browser.openLocalhostLinks": false,
+	"Codegeex.GenerationPreference": "automatic"
 }

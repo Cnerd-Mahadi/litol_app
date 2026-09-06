@@ -3,15 +3,16 @@
 import { waitUntil } from "@vercel/functions";
 import { embedTexts, ingestNoteChunks } from "../lib/ai/ingestion";
 import { diffNoteCues, suggestCue, syncCues } from "../services/note";
-import { authActionClient } from "../safe-action";
+import { authActionClient, aiActionClient } from "../safe-action";
 import { prisma } from "../prisma";
 import { AppError, DbError } from "../errors";
 import { logger } from "../logger";
 import { createNoteSchema, suggestCueSchema, getNotesSchema, getNoteByIdSchema, updateNoteSchema, deleteNoteSchema } from "../schemas/note";
 
-export const createNote = authActionClient
+export const createNote = aiActionClient
 	.schema(createNoteSchema)
 	.action(async ({ parsedInput, ctx }) => {
+		if (ctx.isDemo) throw new AppError("Not available in demo mode.");
 		const { cues, ...noteData } = parsedInput;
 
 		const note = await prisma.note
@@ -34,9 +35,10 @@ export const createNote = authActionClient
 		return { noteId: note.id };
 	});
 
-export const updateNote = authActionClient
+export const updateNote = aiActionClient
 	.schema(updateNoteSchema)
 	.action(async ({ parsedInput, ctx }) => {
+		if (ctx.isDemo) throw new AppError("Not available in demo mode.");
 		const { id, cues, ...noteData } = parsedInput;
 
 		const existing = await prisma.note
@@ -82,6 +84,7 @@ export const updateNote = authActionClient
 export const deleteNote = authActionClient
 	.schema(deleteNoteSchema)
 	.action(async ({ parsedInput, ctx }) => {
+		if (ctx.isDemo) throw new AppError("Not available in demo mode.");
 		const note = await prisma.note
 			.findFirst({
 				where: { id: parsedInput.id, userId: ctx.user.id },
@@ -104,7 +107,7 @@ export const deleteNote = authActionClient
 		return { noteId: note.id };
 	});
 
-export const suggestCueAction = authActionClient
+export const suggestCueAction = aiActionClient
 	.schema(suggestCueSchema)
 	.action(async ({ parsedInput }) => {
 		const result = await suggestCue(parsedInput.detail);

@@ -2,6 +2,7 @@
 
 import { deleteSubject, updateSubject } from "@/actions/user";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
 	Modal,
 	ModalContent,
@@ -10,6 +11,7 @@ import {
 } from "@/ui/shared/modal";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { useIsDemo } from "@/hooks/use-is-demo";
 import { useSubjects } from "@/lib/swr/use-subjects";
 import type { SubjectItem } from "@/lib/swr/use-subjects";
 import { cn } from "@/lib/utils";
@@ -33,6 +35,7 @@ function SubjectRow({ subject }: { subject: SubjectItem }) {
 	const [editing, setEditing] = useState(false);
 	const [name, setName] = useState(subject.name);
 	const [confirming, setConfirming] = useState(false);
+	const isDemo = useIsDemo();
 
 	const rename = useAction(updateSubject, {
 		onSuccess: () => {
@@ -147,20 +150,38 @@ function SubjectRow({ subject }: { subject: SubjectItem }) {
 			<p className="min-w-0 flex-1 truncate text-[14px] font-medium text-foreground">
 				{subject.name}
 			</p>
-			<button
-				type="button"
-				aria-label={`Rename ${subject.name}`}
-				onClick={() => setEditing(true)}
-				className="grid size-7 shrink-0 place-items-center rounded-md text-foreground-faint opacity-0 transition hover:bg-accent hover:text-foreground focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 max-lg:opacity-100">
-				<EditIcon size={14} strokeWidth={1.5} />
-			</button>
-			<button
-				type="button"
-				aria-label={`Delete ${subject.name}`}
-				onClick={() => setConfirming(true)}
-				className="grid size-7 shrink-0 place-items-center rounded-md text-foreground-faint opacity-0 transition hover:bg-danger-bg hover:text-danger-text focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 max-lg:opacity-100">
-				<DeleteIcon size={14} strokeWidth={1.5} />
-			</button>
+			{isDemo ? (
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<span tabIndex={0} className="flex items-center gap-1">
+							<span className="grid size-7 shrink-0 place-items-center rounded-md text-foreground-faint opacity-50 cursor-not-allowed">
+								<EditIcon size={14} strokeWidth={1.5} />
+							</span>
+							<span className="grid size-7 shrink-0 place-items-center rounded-md text-foreground-faint opacity-50 cursor-not-allowed">
+								<DeleteIcon size={14} strokeWidth={1.5} />
+							</span>
+						</span>
+					</TooltipTrigger>
+					<TooltipContent>Not available in demo mode</TooltipContent>
+				</Tooltip>
+			) : (
+				<>
+					<button
+						type="button"
+						aria-label={`Rename ${subject.name}`}
+						onClick={() => setEditing(true)}
+						className="grid size-7 shrink-0 place-items-center rounded-md text-foreground-faint opacity-0 transition hover:bg-accent hover:text-foreground focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 max-lg:opacity-100">
+						<EditIcon size={14} strokeWidth={1.5} />
+					</button>
+					<button
+						type="button"
+						aria-label={`Delete ${subject.name}`}
+						onClick={() => setConfirming(true)}
+						className="grid size-7 shrink-0 place-items-center rounded-md text-foreground-faint opacity-0 transition hover:bg-danger-bg hover:text-danger-text focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:opacity-100 max-lg:opacity-100">
+						<DeleteIcon size={14} strokeWidth={1.5} />
+					</button>
+				</>
+			)}
 		</div>
 	);
 }

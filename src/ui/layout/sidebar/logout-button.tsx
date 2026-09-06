@@ -9,6 +9,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth-client";
+import { useIsDemo } from "@/hooks/use-is-demo";
 import { cn } from "@/lib/utils";
 import { LogoutIcon } from "@/ui/shared/icons";
 import { UserAvatar } from "@/ui/shared/user-avatar";
@@ -20,7 +21,8 @@ export const LogoutButton = ({ expanded = true }: { expanded?: boolean }) => {
 	const router = useRouter();
 	const { data, isPending } = authClient.useSession();
 	const user = data?.user;
-	const displayName = user?.name?.trim().split(/\s+/).slice(0, 2).join(" ");
+	const isDemo = useIsDemo();
+	const displayName = isDemo ? "Demo account" : user?.name?.trim().split(/\s+/).slice(0, 2).join(" ");
 
 	const handleLogout = async () => {
 		setLoading(true);
@@ -55,10 +57,14 @@ export const LogoutButton = ({ expanded = true }: { expanded?: boolean }) => {
 				</button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="start" side="top" className="w-48">
-				<DropdownMenuLabel className="truncate font-normal text-muted-foreground">
-					{user?.email ?? "Signed in"}
-				</DropdownMenuLabel>
-				<DropdownMenuSeparator />
+				{!isDemo && (
+					<>
+						<DropdownMenuLabel className="truncate font-normal text-muted-foreground">
+							{user?.email ?? "Signed in"}
+						</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+					</>
+				)}
 				<DropdownMenuItem variant="destructive" disabled={loading} onClick={handleLogout}>
 					<LogoutIcon size={14} strokeWidth={1.5} aria-hidden />
 					{loading ? "Signing out…" : "Log out"}

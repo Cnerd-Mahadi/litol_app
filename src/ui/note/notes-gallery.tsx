@@ -14,6 +14,7 @@ import {
 	NoteIcon,
 } from "@/ui/shared/icons";
 import { fmtDate } from "@/lib/time";
+import { useIsDemo } from "@/hooks/use-is-demo";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -22,6 +23,9 @@ import { DeleteNoteDialog } from "./delete-note-dialog";
 function NoteCardMenu({ note }: { note: NoteListItem }) {
 	const router = useRouter();
 	const [deleteOpen, setDeleteOpen] = useState(false);
+	const isDemo = useIsDemo();
+
+	if (isDemo) return null;
 
 	return (
 		<div className="relative z-10 shrink-0">
