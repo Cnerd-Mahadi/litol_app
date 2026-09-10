@@ -13,6 +13,7 @@ An AI-powered study companion that helps students take notes with recall cues, g
 - **AI Summarizer** — Generate structured summaries from selected notes using Gemini, or write them manually.
 - **AI Quiz** — Generate grounded multiple-choice questions from your notes. Tracks attempt history with scores.
 - **Subjects** — Organise notes and summaries by subject. Create and manage subjects inline.
+- **Demo Mode** — Try the app without an account. A shared demo account with pre-seeded content lets visitors generate AI summaries and quizzes. All write operations are blocked at the server action level; generated content is shown read-only and never persisted.
 - **Google OAuth** — Sign in with Google via Better Auth.
 - **Dark / Light theme** — System-aware with manual toggle.
 
@@ -135,5 +136,21 @@ Open [http://localhost:3000](http://localhost:3000).
 | `GOOGLE_CLIENT_ID` | Google OAuth client ID |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | Gemini API key |
+| `DEMO_EMAIL` | Email of the shared demo account |
+| `DEMO_PASSWORD` | Password of the shared demo account |
 
 > Enable the `pgvector` extension on your database before running migrations: `CREATE EXTENSION vector;`
+
+### Demo Mode Setup
+
+The demo mode requires a seeded account and content. After running migrations:
+
+```bash
+# 1. Create the demo user (uses DEMO_EMAIL and DEMO_PASSWORD from .env)
+bun run scripts/seed-demo-user.ts
+
+# 2. Seed demo notes, summaries, and embeddings
+bun run scripts/seed-demo-content.ts
+```
+
+The demo endpoint (`POST /api/demo`) signs any visitor into this shared account. The account has `isDemo: true` in the database, which the server action layer uses to block all write operations.

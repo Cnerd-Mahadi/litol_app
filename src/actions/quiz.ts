@@ -1,6 +1,6 @@
 "use server";
 
-import { authActionClient, aiActionClient } from "../safe-action";
+import { aiActionClient, demoAuthActionClient } from "../safe-action";
 import { generateQuiz } from "../services/quiz";
 import { logger } from "../logger";
 import { prisma } from "../prisma";
@@ -18,27 +18,29 @@ export const generateQuizAction = aiActionClient
 
     const quizzes = await generateQuiz(parsedInput);
 
-    const attempt = await prisma.quizAttempt
-      .create({
-        data: { userId: ctx.user.id },
-        select: { id: true },
-      })
-      .catch((error) => {
-        throw new DbError("Failed to record quiz attempt", error);
-      });
+    const attemptId = ctx.isDemo
+      ? crypto.randomUUID()
+      : await prisma.quizAttempt
+          .create({
+            data: { userId: ctx.user.id },
+            select: { id: true },
+          })
+          .then((a) => a.id)
+          .catch((error) => {
+            throw new DbError("Failed to record quiz attempt", error);
+          });
 
     logger.info("Quiz generation complete", {
       userId: ctx.user.id,
       count: quizzes.length,
     });
 
-    return { quizzes, attemptId: attempt.id };
+    return { quizzes, attemptId };
   });
 
-export const submitQuizResult = authActionClient
+export const submitQuizResult = demoAuthActionClient
   .schema(submitQuizResultSchema)
   .action(async ({ parsedInput, ctx }) => {
-    if (ctx.isDemo) throw new AppError("Not available in demo mode.");
     const { attemptId, score, total } = parsedInput;
 
     const owned = await prisma.quizAttempt

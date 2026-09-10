@@ -3,13 +3,12 @@
 import { AppError, DbError } from "../errors";
 import { logger } from "../logger";
 import { prisma } from "../prisma";
-import { authActionClient } from "../safe-action";
+import { authActionClient, demoAuthActionClient } from "../safe-action";
 import { createSubjectSchema, getSubjectsSchema, updateSubjectSchema, deleteSubjectSchema } from "../schemas/user";
 
-export const createSubject = authActionClient
+export const createSubject = demoAuthActionClient
 	.schema(createSubjectSchema)
 	.action(async ({ parsedInput, ctx }) => {
-		if (ctx.isDemo) throw new AppError("Not available in demo mode.");
 		const subject = await prisma.subject
 			.create({
 				data: {
@@ -26,10 +25,9 @@ export const createSubject = authActionClient
 		return { subjectId: subject.id };
 	});
 
-export const updateSubject = authActionClient
+export const updateSubject = demoAuthActionClient
 	.schema(updateSubjectSchema)
 	.action(async ({ parsedInput, ctx }) => {
-		if (ctx.isDemo) throw new AppError("Not available in demo mode.");
 		const { id, name } = parsedInput;
 
 		const owned = await prisma.subject
@@ -54,10 +52,9 @@ export const updateSubject = authActionClient
 		return { subjectId: id };
 	});
 
-export const deleteSubject = authActionClient
+export const deleteSubject = demoAuthActionClient
 	.schema(deleteSubjectSchema)
 	.action(async ({ parsedInput, ctx }) => {
-		if (ctx.isDemo) throw new AppError("Not available in demo mode.");
 		const owned = await prisma.subject
 			.findFirst({
 				where: { id: parsedInput.id, userId: ctx.user.id },

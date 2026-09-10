@@ -1,3 +1,4 @@
+import { DemoBanner } from "@/ui/layout/demo-banner";
 import { MobileNav } from "@/ui/layout/mobile-nav";
 import { MobileTopbar } from "@/ui/layout/mobile-topbar";
 import { SideBar } from "@/ui/layout/sidebar";
@@ -12,6 +13,7 @@ export default async function StudentLayout({
 			<SideBar />
 			<MobileTopbar />
 			<main className="min-h-screen pb-[calc(56px+env(safe-area-inset-bottom))] lg:pb-0 lg:pl-16">
+				<DemoBanner />
 				{children}
 			</main>
 			<MobileNav />

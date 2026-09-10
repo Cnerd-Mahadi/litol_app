@@ -1,16 +1,15 @@
 "use server";
 
-import { authActionClient, aiActionClient } from "../safe-action";
+import { authActionClient, aiActionClient, demoAuthActionClient } from "../safe-action";
 import { prisma } from "../prisma";
 import { AppError, DbError } from "../errors";
 import { logger } from "../logger";
 import { generateSummary } from "../services/summary";
 import { createSummarySchema, generateSummarySchema, getSummariesSchema, getSummaryByIdSchema, deleteSummarySchema, updateSummarySchema } from "../schemas/summary";
 
-export const createSummary = authActionClient
+export const createSummary = demoAuthActionClient
 	.schema(createSummarySchema)
 	.action(async ({ parsedInput, ctx }) => {
-		if (ctx.isDemo) throw new AppError("Not available in demo mode.");
 		const { noteIds, ...rest } = parsedInput;
 
 		const summary = await prisma.summary
@@ -30,10 +29,9 @@ export const createSummary = authActionClient
 		return { summaryId: summary.id };
 	});
 
-export const updateSummary = authActionClient
+export const updateSummary = demoAuthActionClient
 	.schema(updateSummarySchema)
 	.action(async ({ parsedInput, ctx }) => {
-		if (ctx.isDemo) throw new AppError("Not available in demo mode.");
 		const { id, ...rest } = parsedInput;
 
 		const owned = await prisma.summary
@@ -79,10 +77,9 @@ export const generateSummaryAction = aiActionClient
 		return { summary };
 	});
 
-export const deleteSummary = authActionClient
+export const deleteSummary = demoAuthActionClient
 	.schema(deleteSummarySchema)
 	.action(async ({ parsedInput, ctx }) => {
-		if (ctx.isDemo) throw new AppError("Not available in demo mode.");
 		const summary = await prisma.summary
 			.findFirst({
 				where: { id: parsedInput.id, userId: ctx.user.id },

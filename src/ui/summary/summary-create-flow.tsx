@@ -1,6 +1,8 @@
 "use client";
 
 import { createSummary, generateSummaryAction } from "@/actions/summary";
+import { authClient } from "@/lib/auth-client";
+import { useIsDemo } from "@/hooks/use-is-demo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -24,6 +26,7 @@ import {
 import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { useSWRConfig } from "swr";
 import { z } from "zod";
 import { NotesPicker } from "./notes-picker";
@@ -191,6 +194,8 @@ function ContentForm({
 export function SummaryCreateFlow({ onDone }: { onDone: () => void }) {
 	const { mutate } = useSWRConfig();
 	const { toast } = useToast();
+	const router = useRouter();
+	const isDemo = useIsDemo();
 	const [subjectId, setSubjectId] = useState("");
 	const [selectedNoteIds, setSelectedNoteIds] = useState<string[]>([]);
 	const [maxWords, setMaxWords] = useState(500);
@@ -257,6 +262,57 @@ export function SummaryCreateFlow({ onDone }: { onDone: () => void }) {
 	}
 
 	if (phase === "review" && aiResult) {
+		if (isDemo) {
+			return (
+				<div className="space-y-8">
+					<div className="grid grid-cols-1 gap-x-10 gap-y-4 lg:grid-cols-[1fr_380px]">
+						<div className="min-w-0 border-b border-border-strong pb-4">
+							<h1 className="text-[28px] font-semibold tracking-tight text-foreground">
+								{aiResult.title}
+							</h1>
+						</div>
+					</div>
+					<div className="grid grid-cols-1 gap-x-10 gap-y-10 lg:grid-cols-[1fr_380px]">
+						<div className="min-w-0 border-b border-border-strong pb-6 text-[15px] leading-[1.85] text-foreground whitespace-pre-wrap">
+							{aiResult.content}
+						</div>
+						{aiResult.keywords.length > 0 && (
+							<div className="border-b border-border-strong py-3">
+								<div className="flex items-start gap-3">
+									<span className="flex w-21 shrink-0 items-center gap-1.5 pt-1 text-[12px] text-muted-foreground">
+										<KeywordsIcon size={13} strokeWidth={1.5} aria-hidden />
+										Keywords
+									</span>
+									<div className="flex flex-wrap gap-1.5">
+										{aiResult.keywords.map((k) => (
+											<span
+												key={k}
+												className="inline-flex h-6 items-center rounded-md bg-secondary px-2 text-[12.5px] font-medium text-secondary-foreground">
+												{k}
+											</span>
+										))}
+									</div>
+								</div>
+							</div>
+						)}
+					</div>
+					<div className="border-t border-border pt-6">
+						<p className="mb-4 text-[14px] text-muted-foreground">
+							This summary was generated from the demo notes. Sign in to run this on your own notes and save your results.
+						</p>
+						<button
+							onClick={async () => {
+								await authClient.signOut();
+								router.push("/signin");
+							}}
+							className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-[14px] font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+							Sign in to get started
+						</button>
+					</div>
+				</div>
+			);
+		}
+
 		return (
 			<ContentForm
 				defaults={aiResult}
@@ -281,10 +337,12 @@ export function SummaryCreateFlow({ onDone }: { onDone: () => void }) {
 					<SummaryIcon size={14} strokeWidth={1.5} aria-hidden />
 					Generate with AI
 				</TabsTrigger>
-				<TabsTrigger value="manual">
-					<NoteIcon size={14} strokeWidth={1.5} aria-hidden />
-					Write manually
-				</TabsTrigger>
+				{!isDemo && (
+					<TabsTrigger value="manual">
+						<NoteIcon size={14} strokeWidth={1.5} aria-hidden />
+						Write manually
+					</TabsTrigger>
+				)}
 			</TabsList>
 
 			<TabsContent value="ai" className="mt-5 space-y-6">

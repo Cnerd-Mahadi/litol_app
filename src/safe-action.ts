@@ -40,3 +40,13 @@ export const aiActionClient = authActionClient.use(async ({ next, ctx }) => {
 	await checkRateLimit(aiLimiter, identifier);
 	return next({ ctx });
 });
+
+export const demoAuthActionClient = authActionClient.use(async ({ next, ctx }) => {
+	if (ctx.isDemo) throw new AppError("Not available in demo mode.");
+	return next({ ctx });
+});
+
+export const demoAiActionClient = aiActionClient.use(async ({ next, ctx }) => {
+	if (ctx.isDemo) throw new AppError("Not available in demo mode.");
+	return next({ ctx });
+});
