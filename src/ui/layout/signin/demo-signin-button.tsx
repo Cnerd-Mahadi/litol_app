@@ -26,7 +26,7 @@ export const DemoSignInButton = () => {
 		<button
 			onClick={signInAsDemo}
 			disabled={loading}
-			className="flex h-11 w-full items-center justify-center gap-2 rounded-md border border-border bg-card text-[14px] font-medium text-foreground shadow-(--shadow-card) transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50">
+			className="flex h-11 w-full items-center justify-center gap-2 rounded-md border border-border bg-card text-ui font-medium text-foreground shadow-(--shadow-card) transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50">
 			{loading ? (
 				<SpinnerIcon size={18} className="animate-spin" aria-hidden />
 			) : null}

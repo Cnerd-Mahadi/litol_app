@@ -38,19 +38,15 @@ function CueRow({ cue, index }: { cue: NoteCue; index: number }) {
 	return (
 		<AccordionItem
 			value={cue.id}
-			className="overflow-hidden rounded-xl border border-border bg-card">
-			<AccordionTrigger className="items-center gap-3.5 px-5 py-4 text-left hover:bg-accent hover:no-underline focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring [&>svg]:size-4">
-				<span className="shrink-0 text-[11px] tabular-nums text-foreground-faint">
+			className="overflow-hidden rounded-lg border border-border bg-card">
+			<AccordionTrigger className="items-center gap-3 px-4 py-3 text-left hover:bg-secondary/50 hover:no-underline focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring [&>svg]:size-4">
+				<span className="shrink-0 text-caption tabular-nums text-foreground-faint">
 					{String(index + 1).padStart(2, "0")}
 				</span>
-				<span className="flex-1 text-[13.5px] font-medium text-foreground">
-					{cue.cue}
-				</span>
+				<span className="flex-1 text-ui font-medium text-foreground">{cue.cue}</span>
 			</AccordionTrigger>
-			<AccordionContent className="border-t border-border px-5 pt-4 pb-5">
-				<p className="pl-7.5 text-[13.5px] leading-relaxed text-muted-foreground">
-					{cue.details}
-				</p>
+			<AccordionContent className="border-t border-border px-4 pt-3 pb-4">
+				<p className="pl-7 text-ui leading-relaxed text-muted-foreground">{cue.details}</p>
 			</AccordionContent>
 		</AccordionItem>
 	);
@@ -107,7 +103,7 @@ export function NoteReader({ note }: { note: NoteItem }) {
 			<div className="mb-5 flex items-center justify-between">
 				<Link
 					href="/note"
-					className="inline-flex items-center gap-1.5 whitespace-nowrap text-[13px] text-muted-foreground transition-colors hover:text-foreground">
+					className="inline-flex items-center gap-1.5 whitespace-nowrap text-caption text-muted-foreground transition-colors hover:text-foreground">
 					<BackIcon size={15} strokeWidth={1.5} className="rotate-180" aria-hidden />
 					Back to notes
 				</Link>
@@ -115,27 +111,32 @@ export function NoteReader({ note }: { note: NoteItem }) {
 			</div>
 
 			<div className="max-w-180">
-				<div className="mb-3 flex items-center gap-2.5">
-					<span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.04em] text-muted-foreground">
+				<h1 className="text-display font-semibold text-foreground">{note.title}</h1>
+				<div className="mt-2 flex items-center gap-2 text-caption text-muted-foreground">
+					<span className="inline-flex items-center gap-1.5">
 						<span
 							className={`size-1.5 shrink-0 rounded-full ${hueDot(hueFor(subjectName))}`}
 							aria-hidden
 						/>
 						{subjectName}
 					</span>
-					<span className="text-[11px] tabular-nums text-foreground-faint">
-						{fmtDate(note.createdAt)}
-					</span>
+					<span className="text-foreground-faint" aria-hidden>·</span>
+					<span className="tabular-nums">{fmtDate(note.createdAt)}</span>
+					{note.cues.length > 0 && (
+						<>
+							<span className="text-foreground-faint" aria-hidden>·</span>
+							<span className="tabular-nums">
+								{note.cues.length} {note.cues.length === 1 ? "cue" : "cues"}
+							</span>
+						</>
+					)}
 				</div>
-				<h1 className="text-[22px] font-semibold leading-tight tracking-[-0.01em] text-foreground sm:text-[26px]">
-					{note.title}
-				</h1>
 				{note.keywords.length > 0 && (
-					<div className="mt-4 flex flex-wrap gap-2">
+					<div className="mt-4 flex flex-wrap gap-1.5">
 						{note.keywords.map((k) => (
 							<span
 								key={k}
-								className="inline-flex h-7 items-center whitespace-nowrap rounded-md border border-border bg-secondary px-3 text-[12.5px] font-medium text-secondary-foreground">
+								className="inline-flex h-6 items-center whitespace-nowrap rounded-md border border-border px-2 text-caption text-muted-foreground">
 								{k}
 							</span>
 						))}
@@ -145,17 +146,13 @@ export function NoteReader({ note }: { note: NoteItem }) {
 
 			<div className="mt-8 max-w-180 space-y-8">
 				{note.description && (
-					<p className="whitespace-pre-wrap text-[15px] leading-[1.85] text-foreground">
-						{note.description}
-					</p>
+					<p className="whitespace-pre-wrap text-prose text-foreground">{note.description}</p>
 				)}
 				{note.cues.length > 0 && (
 					<div>
-						<div className="mb-3 text-[11px] uppercase tracking-[0.04em] text-foreground-faint">
-							Cues{" "}
-							<span className="font-normal normal-case text-foreground-faint">
-								· click to reveal
-							</span>
+						<div className="mb-3 flex h-6 items-center justify-between">
+							<h2 className="text-ui font-medium text-foreground">Cues</h2>
+							<span className="text-caption text-muted-foreground">Click a cue to reveal its answer</span>
 						</div>
 						<Accordion type="multiple" className="space-y-2">
 							{note.cues.map((c, i) => (
@@ -165,7 +162,7 @@ export function NoteReader({ note }: { note: NoteItem }) {
 					</div>
 				)}
 				{!note.description && note.cues.length === 0 && (
-					<div className="border-t border-border py-8 text-center text-[14px] text-muted-foreground">
+					<div className="border-t border-border py-8 text-center text-ui text-muted-foreground">
 						No content added to this note yet.
 					</div>
 				)}

@@ -23,9 +23,9 @@ export const MobileNav = () => {
 						href={route}
 						aria-current={isActive ? "page" : undefined}
 						className={cn(
-							"flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors",
+							"flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-micro font-medium transition-colors",
 							"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-							isActive ? "text-link" : "text-muted-foreground",
+							isActive ? "text-foreground" : "text-muted-foreground",
 						)}>
 						<Icon size={20} strokeWidth={1.5} aria-hidden />
 						<span>{name}</span>

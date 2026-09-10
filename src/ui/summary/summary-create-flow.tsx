@@ -79,7 +79,7 @@ function ContentForm({
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 			<div className="grid grid-cols-1 gap-x-10 gap-y-4 lg:grid-cols-[1fr_380px]">
-				<div className="min-w-0 border-b border-border-strong pb-4">
+				<div className="min-w-0 border-b border-border pb-4">
 					<label htmlFor="sum-title" className="sr-only">
 						Title
 					</label>
@@ -87,10 +87,10 @@ function ContentForm({
 						id="sum-title"
 						{...register("title")}
 						placeholder="Untitled summary"
-						className="h-auto w-full border-0 bg-transparent p-0 text-[28px] font-semibold tracking-tight text-foreground shadow-none outline-none placeholder:text-foreground-faint/70 focus-visible:ring-0"
+						className="h-auto w-full border-0 bg-transparent p-0 text-display font-semibold tracking-tight text-foreground shadow-none outline-none placeholder:text-foreground-faint/70 focus-visible:ring-0"
 					/>
 					{errors.title && (
-						<p className="mt-2 text-[12px] text-destructive">Title is required.</p>
+						<p className="mt-2 text-label text-destructive">Title is required.</p>
 					)}
 				</div>
 				<div className="hidden items-start justify-end lg:flex">
@@ -106,7 +106,7 @@ function ContentForm({
 			</div>
 			<div className="grid grid-cols-1 gap-x-10 gap-y-10 lg:grid-cols-[1fr_380px]">
 				<div className="min-w-0 space-y-8">
-					<div className="border-b border-border-strong pb-6">
+					<div className="border-b border-border pb-6">
 						<label htmlFor="sum-content" className="sr-only">
 							Content
 						</label>
@@ -114,18 +114,18 @@ function ContentForm({
 							id="sum-content"
 							{...register("content")}
 							placeholder="Write your summary here…"
-							className="min-h-40 w-full resize-none border-0 bg-transparent p-0 text-[15px] leading-[1.85] text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0 lg:min-h-125"
+							className="min-h-40 w-full resize-none border-0 bg-transparent p-0 text-prose text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0 lg:min-h-125"
 						/>
 						{errors.content && (
-							<p className="text-[12px] text-destructive">Content is required.</p>
+							<p className="text-label text-destructive">Content is required.</p>
 						)}
 					</div>
 				</div>
 
 				<div>
-					<div className="border-b border-border-strong py-3">
+					<div className="border-b border-border py-3">
 						<div className="flex items-start gap-3">
-							<span className="flex w-21 shrink-0 items-center gap-1.5 pt-1 text-[12px] text-muted-foreground">
+							<span className="flex w-24 shrink-0 items-center gap-1.5 pt-1 text-caption text-muted-foreground">
 								<DescriptionIcon size={13} strokeWidth={1.5} aria-hidden />
 								Description
 							</span>
@@ -133,14 +133,14 @@ function ContentForm({
 								{...register("description")}
 								placeholder="Optional"
 								rows={2}
-								className="min-h-0 flex-1 resize-none border-0 bg-transparent p-0 text-[13.5px] leading-relaxed text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
+								className="min-h-0 flex-1 resize-none border-0 bg-transparent p-0 text-ui leading-relaxed text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
 							/>
 						</div>
 					</div>
 
-					<div className="border-b border-border-strong py-3">
+					<div className="border-b border-border py-3">
 						<div className="flex items-start gap-3">
-							<span className="flex w-21 shrink-0 items-center gap-1.5 pt-1 text-[12px] text-muted-foreground">
+							<span className="flex w-24 shrink-0 items-center gap-1.5 pt-1 text-caption text-muted-foreground">
 								<KeywordsIcon size={13} strokeWidth={1.5} aria-hidden />
 								Keywords
 							</span>
@@ -148,7 +148,7 @@ function ContentForm({
 								{keywords.map((k) => (
 									<span
 										key={k}
-										className="inline-flex h-6 items-center gap-1 rounded-md bg-secondary pl-2 pr-1 text-[12.5px] font-medium text-secondary-foreground">
+										className="inline-flex h-6 items-center gap-1 rounded-md bg-secondary pl-2 pr-1 text-caption text-secondary-foreground">
 										{k}
 										<button
 											type="button"
@@ -169,7 +169,7 @@ function ContentForm({
 									onChange={(e) => setKwInput(e.target.value)}
 									onKeyDown={addKw}
 									placeholder={keywords.length ? "Add…" : "e.g. Calvin cycle"}
-									className="h-auto min-w-25 flex-1 border-0 bg-transparent p-0 py-1 text-[13px] text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
+									className="h-auto min-w-25 flex-1 border-0 bg-transparent p-0 py-1 text-caption text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
 								/>
 							</div>
 						</div>
@@ -266,20 +266,20 @@ export function SummaryCreateFlow({ onDone }: { onDone: () => void }) {
 			return (
 				<div className="space-y-8">
 					<div className="grid grid-cols-1 gap-x-10 gap-y-4 lg:grid-cols-[1fr_380px]">
-						<div className="min-w-0 border-b border-border-strong pb-4">
-							<h1 className="text-[28px] font-semibold tracking-tight text-foreground">
+						<div className="min-w-0 border-b border-border pb-4">
+							<h1 className="text-display font-semibold tracking-tight text-foreground">
 								{aiResult.title}
 							</h1>
 						</div>
 					</div>
 					<div className="grid grid-cols-1 gap-x-10 gap-y-10 lg:grid-cols-[1fr_380px]">
-						<div className="min-w-0 border-b border-border-strong pb-6 text-[15px] leading-[1.85] text-foreground whitespace-pre-wrap">
+						<div className="min-w-0 border-b border-border pb-6 text-prose text-foreground whitespace-pre-wrap">
 							{aiResult.content}
 						</div>
 						{aiResult.keywords.length > 0 && (
-							<div className="border-b border-border-strong py-3">
+							<div className="border-b border-border py-3">
 								<div className="flex items-start gap-3">
-									<span className="flex w-21 shrink-0 items-center gap-1.5 pt-1 text-[12px] text-muted-foreground">
+									<span className="flex w-24 shrink-0 items-center gap-1.5 pt-1 text-caption text-muted-foreground">
 										<KeywordsIcon size={13} strokeWidth={1.5} aria-hidden />
 										Keywords
 									</span>
@@ -287,7 +287,7 @@ export function SummaryCreateFlow({ onDone }: { onDone: () => void }) {
 										{aiResult.keywords.map((k) => (
 											<span
 												key={k}
-												className="inline-flex h-6 items-center rounded-md bg-secondary px-2 text-[12.5px] font-medium text-secondary-foreground">
+												className="inline-flex h-6 items-center rounded-md border border-border px-2 text-caption text-muted-foreground">
 												{k}
 											</span>
 										))}
@@ -297,7 +297,7 @@ export function SummaryCreateFlow({ onDone }: { onDone: () => void }) {
 						)}
 					</div>
 					<div className="border-t border-border pt-6">
-						<p className="mb-4 text-[14px] text-muted-foreground">
+						<p className="mb-4 text-ui text-muted-foreground">
 							This summary was generated from the demo notes. Sign in to run this on your own notes and save your results.
 						</p>
 						<button
@@ -305,7 +305,7 @@ export function SummaryCreateFlow({ onDone }: { onDone: () => void }) {
 								await authClient.signOut();
 								router.push("/signin");
 							}}
-							className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-[14px] font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+							className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-ui font-medium text-primary-foreground transition-colors hover:bg-primary/90">
 							Sign in to get started
 						</button>
 					</div>
@@ -348,7 +348,7 @@ export function SummaryCreateFlow({ onDone }: { onDone: () => void }) {
 			<TabsContent value="ai" className="mt-5 space-y-6">
 				<div>
 					<div className="flex items-center gap-3">
-						<span className="flex w-28 shrink-0 items-center gap-1.5 text-[12px] text-muted-foreground">
+						<span className="flex w-24 shrink-0 items-center gap-1.5 text-caption text-muted-foreground">
 							<SubjectIcon size={13} strokeWidth={1.5} aria-hidden />
 							Subject
 						</span>
@@ -360,13 +360,13 @@ export function SummaryCreateFlow({ onDone }: { onDone: () => void }) {
 							}}
 							placeholder="Select a subject"
 							manageable={false}
-							className="h-8 flex-1 justify-start gap-1.5 text-[13.5px] font-medium data-placeholder:text-foreground-faint"
+							className="h-8 flex-1 justify-start gap-1.5 text-ui font-medium data-placeholder:text-foreground-faint"
 						/>
 					</div>
 				</div>
 
 				<div>
-					<div className="mb-3 flex items-center gap-1.5 text-[12px] text-muted-foreground">
+					<div className="mb-3 flex items-center gap-1.5 text-caption text-muted-foreground">
 						<NoteIcon size={13} strokeWidth={1.5} aria-hidden />
 						Notes{" "}
 						<span className="text-foreground-faint">
@@ -384,9 +384,9 @@ export function SummaryCreateFlow({ onDone }: { onDone: () => void }) {
 					/>
 				</div>
 
-				<div className="flex flex-wrap items-center justify-between gap-4 border-t border-border-strong pt-5">
+				<div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-5">
 					<div className="flex min-w-55 flex-1 items-center gap-3">
-						<span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[12px] text-muted-foreground">
+						<span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-caption text-muted-foreground">
 							<AdjustIcon size={13} strokeWidth={1.5} aria-hidden />
 							Max words
 						</span>
@@ -398,7 +398,7 @@ export function SummaryCreateFlow({ onDone }: { onDone: () => void }) {
 							step={100}
 							className="flex-1"
 						/>
-						<span className="w-10 shrink-0 text-right text-[12px] tabular-nums text-foreground-faint">
+						<span className="w-10 shrink-0 text-right text-label tabular-nums text-foreground-faint">
 							{maxWords}
 						</span>
 					</div>

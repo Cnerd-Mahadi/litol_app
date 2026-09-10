@@ -10,7 +10,7 @@ function BackLink() {
 	return (
 		<Link
 			href="/summary"
-			className="mb-5 inline-flex items-center gap-1.5 whitespace-nowrap text-[13px] text-muted-foreground transition-colors hover:text-foreground">
+			className="mb-5 inline-flex items-center gap-1.5 whitespace-nowrap text-caption text-muted-foreground transition-colors hover:text-foreground">
 			<BackIcon size={15} strokeWidth={1.5} className="rotate-180" aria-hidden />
 			Back to gallery
 		</Link>
@@ -39,10 +39,10 @@ function NotFound() {
 		<div className="max-w-180">
 			<BackLink />
 			<Card className="py-16 text-center shadow-(--shadow-card)">
-				<h3 className="text-[15px] font-medium text-foreground">
+				<h3 className="text-title font-semibold text-foreground">
 					Summary not found
 				</h3>
-				<p className="mt-1 text-[13px] text-muted-foreground">
+				<p className="mt-1 text-caption text-muted-foreground">
 					It may have been deleted.
 				</p>
 			</Card>

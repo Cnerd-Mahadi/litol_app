@@ -1,125 +1,51 @@
-import { FEATURES, FeatureKey } from "@/lib/dummy-data";
+import { DashboardActions } from "@/ui/dashboard/dashboard-actions";
 import { DashboardGreeting } from "@/ui/dashboard/dashboard-greeting";
-import { DashboardNewNoteButton } from "@/ui/dashboard/dashboard-new-note-button";
 import { DashboardRecent } from "@/ui/dashboard/dashboard-recent";
 import { DashboardStats } from "@/ui/dashboard/dashboard-stats";
 import { RecallCard } from "@/ui/dashboard/recall-card";
-import {
-	ClockIcon,
-	ExternalIcon,
-	NoteIcon,
-	QuizIcon,
-	SummaryIcon,
-	ZapIcon,
-} from "@/ui/shared/icons";
-import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 
-const ACTION_ICON: Record<string, LucideIcon> = {
-	sparkles: SummaryIcon,
-	chat: NoteIcon,
-	quiz: QuizIcon,
-};
-
-// Each feature gets a functional hue — chrome stays blue, content gets identity.
-const ACTION_HUE: Record<FeatureKey, { tile: string; hover: string }> = {
-	summary: {
-		tile: "bg-hue-violet-bg text-hue-violet-fg",
-		hover: "group-hover:text-hue-violet-fg",
-	},
-	qa: {
-		tile: "bg-hue-blue-bg text-hue-blue-fg",
-		hover: "group-hover:text-hue-blue-fg",
-	},
-	quiz: {
-		tile: "bg-hue-amber-bg text-hue-amber-fg",
-		hover: "group-hover:text-hue-amber-fg",
-	},
-};
+function SectionHeader({
+	title,
+	href,
+	action,
+}: {
+	title: string;
+	href?: string;
+	action?: string;
+}) {
+	return (
+		<div className="mb-3 flex h-6 items-center justify-between">
+			<h2 className="text-ui font-medium text-foreground">{title}</h2>
+			{href && action && (
+				<Link
+					href={href}
+					className="text-caption text-muted-foreground transition-colors hover:text-foreground">
+					{action}
+				</Link>
+			)}
+		</div>
+	);
+}
 
 export default function DashPage() {
 	return (
-		<div className="animate-fade-up">
-			<div>
-				<div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-4 px-4 py-7 sm:px-6 sm:py-8 xl:px-12">
-					<div>
-						<DashboardGreeting />
-						<p className="mt-1 hidden text-[14px] text-muted-foreground sm:block">
-							Pick up where you left off, or start something new.
-						</p>
-					</div>
-					<div className="flex shrink-0 items-center gap-2.5">
-						<Link
-							href="/quiz"
-							className="inline-flex h-10 items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 text-[13.5px] font-medium text-foreground transition-colors hover:border-border-strong hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-							<QuizIcon size={16} strokeWidth={1.75} aria-hidden />
-							Take a quiz
-						</Link>
-						<DashboardNewNoteButton />
-					</div>
-				</div>
-			</div>
+		<div className="mx-auto max-w-[1180px] px-4 py-6 sm:px-6 xl:px-10">
+			<header className="flex flex-wrap items-end justify-between gap-4">
+				<DashboardGreeting />
+				<DashboardActions />
+			</header>
 
-			<div className="mx-auto max-w-[1180px] px-4 pb-8 pt-2 sm:px-6 sm:pb-10 xl:px-12">
-				<DashboardStats />
+			<DashboardStats className="mt-6" />
 
-				<div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
-					<div className="min-w-0">
-						<h2 className="mb-3.5 text-[12px] font-medium uppercase tracking-[0.06em] text-foreground-faint">
-							Quick recall
-						</h2>
-						<RecallCard />
-					</div>
-					<div className="min-w-0">
-						<div className="mb-3.5 flex items-center gap-1.5 text-foreground-faint">
-							<ClockIcon size={13} strokeWidth={1.5} aria-hidden />
-							<h2 className="text-[12px] font-medium uppercase tracking-[0.06em]">
-								Recent activity
-							</h2>
-						</div>
-						<DashboardRecent />
-					</div>
-				</div>
-
-				<section className="mt-12">
-					<div className="mb-3.5 flex items-center gap-1.5 text-foreground-faint">
-						<ZapIcon size={13} strokeWidth={1.5} aria-hidden />
-						<h2 className="text-[12px] font-medium uppercase tracking-[0.06em]">
-							Start something
-						</h2>
-					</div>
-					<div className="grid gap-4 sm:grid-cols-3">
-						{(["summary", "qa", "quiz"] as FeatureKey[]).map((key) => {
-							const f = FEATURES[key];
-							const Icon = ACTION_ICON[f.icon];
-							const hue = ACTION_HUE[key];
-							return (
-								<Link
-									key={key}
-									href={f.route}
-									className="lift group flex h-full flex-col rounded-xl border border-border bg-card p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-									<div className="flex items-center justify-between">
-										<span
-											className={`grid size-11 place-items-center rounded-xl ${hue.tile}`}>
-											<Icon size={22} strokeWidth={1.75} aria-hidden />
-										</span>
-										<ExternalIcon
-											size={17}
-											strokeWidth={1.75}
-											aria-hidden
-											className={`text-foreground-faint transition-colors ${hue.hover}`}
-										/>
-									</div>
-									<div className="mt-5 text-[16px] font-medium text-foreground">
-										{f.title}
-									</div>
-									<div className="mt-1 text-[13.5px] leading-relaxed text-muted-foreground">
-										{f.desc}
-									</div>
-								</Link>
-							);
-						})}
-					</div>
+			<div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[3fr_2fr]">
+				<section className="min-w-0">
+					<SectionHeader title="Quick recall" href="/note" action="All notes" />
+					<RecallCard />
+				</section>
+				<section className="min-w-0">
+					<SectionHeader title="Recent activity" />
+					<DashboardRecent />
 				</section>
 			</div>
 		</div>

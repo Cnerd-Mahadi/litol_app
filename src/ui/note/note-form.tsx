@@ -179,7 +179,7 @@ export function NoteForm({
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 			<div className="grid grid-cols-1 gap-x-10 gap-y-4 lg:grid-cols-[1fr_380px]">
-				<div className="min-w-0 border-b border-border-strong pb-4">
+				<div className="min-w-0 border-b border-border pb-4">
 					<label htmlFor="note-title" className="sr-only">
 						Note title
 					</label>
@@ -187,10 +187,10 @@ export function NoteForm({
 						id="note-title"
 						{...register("title")}
 						placeholder="Untitled note"
-						className="h-auto w-full border-0 bg-transparent p-0 text-[28px] font-semibold tracking-tight text-foreground shadow-none outline-none placeholder:text-foreground-faint/70 focus-visible:ring-0"
+						className="h-auto w-full border-0 bg-transparent p-0 text-display font-semibold tracking-tight text-foreground shadow-none outline-none placeholder:text-foreground-faint/70 focus-visible:ring-0"
 					/>
 					{errors.title && (
-						<p className="mt-2 text-[12px] text-destructive">
+						<p className="mt-2 text-label text-destructive">
 							Title is required.
 						</p>
 					)}
@@ -226,28 +226,26 @@ export function NoteForm({
 							id="note-desc"
 							{...register("description")}
 							placeholder="Write your notes here…"
-							className="min-h-32 w-full resize-none border-0 bg-transparent p-0 text-[15px] leading-[1.85] text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0 lg:min-h-64"
+							className="min-h-32 w-full resize-none border-0 bg-transparent p-0 text-prose text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0 lg:min-h-64"
 						/>
 					</div>
 
 					<div className="border-t border-border pt-8">
-						<div className="mb-3.5 text-[13px] font-medium text-foreground">
-							Cues{" "}
-							<span className="font-normal text-muted-foreground">
-								(question and answer pairs)
-							</span>
+						<div className="mb-3 flex h-6 items-center justify-between">
+							<h2 className="text-ui font-medium text-foreground">Cues</h2>
+							<span className="text-caption text-muted-foreground">Question and answer pairs</span>
 						</div>
 						<div className="space-y-2.5">
 							{fields.map((field, i) => (
 								<Card key={field.id} className="group/cue p-4">
 									<div className="flex items-center gap-2.5">
-										<span className="shrink-0 text-[11px] tabular-nums text-foreground-faint">
+										<span className="shrink-0 text-micro tabular-nums text-foreground-faint">
 											{String(i + 1).padStart(2, "0")}
 										</span>
 										<Input
 											{...register(`cues.${i}.cue`)}
 											placeholder="Question / cue"
-											className="h-auto flex-1 border-0 bg-transparent p-0 text-[14px] font-medium text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
+											className="h-auto flex-1 border-0 bg-transparent p-0 text-ui font-medium text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
 										/>
 										<Tooltip>
 											<TooltipTrigger asChild>
@@ -286,7 +284,7 @@ export function NoteForm({
 									<Input
 										{...register(`cues.${i}.details`)}
 										placeholder="Answer / details"
-										className="mt-2 h-auto w-full border-0 bg-transparent p-0 pl-6.5 text-[13.5px] text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
+										className="mt-2 h-auto w-full border-0 bg-transparent p-0 pl-6.5 text-ui text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
 									/>
 								</Card>
 							))}
@@ -294,7 +292,7 @@ export function NoteForm({
 						<button
 							type="button"
 							onClick={() => append({ cue: "", details: "" })}
-							className="mt-2.5 flex h-8 items-center gap-1.5 rounded-md px-2.5 text-[12.5px] text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
+							className="mt-2 flex h-8 items-center gap-1.5 rounded-md px-2.5 text-caption text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
 							<AddIcon size={14} strokeWidth={1.5} /> Add cue
 						</button>
 					</div>
@@ -302,9 +300,9 @@ export function NoteForm({
 
 				{/* Rail — properties, Notion-style inline rows */}
 				<div>
-					<div className="border-b border-border-strong py-3">
+					<div className="border-b border-border py-3">
 						<div className="flex items-center gap-3">
-							<span className="flex w-21 shrink-0 items-center gap-1.5 text-[12px] text-muted-foreground">
+							<span className="flex w-24 shrink-0 items-center gap-1.5 text-caption text-muted-foreground">
 								<SubjectIcon size={13} strokeWidth={1.5} aria-hidden />
 								Subject
 							</span>
@@ -313,19 +311,19 @@ export function NoteForm({
 								onChange={(id) =>
 									setValue("subjectId", id, { shouldValidate: true })
 								}
-								className="h-8 flex-1 justify-start gap-1.5 text-[13.5px] font-medium data-placeholder:text-foreground-faint"
+								className="h-8 flex-1 justify-start gap-1.5 text-ui font-medium data-placeholder:text-foreground-faint"
 							/>
 						</div>
 						{errors.subjectId && (
-							<p className="mt-1.5 text-[12px] text-destructive">
+							<p className="mt-1.5 text-label text-destructive">
 								Subject is required.
 							</p>
 						)}
 					</div>
 
-					<div className="border-b border-border-strong py-3">
+					<div className="border-b border-border py-3">
 						<div className="flex items-start gap-3">
-							<span className="flex w-21 shrink-0 items-center gap-1.5 pt-1 text-[12px] text-muted-foreground">
+							<span className="flex w-24 shrink-0 items-center gap-1.5 pt-1 text-caption text-muted-foreground">
 								<KeywordsIcon size={13} strokeWidth={1.5} aria-hidden />
 								Keywords
 							</span>
@@ -333,7 +331,7 @@ export function NoteForm({
 								{keywords.map((k) => (
 									<span
 										key={k}
-										className="inline-flex h-6 items-center gap-1 rounded-md bg-secondary pl-2 pr-1 text-[12.5px] font-medium text-secondary-foreground">
+										className="inline-flex h-6 items-center gap-1 rounded-md bg-secondary pl-2 pr-1 text-caption text-secondary-foreground">
 										{k}
 										<button
 											type="button"
@@ -354,7 +352,7 @@ export function NoteForm({
 									onChange={(e) => setKwInput(e.target.value)}
 									onKeyDown={addKw}
 									placeholder={keywords.length ? "Add…" : "e.g. hydroxyl group"}
-									className="h-auto min-w-25 flex-1 border-0 bg-transparent p-0 py-1 text-[13px] text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
+									className="h-auto min-w-25 flex-1 border-0 bg-transparent p-0 py-1 text-caption text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
 								/>
 							</div>
 						</div>

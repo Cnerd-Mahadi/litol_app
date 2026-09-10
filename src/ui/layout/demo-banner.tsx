@@ -16,11 +16,11 @@ export function DemoBanner() {
 	};
 
 	return (
-		<div className="sticky top-14 lg:top-0 z-20 w-full bg-violet-600 px-4 py-2 text-center text-[13px] text-white">
+		<div className="sticky top-14 z-20 w-full border-b border-notice-border bg-card px-4 py-2 text-center text-caption text-notice-text lg:top-0">
 			You are in demo mode. Notes, summaries, and subjects cannot be created or changed.{" "}
 			<button
 				onClick={handleSignIn}
-				className="font-semibold underline underline-offset-2 hover:opacity-80">
+				className="font-semibold underline decoration-notice-text/40 transition-colors hover:decoration-notice-text">
 				Sign in
 			</button>{" "}
 			to get started with your own content.

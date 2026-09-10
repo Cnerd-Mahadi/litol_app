@@ -12,7 +12,7 @@ export default async function StudentLayout({
 		<div className="min-h-screen overflow-x-hidden">
 			<SideBar />
 			<MobileTopbar />
-			<main className="min-h-screen pb-[calc(56px+env(safe-area-inset-bottom))] lg:pb-0 lg:pl-16">
+			<main className="min-h-screen pb-[calc(56px+env(safe-area-inset-bottom))] transition-[padding] duration-300 ease-[cubic-bezier(.2,0,0,1)] lg:pb-0 lg:pl-(--sidebar-w)">
 				<DemoBanner />
 				{children}
 			</main>

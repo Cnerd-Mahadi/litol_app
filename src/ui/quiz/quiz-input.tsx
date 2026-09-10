@@ -81,36 +81,35 @@ export function QuizInput({
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)} className="max-w-205 space-y-8">
-			{/* Prompt — the actual ask */}
-			<div>
-				<label htmlFor="quiz-query" className="sr-only">
-					Describe your quiz
-				</label>
-				<Textarea
-					id="quiz-query"
-					{...register("query")}
-					onKeyDown={(e) => {
-						if (e.key === "Enter" && !e.shiftKey) {
-							e.preventDefault();
-							handleSubmit(onSubmit)();
-						}
-					}}
-					rows={3}
-					placeholder="Test me on how enzymes work and why temperature matters…"
-					className="w-full resize-none border-0 bg-transparent p-0 text-[20px] font-medium leading-snug text-foreground shadow-none outline-none placeholder:text-foreground-faint/70 focus-visible:ring-0"
-				/>
-				{errors.query && (
-					<p className="mt-2 text-[12px] text-destructive">
-						Describe what to quiz you on.
-					</p>
-				)}
-			</div>
+		<form onSubmit={handleSubmit(onSubmit)} className="max-w-205 space-y-6">
+			<Card className="overflow-hidden">
+				<div className="px-4 py-3">
+					<label htmlFor="quiz-query" className="sr-only">
+						Describe your quiz
+					</label>
+					<Textarea
+						id="quiz-query"
+						{...register("query")}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" && !e.shiftKey) {
+								e.preventDefault();
+								handleSubmit(onSubmit)();
+							}
+						}}
+						rows={2}
+						placeholder="Test me on how enzymes work and why temperature matters…"
+						className="min-h-0 w-full resize-none border-0 bg-transparent p-0 text-ui leading-relaxed text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
+					/>
+					{errors.query && (
+						<p className="mt-2 text-label text-destructive">
+							Describe what to quiz you on.
+						</p>
+					)}
+				</div>
 
-			<div className="border-t border-border">
-				<div className="border-b border-border-strong py-3">
+				<div className="border-t border-border px-4 py-2.5">
 					<div className="flex items-center gap-3">
-						<span className="flex w-28 shrink-0 items-center gap-1.5 text-[12px] text-muted-foreground">
+						<span className="flex w-24 shrink-0 items-center gap-1.5 text-caption text-muted-foreground">
 							<SubjectIcon size={13} strokeWidth={1.5} aria-hidden />
 							Subject
 						</span>
@@ -122,19 +121,19 @@ export function QuizInput({
 							}}
 							placeholder="Select a subject"
 							manageable={false}
-							className="h-8 flex-1 justify-start gap-1.5 text-[13.5px] font-medium data-placeholder:text-foreground-faint"
+							className="h-8 flex-1 justify-start gap-1.5 text-ui font-medium data-placeholder:text-foreground-faint"
 						/>
 					</div>
 					{errors.subjectId && (
-						<p className="mt-1.5 pl-31 text-[12px] text-destructive">
+						<p className="mt-1.5 pl-27 text-label text-destructive">
 							Subject is required.
 						</p>
 					)}
 				</div>
 
-				<div className="py-3">
+				<div className="border-t border-border px-4 py-2.5">
 					<div className="flex items-center gap-3">
-						<span className="flex w-28 shrink-0 items-center gap-1.5 text-[12px] text-muted-foreground">
+						<span className="flex w-24 shrink-0 items-center gap-1.5 text-caption text-muted-foreground">
 							<QuestionsIcon size={13} strokeWidth={1.5} aria-hidden />
 							Questions
 						</span>
@@ -146,7 +145,7 @@ export function QuizInput({
 									onClick={() => setValue("numberOfQuizzes", n)}
 									aria-pressed={count === n}
 									className={cn(
-										"h-7 rounded-md px-3 text-[12.5px] font-medium tabular-nums transition-colors",
+										"h-7 rounded-md px-3 text-caption font-medium tabular-nums transition-colors",
 										count === n
 											? "bg-secondary text-foreground"
 											: "text-muted-foreground hover:bg-accent hover:text-foreground",
@@ -157,11 +156,11 @@ export function QuizInput({
 						</div>
 					</div>
 				</div>
-			</div>
+			</Card>
 
 			{subjectId && (
 				<div>
-					<div className="mb-3 flex items-center gap-1.5 text-[12px] text-muted-foreground">
+					<div className="mb-3 flex items-center gap-1.5 text-caption text-muted-foreground">
 						<NoteIcon size={13} strokeWidth={1.5} aria-hidden />
 						Notes{" "}
 						<span className="text-foreground-faint">
@@ -176,7 +175,7 @@ export function QuizInput({
 						</div>
 					)}
 					{!notesLoading && notes.length === 0 && (
-						<Card className="py-6 text-center text-[13px] text-muted-foreground">
+						<Card className="py-6 text-center text-caption text-muted-foreground">
 							No notes for this subject yet.
 						</Card>
 					)}
@@ -193,19 +192,19 @@ export function QuizInput({
 										className={cn(
 											"flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 											sel
-												? "border-primary bg-accent/40"
-												: "border-border-strong hover:bg-accent/25",
+												? "border-border-strong bg-secondary/50"
+												: "border-border hover:bg-secondary/40",
 										)}>
 										<span
 											className={cn(
 												"grid size-5 shrink-0 place-items-center rounded-md border transition-colors",
 												sel
 													? "border-primary bg-primary text-primary-foreground"
-													: "border-border",
+													: "border-border-strong",
 											)}>
 											{sel && <CheckIcon size={12} strokeWidth={2.5} />}
 										</span>
-										<span className="truncate text-[13.5px] font-medium text-foreground">
+										<span className="truncate text-ui font-medium text-foreground">
 											{n.title}
 										</span>
 									</button>
@@ -214,13 +213,13 @@ export function QuizInput({
 						</div>
 					)}
 					{errors.noteIds && (
-						<p className="text-[12px] text-destructive">Select at least one note.</p>
+						<p className="text-label text-destructive">Select at least one note.</p>
 					)}
 				</div>
 			)}
 
-			<div className="flex items-center justify-between border-t border-border-strong pt-5">
-				<span className="text-[11px] tabular-nums text-foreground-faint">
+			<div className="flex items-center justify-between border-t border-border pt-5">
+				<span className="text-caption tabular-nums text-muted-foreground">
 					{noteIds.length} note{noteIds.length === 1 ? "" : "s"} selected
 				</span>
 				<Button type="submit" disabled={isPending}>

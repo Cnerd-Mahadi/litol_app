@@ -66,16 +66,16 @@ export function RecallCard() {
 					aria-hidden
 					className="mb-3 text-foreground-faint"
 				/>
-				<h3 className="text-[15px] font-medium text-foreground">
+				<h3 className="text-title font-semibold text-foreground">
 					Nothing to review yet
 				</h3>
-				<p className="mt-1 max-w-xs text-[13px] text-muted-foreground">
+				<p className="mt-1 max-w-xs text-caption text-muted-foreground">
 					Add cues to a note and they appear here as a recall deck you can flip
 					through.
 				</p>
 				<Link
 					href="/note"
-					className="mt-5 inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-4 text-[13px] font-medium text-primary-foreground transition-[filter] hover:brightness-110">
+					className="mt-5 inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-4 text-caption font-medium text-primary-foreground transition-[filter] hover:brightness-110">
 					Write a note
 				</Link>
 			</Card>
@@ -103,16 +103,12 @@ export function RecallCard() {
 						aria-hidden
 						className="shrink-0 text-foreground-faint"
 					/>
-					<div className="min-w-0 leading-tight">
-						<div className="text-[10px] font-medium uppercase tracking-[0.08em] text-foreground-faint">
-							Review
-						</div>
-						<div className="truncate text-[13px] font-medium text-foreground">
-							{subjectName}
-						</div>
+					<div className="min-w-0 truncate text-caption text-muted-foreground">
+						Reviewing{" "}
+						<span className="font-medium text-foreground">{subjectName}</span>
 					</div>
 				</div>
-				<span className="shrink-0 text-[12px] tabular-nums text-foreground-faint">
+				<span className="shrink-0 text-caption tabular-nums text-foreground-faint">
 					{idx + 1} / {total}
 				</span>
 			</div>
@@ -124,18 +120,14 @@ export function RecallCard() {
 						flipped ? "[transform:rotateY(180deg)]" : "",
 					)}>
 					<div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center [backface-visibility:hidden]">
-						<span className="text-[10px] font-medium uppercase tracking-[0.08em] text-foreground-faint">
-							Cue
-						</span>
-						<p className="text-[19px] font-semibold leading-snug text-foreground">
+						<span className="text-caption text-foreground-faint">Cue</span>
+						<p className="max-w-[36ch] text-title font-semibold text-foreground">
 							{cue.cue}
 						</p>
 					</div>
 					<div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-						<span className="text-[10px] font-medium uppercase tracking-[0.08em] text-primary">
-							Answer
-						</span>
-						<p className="text-[15px] leading-relaxed text-muted-foreground">
+						<span className="text-caption font-medium text-primary">Answer</span>
+						<p className="text-prose text-muted-foreground">
 							{cue.details}
 						</p>
 					</div>
@@ -143,17 +135,30 @@ export function RecallCard() {
 			</div>
 
 			<div className="border-t border-border px-5 py-3">
-				<div className="mb-2.5 h-0.5 overflow-hidden rounded-full bg-secondary">
+				<div className="mb-2.5 h-1 overflow-hidden rounded-full bg-secondary">
 					<div
 						className="h-full rounded-full bg-primary transition-all duration-300"
 						style={{ width: `${pct}%` }}
 					/>
 				</div>
 				<div className="flex items-center justify-between">
-					<span className="flex items-center gap-1.5 text-[12px] text-foreground-faint">
+					<span className="flex items-center gap-1.5 text-label text-foreground-faint">
 						<FlipIcon size={13} strokeWidth={1.5} aria-hidden />
 						<span className="sm:hidden">Tap to flip</span>
-						<span className="hidden sm:inline">Press space to flip</span>
+						<span className="hidden items-center gap-1.5 sm:inline-flex">
+							<kbd className="rounded border border-border bg-secondary/60 px-1.5 py-px font-sans text-micro font-medium text-foreground">
+								Space
+							</kbd>
+							flip
+							<span className="mx-0.5 text-foreground-faint" aria-hidden>·</span>
+							<kbd className="rounded border border-border bg-secondary/60 px-1.5 py-px font-sans text-micro font-medium text-foreground">
+								←
+							</kbd>
+							<kbd className="rounded border border-border bg-secondary/60 px-1.5 py-px font-sans text-micro font-medium text-foreground">
+								→
+							</kbd>
+							move
+						</span>
 					</span>
 					<div className="flex items-center gap-1">
 						<button

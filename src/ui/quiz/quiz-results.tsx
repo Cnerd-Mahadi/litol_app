@@ -20,17 +20,11 @@ export function QuizResults({
 	onRetry: () => void;
 	onNew: () => void;
 }) {
-	const correct = questions.filter(
-		(q, i) => q.options[answers[i]] === q.answer,
-	).length;
+	const correct = questions.filter((q, i) => q.options[answers[i]] === q.answer).length;
 	const pct = Math.round((correct / questions.length) * 100);
 	const [dash, setDash] = useState(0);
 	const verdict =
-		pct >= 80
-			? "Excellent recall"
-			: pct >= 60
-				? "Solid. Review the misses"
-				: "Worth another pass";
+		pct >= 80 ? "Excellent recall" : pct >= 60 ? "Solid. Review the misses" : "Worth another pass";
 	const R = 52;
 	const C = 2 * Math.PI * R;
 
@@ -41,20 +35,11 @@ export function QuizResults({
 
 	return (
 		<div className="mx-auto max-w-2xl animate-fade-up">
-			<Card className="p-6 text-center shadow-(--shadow-card) sm:p-8">
-				<div className="text-[11px] uppercase tracking-[0.04em] text-foreground-faint">
-					Quiz complete · {label}
-				</div>
+			<Card className="p-6 text-center sm:p-8">
+				<div className="text-caption text-muted-foreground">Quiz complete · {label}</div>
 				<div className="relative mx-auto mt-5 size-32">
 					<svg viewBox="0 0 120 120" className="size-32 -rotate-90">
-						<circle
-							cx="60"
-							cy="60"
-							r={R}
-							fill="none"
-							stroke="var(--border)"
-							strokeWidth="9"
-						/>
+						<circle cx="60" cy="60" r={R} fill="none" stroke="var(--border-strong)" strokeWidth="9" />
 						<circle
 							cx="60"
 							cy="60"
@@ -65,30 +50,22 @@ export function QuizResults({
 							strokeLinecap="round"
 							strokeDasharray={C}
 							strokeDashoffset={C - (C * dash) / 100}
-							style={{
-								transition: "stroke-dashoffset 1.1s cubic-bezier(.2,0,0,1)",
-							}}
+							style={{ transition: "stroke-dashoffset 1.1s cubic-bezier(.2,0,0,1)" }}
 						/>
 					</svg>
 					<div className="absolute inset-0 grid place-items-center">
 						<div>
-							<div className="text-[26px] font-semibold leading-none tabular-nums text-foreground sm:text-[30px]">
+							<div className="text-display font-semibold leading-none tabular-nums text-foreground">
 								{correct}
-								<span className="text-[18px] text-foreground-faint sm:text-[20px]">
-									/{questions.length}
-								</span>
+								<span className="text-title text-foreground-faint">/{questions.length}</span>
 							</div>
-							<div className="mt-1 text-[12px] tabular-nums text-link">
-								{pct}%
-							</div>
+							<div className="mt-1 text-caption tabular-nums text-muted-foreground">{pct}%</div>
 						</div>
 					</div>
 				</div>
-				<div className="mt-5 text-[18px] font-medium text-foreground">
-					{verdict}
-				</div>
-				<div className="mt-6 flex justify-center gap-3">
-					<Button variant="secondary" onClick={onRetry}>
+				<div className="mt-5 text-title font-semibold text-foreground">{verdict}</div>
+				<div className="mt-6 flex justify-center gap-2">
+					<Button variant="outline" onClick={onRetry}>
 						<RetryIcon size={15} strokeWidth={1.5} />
 						Retry quiz
 					</Button>
@@ -99,47 +76,42 @@ export function QuizResults({
 				</div>
 			</Card>
 
-			<div className="mt-5 space-y-2.5">
-				<div className="mb-1 text-[11px] uppercase tracking-[0.04em] text-foreground-faint">
-					Breakdown
+			<div className="mt-8">
+				<div className="mb-3 flex h-6 items-center justify-between">
+					<h2 className="text-ui font-medium text-foreground">Breakdown</h2>
+					<span className="text-caption tabular-nums text-muted-foreground">
+						{correct} of {questions.length} correct
+					</span>
 				</div>
-				{questions.map((q, i) => {
-					const ok = q.options[answers[i]] === q.answer;
-					return (
-						<Card
-							key={i}
-							className="flex items-start gap-3 p-4 shadow-(--shadow-card)">
-							<span
-								className={cn(
-									"mt-0.5 grid size-6 shrink-0 place-items-center rounded-md",
-									ok
-										? "bg-success-bg text-success-text"
-										: "bg-danger-bg text-danger-text",
-								)}>
-								{ok ? (
-									<CheckIcon size={13} strokeWidth={2.5} />
-								) : (
-									<CloseIcon size={12} strokeWidth={2.5} />
-								)}
-							</span>
-							<div className="min-w-0 flex-1">
-								<div className="text-[13.5px] font-medium text-foreground">
-									{q.question}
-								</div>
-								<div className="mt-1 text-[12.5px] text-muted-foreground">
-									Answer:{" "}
-									<span className="text-success-text">{q.answer}</span>
-									{!ok && answers[i] != null && (
-										<span className="text-danger-text">
-											{" "}
-											· You picked {q.options[answers[i]]}
-										</span>
+				<Card className="divide-y divide-border overflow-hidden">
+					{questions.map((q, i) => {
+						const ok = q.options[answers[i]] === q.answer;
+						return (
+							<div key={i} className="flex items-start gap-3 px-4 py-3">
+								<span
+									className={cn(
+										"mt-0.5 grid size-6 shrink-0 place-items-center rounded-md",
+										ok ? "bg-success-bg text-success-text" : "bg-danger-bg text-danger-text",
+									)}>
+									{ok ? (
+										<CheckIcon size={13} strokeWidth={2.5} />
+									) : (
+										<CloseIcon size={12} strokeWidth={2.5} />
 									)}
+								</span>
+								<div className="min-w-0 flex-1">
+									<div className="text-ui font-medium text-foreground">{q.question}</div>
+									<div className="mt-0.5 text-caption text-muted-foreground">
+										Answer: <span className="text-success-text">{q.answer}</span>
+										{!ok && answers[i] != null && (
+											<span className="text-danger-text"> · You picked {q.options[answers[i]]}</span>
+										)}
+									</div>
 								</div>
 							</div>
-						</Card>
-					);
-				})}
+						);
+					})}
+				</Card>
 			</div>
 		</div>
 	);

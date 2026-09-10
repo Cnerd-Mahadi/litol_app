@@ -41,3 +41,9 @@ next-env.d.ts
 
 # claude code
 .claude/
+
+# Impeccable working artifacts (screenshots, mocks, spent decision rounds)
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/decision-*.json
+.impeccable/questions/

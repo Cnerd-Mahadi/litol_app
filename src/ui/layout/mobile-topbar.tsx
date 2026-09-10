@@ -47,13 +47,13 @@ export const MobileTopbar = () => {
 	);
 
 	return (
-		<header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-card/80 px-4 backdrop-blur lg:hidden">
+		<header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-sidebar/90 px-4 backdrop-blur lg:hidden">
 			<Logo expanded={false} />
 			{isMobile ? (
 				<Drawer>
 					<DrawerTrigger asChild>{trigger}</DrawerTrigger>
 					<DrawerContent>
-						<div className="truncate px-4 pt-1 pb-2 text-[13px] text-muted-foreground">
+						<div className="truncate px-4 pt-1 pb-2 text-caption text-muted-foreground">
 							{user?.email ?? "Signed in"}
 						</div>
 						<div className="mx-2 h-px bg-border" />
@@ -63,7 +63,7 @@ export const MobileTopbar = () => {
 									<button
 										type="button"
 										onClick={() => setTheme(value)}
-										className="flex items-center gap-3 rounded-md px-3 py-3 text-left text-[14px] font-medium text-foreground transition-colors active:bg-accent">
+										className="flex items-center gap-3 rounded-md px-3 py-3 text-left text-ui font-medium text-foreground transition-colors active:bg-accent">
 										<Icon size={16} strokeWidth={1.5} aria-hidden />
 										<span className="flex-1">{label}</span>
 										{activeTheme === value && (
@@ -80,7 +80,7 @@ export const MobileTopbar = () => {
 									type="button"
 									disabled={loading}
 									onClick={handleLogout}
-									className="flex w-full items-center gap-3 rounded-md px-3 py-3 text-left text-[14px] font-medium text-destructive transition-colors active:bg-accent disabled:opacity-50">
+									className="flex w-full items-center gap-3 rounded-md px-3 py-3 text-left text-ui font-medium text-destructive transition-colors active:bg-accent disabled:opacity-50">
 									<LogoutIcon size={16} strokeWidth={1.5} aria-hidden />
 									{loading ? "Signing out…" : "Log out"}
 								</button>

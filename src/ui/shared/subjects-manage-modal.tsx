@@ -15,14 +15,13 @@ import { useIsDemo } from "@/hooks/use-is-demo";
 import { useSubjects } from "@/lib/swr/use-subjects";
 import type { SubjectItem } from "@/lib/swr/use-subjects";
 import { cn } from "@/lib/utils";
-import { hueChip, hueDot, hueFor } from "@/ui/shared/icon-chip";
+import { hueDot, hueFor } from "@/ui/shared/icon-chip";
 import {
 	CheckIcon,
 	CloseIcon,
 	DeleteIcon,
 	EditIcon,
 	SpinnerIcon,
-	SubjectIcon,
 	WarningIcon,
 } from "@/ui/shared/icons";
 import { useAction } from "next-safe-action/hooks";
@@ -70,7 +69,7 @@ function SubjectRow({ subject }: { subject: SubjectItem }) {
 
 	if (confirming) {
 		return (
-			<div className="rounded-lg border border-border-strong p-4">
+			<div className="rounded-lg border border-border bg-card p-4">
 				<div className="flex items-start gap-3">
 					<WarningIcon
 						size={18}
@@ -78,10 +77,10 @@ function SubjectRow({ subject }: { subject: SubjectItem }) {
 						className="mt-0.5 shrink-0 text-danger-text"
 					/>
 					<div className="min-w-0 flex-1">
-						<p className="text-[14px] font-semibold text-foreground">
+						<p className="text-ui font-semibold text-foreground">
 							Delete “{subject.name}”?
 						</p>
-						<p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">
+						<p className="mt-1 text-caption leading-relaxed text-muted-foreground">
 							All its notes and cues will be permanently deleted. This can’t
 							be undone.
 						</p>
@@ -147,7 +146,7 @@ function SubjectRow({ subject }: { subject: SubjectItem }) {
 			<span
 				className={cn("size-2 shrink-0 rounded-full", hueDot(hueFor(subject.name)))}
 			/>
-			<p className="min-w-0 flex-1 truncate text-[14px] font-medium text-foreground">
+			<p className="min-w-0 flex-1 truncate text-ui font-medium text-foreground">
 				{subject.name}
 			</p>
 			{isDemo ? (
@@ -200,24 +199,10 @@ export function SubjectsManageModal({
 		<Modal open={open} onOpenChange={onOpenChange}>
 			<ModalContent className="flex max-h-[85vh] min-h-100 flex-col gap-0 overflow-hidden p-0 sm:max-w-md">
 				<ModalHeader className="shrink-0 px-4 pt-4 pb-4 text-left sm:px-6 sm:pt-6 sm:pb-5">
-					<div className="flex items-center gap-3 sm:gap-3.5">
-						<span
-							className={cn(
-								"grid size-9 shrink-0 place-items-center rounded-md sm:size-11",
-								hueChip("blue"),
-							)}>
-							<SubjectIcon size={18} strokeWidth={1.75} aria-hidden />
-						</span>
-						<div>
-							<ModalTitle className="text-[16px] font-semibold sm:text-[19px]">
-								Manage subjects
-							</ModalTitle>
-							<p className="mt-0.5 text-[12.5px] text-muted-foreground sm:text-[13.5px]">
-								Rename or remove subjects. New subjects are created from the
-								subject picker.
-							</p>
-						</div>
-					</div>
+					<ModalTitle className="text-title font-semibold">Manage subjects</ModalTitle>
+					<p className="mt-1 text-caption text-muted-foreground">
+						Rename or remove subjects. New subjects are created from the subject picker.
+					</p>
 				</ModalHeader>
 				<div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 sm:px-6 sm:pb-6">
 					<div>
@@ -226,7 +211,7 @@ export function SubjectsManageModal({
 								<SpinnerIcon className="animate-spin text-muted-foreground" />
 							</div>
 						) : subjects.length === 0 ? (
-							<p className="py-8 text-center text-[13px] text-muted-foreground">
+							<p className="py-8 text-center text-caption text-muted-foreground">
 								No subjects yet.
 							</p>
 						) : (

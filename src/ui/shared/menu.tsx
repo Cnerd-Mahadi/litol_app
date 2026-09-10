@@ -42,7 +42,7 @@ export function Menu({
 									type="button"
 									onClick={item.onClick}
 									className={cn(
-										"flex items-center gap-3 rounded-md px-3 py-3 text-left text-[14px] font-medium transition-colors active:bg-accent",
+										"flex items-center gap-3 rounded-md px-3 py-3 text-left text-ui font-medium transition-colors active:bg-accent",
 										item.destructive ? "text-destructive" : "text-foreground",
 									)}>
 									{item.icon}

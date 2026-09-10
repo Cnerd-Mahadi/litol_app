@@ -74,7 +74,7 @@ export function SubjectSelector({
 			aria-controls="subject-selector-list"
 			disabled={isLoading}
 			className={cn(
-				"flex h-8 w-full items-center justify-between gap-1.5 text-sm text-muted-foreground outline-none disabled:cursor-not-allowed disabled:opacity-50",
+				"flex h-8 w-full items-center justify-between gap-1.5 text-ui text-muted-foreground outline-none disabled:cursor-not-allowed disabled:opacity-50",
 				!selected && "text-foreground-faint",
 				className,
 			)}>
@@ -141,7 +141,7 @@ export function SubjectSelector({
 							setOpen(false);
 							setManageOpen(true);
 						}}
-						className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-[13px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+						className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-caption text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
 						<ManageIcon size={14} strokeWidth={1.5} aria-hidden />
 						Manage subjects
 					</button>

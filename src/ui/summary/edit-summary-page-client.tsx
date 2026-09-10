@@ -14,7 +14,7 @@ export function EditSummaryPageClient({ id }: { id: string }) {
 		<div className="mx-auto max-w-[1180px] px-4 py-6 sm:px-6 xl:px-12">
 			<Link
 				href={`/summary/${id}`}
-				className="mb-5 inline-flex items-center gap-1.5 whitespace-nowrap text-[13px] text-muted-foreground transition-colors hover:text-foreground">
+				className="mb-5 inline-flex items-center gap-1.5 whitespace-nowrap text-caption text-muted-foreground transition-colors hover:text-foreground">
 				<BackIcon size={15} strokeWidth={1.5} className="rotate-180" aria-hidden />
 				Back to summary
 			</Link>

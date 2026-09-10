@@ -2,21 +2,19 @@
 
 import { cn } from "@/lib/utils";
 import type { ChipColor } from "@/ui/shared/icon-chip";
-import { IconChip } from "@/ui/shared/icon-chip";
 import { CheckIcon } from "@/ui/shared/icons";
 import type { LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function GeneratingPanel({
 	Icon,
-	color,
 	heading,
 	subtitle,
 	steps,
 	dwell,
 }: {
 	Icon: LucideIcon;
-	color: ChipColor;
+	color?: ChipColor;
 	heading: string;
 	subtitle: React.ReactNode;
 	steps: string[];
@@ -37,17 +35,17 @@ export function GeneratingPanel({
 	return (
 		<div className="flex min-h-[60vh] items-center justify-center">
 			<div className="mx-auto max-w-sm animate-fade-up text-center">
-				<IconChip Icon={Icon} color={color} size={88} className="mx-auto mb-8" />
-				<div className="text-[22px] font-semibold tracking-tight text-foreground">
-					{heading}
-				</div>
-				<div className="mt-1.5 text-[14px] text-muted-foreground">{subtitle}</div>
-				<div className="mx-auto mt-9 max-w-70 space-y-3 text-left">
+				<span className="mx-auto mb-6 grid size-14 place-items-center rounded-lg border border-border bg-card text-foreground">
+					<Icon size={24} strokeWidth={1.5} aria-hidden />
+				</span>
+				<div className="text-heading font-semibold text-foreground">{heading}</div>
+				<div className="mt-1 text-caption text-muted-foreground">{subtitle}</div>
+				<div className="mx-auto mt-8 max-w-70 space-y-3 text-left">
 					{steps.map((s, i) => (
 						<div
 							key={i}
 							className={cn(
-								"flex items-center gap-3 text-[14px] transition-colors",
+								"flex items-center gap-3 text-ui transition-colors",
 								i <= step ? "text-foreground" : "text-foreground-faint",
 							)}>
 							<span

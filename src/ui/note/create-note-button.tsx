@@ -17,7 +17,7 @@ export function CreateNoteButton() {
 					<span tabIndex={0}>
 						<button
 							disabled
-							className={cn(buttonVariants(), "shrink-0 pointer-events-none opacity-50")}>
+							className={cn(buttonVariants(), "shrink-0 pointer-events-none")}>
 							<AddIcon size={16} strokeWidth={2} />
 							Create
 						</button>

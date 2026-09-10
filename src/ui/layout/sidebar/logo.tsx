@@ -28,11 +28,11 @@ export const Logo = ({
 					"overflow-hidden transition-all duration-200",
 					expanded ? "w-auto opacity-100" : "w-0 opacity-0",
 				)}>
-				<div className="whitespace-nowrap text-[15px] font-semibold leading-none tracking-tight text-foreground">
-					LITOL
+				<div className="whitespace-nowrap text-ui font-semibold leading-none tracking-tight text-foreground">
+					Litol
 				</div>
-				<div className="mt-1 whitespace-nowrap text-[11px] uppercase tracking-[0.16em] text-foreground-faint">
-					Learn smarter
+				<div className="mt-1 whitespace-nowrap text-micro font-normal text-foreground-faint">
+					live to learn
 				</div>
 			</div>
 		</div>

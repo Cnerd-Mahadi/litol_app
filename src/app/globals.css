@@ -13,6 +13,39 @@
 	--radius-lg: var(--radius);
 	--radius-xl: calc(var(--radius) + 4px);
 
+	/* ── Type scale ───────────────────────────────────────────────
+	   Roles, not sizes. Chrome is dense (ui/14); reading is not (prose/16).
+	   Tracking opens up at small sizes and tightens at display sizes to
+	   hold optical weight even against the dark default surface. */
+	--text-micro: 11px;
+	--text-micro--line-height: 1.45;
+	--text-micro--letter-spacing: 0.01em;
+
+	--text-label: 12px;
+	--text-label--line-height: 1.4;
+	--text-label--letter-spacing: 0.005em;
+
+	--text-caption: 13px;
+	--text-caption--line-height: 1.5;
+
+	--text-ui: 14px;
+	--text-ui--line-height: 1.55;
+
+	--text-prose: 16px;
+	--text-prose--line-height: 1.75;
+
+	--text-title: 18px;
+	--text-title--line-height: 1.35;
+	--text-title--letter-spacing: -0.011em;
+
+	--text-heading: 22px;
+	--text-heading--line-height: 1.25;
+	--text-heading--letter-spacing: -0.018em;
+
+	--text-display: 28px;
+	--text-display--line-height: 1.15;
+	--text-display--letter-spacing: -0.024em;
+
 	/* shadcn tokens */
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
@@ -36,6 +69,7 @@
 	--color-border: var(--border);
 	--color-input: var(--input);
 	--color-ring: var(--ring);
+	--color-sidebar: var(--sidebar);
 
 	/* semantic status */
 	--color-success: var(--success);
@@ -49,8 +83,12 @@
 	--color-danger-text: var(--danger-text);
 	--color-danger-bg: var(--danger-bg);
 	--color-danger-border: var(--danger-border);
+	--color-notice-text: var(--notice-text);
+	--color-notice-bg: var(--notice-bg);
+	--color-notice-border: var(--notice-border);
 
-	/* functional category hues (icon tiles, chips, stat cards) */
+	/* functional category hues: subject dots and keyword chips only.
+	   Never icon tiles, stat cards, or surfaces. */
 	--color-hue-blue-bg: var(--hue-blue-bg);
 	--color-hue-blue-fg: var(--hue-blue-fg);
 	--color-hue-indigo-bg: var(--hue-indigo-bg);
@@ -90,6 +128,7 @@
 	--foreground-faint: #64748b;
 	--card: #f8fafc;
 	--card-foreground: #0a0a0a;
+	--sidebar: #f8fafc;
 	--popover: #ffffff;
 	--popover-foreground: #0a0a0a;
 	--primary: #ea580c;
@@ -107,7 +146,8 @@
 	--input: #aab6c7;
 	--ring: #ea580c;
 	--link: #f97316;
-	--radius: 0.625rem;
+	--radius: 0.5rem;
+	--sidebar-w: 224px;
 
 	--success: #1a7f37;
 	--success-foreground: #ffffff;
@@ -120,6 +160,9 @@
 	--danger-text: #d7263d;
 	--danger-bg: #fbdde2;
 	--danger-border: #eeaab1;
+	--notice-text: #6d28d9;
+	--notice-bg: #f5f3ff;
+	--notice-border: #ddd6fe;
 
 	--shadow-card: none;
 	--shadow-hover: 0 8px 24px -4px rgba(16, 24, 40, 0.12);
@@ -151,13 +194,22 @@
 }
 
 /* ── Dark (default) ─────────────────────────────────────────── */
+/* Unlayered on purpose: the 224px default in :root is unlayered, and a
+   layered override can never beat it. */
+html[data-sidebar="collapsed"] {
+	--sidebar-w: 64px;
+}
+
 .dark {
 	--background: #0f172a;
 	--foreground: #eef2f7;
 	--foreground-faint: #a8b7ca;
-	--card: #1a2435;
+	/* Panels sit a few percent above the page, the sidebar a hair below it,
+	   so surfaces stratify by tone instead of by boxed borders. */
+	--card: #151f36;
 	--card-foreground: #eef2f7;
-	--popover: #253044;
+	--sidebar: #0c1426;
+	--popover: #1d2940;
 	--popover-foreground: #eef2f7;
 	--primary: #fb923c;
 	--primary-foreground: #1a0f00;
@@ -169,12 +221,12 @@
 	--accent-foreground: #fafafa;
 	--destructive: #ff6467;
 	--destructive-foreground: #fafafa;
-	--border: #293548;
-	--border-strong: #3e4c63;
+	--border: color-mix(in srgb, #ffffff 8%, transparent);
+	--border-strong: color-mix(in srgb, #ffffff 14%, transparent);
 	--input: #4c5b74;
 	--ring: #fb923c;
 	--link: #fdba74;
-	--radius: 0.625rem;
+	--radius: 0.5rem;
 
 	--success: #2bbe6e;
 	--success-foreground: #ffffff;
@@ -187,6 +239,9 @@
 	--danger-text: #ff6b72;
 	--danger-bg: #2a1a1d;
 	--danger-border: #4a2529;
+	--notice-text: #c4b5fd;
+	--notice-bg: #1e1b3a;
+	--notice-border: #372f6b;
 
 	--shadow-card: none;
 	--shadow-hover: 0 10px 28px -6px rgba(0, 0, 0, 0.55);
@@ -234,8 +289,10 @@
 	[aria-disabled="true"] {
 		cursor: default;
 	}
-	html,
-	body {
+	/* Only the root carries the x-clip: it propagates to the viewport, so the
+	   window stays the scroll container. Putting it on body as well would
+	   turn body into a viewport-height inner scroller. */
+	html {
 		height: 100%;
 		overflow-x: hidden;
 	}
@@ -243,8 +300,8 @@
 		min-height: 100%;
 		background-color: var(--background);
 		color: var(--foreground);
-		font-size: 14px;
-		line-height: 1.5;
+		font-size: var(--text-ui);
+		line-height: 1.55;
 		font-optical-sizing: auto;
 		-webkit-font-smoothing: antialiased;
 		text-rendering: optimizeLegibility;
@@ -254,17 +311,47 @@
 			"ss01" 1,
 			"calt" 1;
 	}
-	h1,
-	h2 {
-		letter-spacing: normal;
-		line-height: 1.2;
+	/* Light text on a dark surface blooms optically. Give it a hair more
+	   tracking so small sizes stay legible instead of smearing together. */
+	.dark body {
+		letter-spacing: 0.003em;
 	}
+	/* Weight belongs to the type role, but Tailwind's `--text-*--font-weight`
+	   emits inconsistently under `@theme inline`, so it lives here instead.
+	   Base layer, so an explicit font-* utility still overrides it. */
+	.text-micro,
+	.text-label {
+		font-weight: 500;
+	}
+	.text-title,
+	.text-heading,
+	.text-display {
+		font-weight: 600;
+	}
+	h1,
+	h2,
 	h3,
 	h4 {
-		letter-spacing: normal;
+		text-wrap: balance;
+	}
+	p {
+		text-wrap: pretty;
 	}
 	::selection {
 		background: color-mix(in srgb, var(--ring) 26%, transparent);
+	}
+	/* Browser surfaces ship with defaults that belong to no design system. */
+	:root {
+		caret-color: var(--ring);
+		accent-color: var(--primary);
+	}
+	:focus-visible {
+		outline: 2px solid var(--ring);
+		outline-offset: 2px;
+	}
+	a {
+		text-underline-offset: 0.2em;
+		text-decoration-thickness: from-font;
 	}
 }
 

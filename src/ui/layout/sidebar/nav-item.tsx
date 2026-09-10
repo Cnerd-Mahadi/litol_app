@@ -22,23 +22,22 @@ export const NavItem = ({ route, title, Icon, expanded }: NavItemProps) => {
 		<Link
 			href={route}
 			aria-current={isActive ? "page" : undefined}
+			title={expanded ? undefined : title}
 			className={cn(
-				"group relative flex h-10 items-center overflow-hidden rounded-lg px-3 transition-colors",
+				"flex h-8 items-center overflow-hidden rounded-md px-2.5 transition-colors",
 				"focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
 				isActive
-					? "bg-accent text-accent-foreground"
-					: "text-muted-foreground hover:bg-secondary hover:text-foreground",
+					? "bg-accent text-foreground"
+					: "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
 			)}>
-			{isActive && (
-				<span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-primary" />
-			)}
 			<span className="grid w-5 shrink-0 place-items-center">
-				<Icon size={17} strokeWidth={1.75} aria-hidden />
+				<Icon size={16} strokeWidth={1.75} aria-hidden />
 			</span>
 			<span
 				className={cn(
-					"whitespace-nowrap text-[13.5px] font-medium transition-all duration-200",
-					expanded ? "ml-3 opacity-100" : "ml-0 w-0 opacity-0",
+					"whitespace-nowrap text-ui transition-all duration-200",
+					isActive && "font-medium",
+					expanded ? "ml-2.5 opacity-100" : "ml-0 w-0 opacity-0",
 				)}>
 				{title}
 			</span>

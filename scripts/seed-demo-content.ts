@@ -17,7 +17,10 @@ async function main() {
 		process.exit(1);
 	}
 
-	// Wipe existing demo content to allow re-seeding
+	// Wipe existing demo content to allow re-seeding. Summaries must go
+	// explicitly: deleting a subject only nulls summary.subjectId, which left
+	// every previous seed's summaries behind as orphaned duplicates.
+	await prisma.summary.deleteMany({ where: { userId: user.id } });
 	await prisma.subject.deleteMany({ where: { userId: user.id } });
 	console.log("Cleared existing demo content.");
 

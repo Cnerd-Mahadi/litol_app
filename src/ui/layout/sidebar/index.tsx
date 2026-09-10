@@ -10,10 +10,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useActiveTheme } from "@/hooks/use-active-theme";
 import { CheckIcon, CollapseIcon } from "@/ui/shared/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "./logo";
 import { LogoutButton } from "./logout-button";
 import { NavItem } from "./nav-item";
+
+const STORAGE_KEY = "litol.sidebar";
+
+const railButton =
+	"flex h-8 w-full items-center rounded-md px-2.5 text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
+const railLabel = (expanded: boolean) =>
+	cn(
+		"overflow-hidden whitespace-nowrap text-left text-ui transition-all duration-200",
+		expanded ? "ml-2.5 flex-1 opacity-100" : "ml-0 w-0 opacity-0",
+	);
 
 function ThemeToggle({ expanded }: { expanded: boolean }) {
 	const { activeTheme, setTheme } = useActiveTheme();
@@ -22,18 +33,13 @@ function ThemeToggle({ expanded }: { expanded: boolean }) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<button
-					aria-label="Change theme"
-					className="flex h-9 w-full items-center rounded-md px-3 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-					<span className="shrink-0">
+				<button aria-label="Change theme" className={railButton}>
+					<span className="grid w-5 shrink-0 place-items-center">
 						<current.Icon size={16} strokeWidth={1.5} aria-hidden />
 					</span>
-					<span
-						className={cn(
-							"whitespace-nowrap overflow-hidden text-left text-[13.5px] transition-all duration-200",
-							expanded ? "flex-1 ml-2.5 opacity-100" : "ml-0 w-0 opacity-0",
-						)}>
-						{current.label} mode
+					<span className={cn(railLabel(expanded), "flex items-center")}>
+						Theme
+						<span className="ml-auto text-caption text-foreground-faint">{current.label}</span>
 					</span>
 				</button>
 			</DropdownMenuTrigger>
@@ -51,50 +57,46 @@ function ThemeToggle({ expanded }: { expanded: boolean }) {
 }
 
 export const SideBar = () => {
-	const [expanded, setExpanded] = useState(false);
+	const [expanded, setExpanded] = useState(true);
+
+	useEffect(() => {
+		if (localStorage.getItem(STORAGE_KEY) === "collapsed") setExpanded(false);
+	}, []);
+
+	useEffect(() => {
+		const state = expanded ? "expanded" : "collapsed";
+		document.documentElement.dataset.sidebar = state;
+		localStorage.setItem(STORAGE_KEY, state);
+	}, [expanded]);
 
 	return (
-		<aside
-			className="bg-card fixed bottom-0 left-0 top-0 z-40 hidden flex-col border-r border-border transition-[width] duration-300 ease-[cubic-bezier(.2,0,0,1)] lg:flex"
-			style={{ width: expanded ? 220 : 64 }}>
-			<div className="flex h-16 shrink-0 items-center px-3.5">
+		<aside className="fixed bottom-0 left-0 top-0 z-40 hidden w-(--sidebar-w) flex-col border-r border-border bg-sidebar transition-[width] duration-300 ease-[cubic-bezier(.2,0,0,1)] lg:flex">
+			<div className="flex h-14 shrink-0 items-center px-3.5">
 				<Logo expanded={expanded} />
 			</div>
 
-			<nav className="flex flex-1 flex-col gap-1 overflow-hidden px-2.5 pt-2">
-				<div
-					className={cn(
-						"mb-1 whitespace-nowrap px-2.5 text-[11px] uppercase tracking-[0.16em] text-foreground-faint transition-opacity",
-						expanded ? "opacity-100" : "opacity-0",
-					)}>
-					Workspace
-				</div>
+			<nav className="flex flex-1 flex-col gap-0.5 overflow-hidden px-2 pt-1">
 				{navItems.map(({ name, route, Icon }) => (
-					<NavItem
-						key={name}
-						route={route}
-						title={name}
-						Icon={Icon}
-						expanded={expanded}
-					/>
+					<NavItem key={name} route={route} title={name} Icon={Icon} expanded={expanded} />
 				))}
 			</nav>
 
-			<div className="flex flex-col gap-0.5 px-2.5 pb-2">
+			<div className="flex flex-col gap-0.5 px-2 pb-2">
 				<ThemeToggle expanded={expanded} />
 				<button
 					onClick={() => setExpanded((e) => !e)}
 					aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
 					aria-pressed={expanded}
-					className="flex h-9 w-full items-center rounded-md px-3 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-					<CollapseIcon size={16} strokeWidth={1.5} aria-hidden />
-					<span
-						className={cn(
-							"whitespace-nowrap overflow-hidden text-[13.5px] transition-all duration-200",
-							expanded ? "ml-2.5 opacity-100" : "ml-0 w-0 opacity-0",
-						)}>
-						Collapse
+					className={railButton}>
+					<span className="grid w-5 shrink-0 place-items-center">
+						<CollapseIcon
+							size={16}
+							strokeWidth={1.5}
+							aria-hidden
+							className={cn("transition-transform duration-300", !expanded && "rotate-180")}
+						/>
 					</span>
+					<span className={railLabel(expanded)}>Collapse</span>
 				</button>
 				<div className="my-1 h-px bg-border" />
 				<LogoutButton expanded={expanded} />

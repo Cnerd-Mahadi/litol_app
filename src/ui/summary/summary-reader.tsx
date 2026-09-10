@@ -69,27 +69,35 @@ export function SummaryReader({ s }: { s: SummaryItem }) {
 			<div className="mb-5 flex items-center justify-between">
 				<Link
 					href="/summary"
-					className="inline-flex items-center gap-1.5 whitespace-nowrap text-[13px] text-muted-foreground transition-colors hover:text-foreground">
+					className="inline-flex items-center gap-1.5 whitespace-nowrap text-caption text-muted-foreground transition-colors hover:text-foreground">
 					<BackIcon size={15} strokeWidth={1.5} className="rotate-180" aria-hidden />
-					Back to gallery
+					Back to summaries
 				</Link>
 				<SummaryReaderActions s={s} />
 			</div>
 
 			<div className="max-w-180">
-				<div className="text-[11px] tabular-nums text-foreground-faint">
-					{fmtDate(s.createdAt)}
+				<h1 className="text-display font-semibold text-foreground">{s.title}</h1>
+				<div className="mt-2 flex items-center gap-2 text-caption text-muted-foreground">
+					<span className="tabular-nums">{fmtDate(s.createdAt)}</span>
+					{s.keywords.length > 0 && (
+						<>
+							<span className="text-foreground-faint" aria-hidden>·</span>
+							<span className="tabular-nums">
+								{s.keywords.length} {s.keywords.length === 1 ? "keyword" : "keywords"}
+							</span>
+						</>
+					)}
 				</div>
-				<h1 className="mt-2 text-[22px] font-semibold leading-tight tracking-[-0.01em] text-foreground sm:text-[26px]">
-					{s.title}
-				</h1>
-
+				{s.description && (
+					<p className="mt-3 text-ui text-muted-foreground">{s.description}</p>
+				)}
 				{s.keywords.length > 0 && (
-					<div className="mt-5 flex flex-wrap gap-2">
+					<div className="mt-4 flex flex-wrap gap-1.5">
 						{s.keywords.map((k) => (
 							<span
 								key={k}
-								className="inline-flex h-7 items-center whitespace-nowrap rounded-md border border-border bg-secondary px-3 text-[12.5px] font-medium text-secondary-foreground">
+								className="inline-flex h-6 items-center whitespace-nowrap rounded-md border border-border px-2 text-caption text-muted-foreground">
 								{k}
 							</span>
 						))}
@@ -98,9 +106,7 @@ export function SummaryReader({ s }: { s: SummaryItem }) {
 			</div>
 
 			<div className="mt-8 max-w-180 border-t border-border pt-8">
-				<p className="whitespace-pre-wrap text-[15px] leading-[1.85] text-foreground">
-					{s.content}
-				</p>
+				<p className="whitespace-pre-wrap text-prose text-foreground">{s.content}</p>
 			</div>
 		</div>
 	);

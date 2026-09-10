@@ -97,17 +97,17 @@ export function SummaryEditForm({
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 			<div className="grid grid-cols-1 gap-x-10 gap-y-4 lg:grid-cols-[1fr_380px]">
-				<div className="min-w-0 border-b border-border-strong pb-4">
+				<div className="min-w-0 border-b border-border pb-4">
 					<label htmlFor="sum-edit-title" className="sr-only">
 						Title
 					</label>
 					<Input
 						id="sum-edit-title"
 						{...register("title")}
-						className="h-auto w-full border-0 bg-transparent p-0 text-[28px] font-semibold tracking-tight text-foreground shadow-none outline-none placeholder:text-foreground-faint/70 focus-visible:ring-0"
+						className="h-auto w-full border-0 bg-transparent p-0 text-display font-semibold tracking-tight text-foreground shadow-none outline-none placeholder:text-foreground-faint/70 focus-visible:ring-0"
 					/>
 					{errors.title && (
-						<p className="mt-2 text-[12px] text-destructive">Title is required.</p>
+						<p className="mt-2 text-label text-destructive">Title is required.</p>
 					)}
 				</div>
 				<div className="hidden items-start justify-end lg:flex">
@@ -123,25 +123,25 @@ export function SummaryEditForm({
 			</div>
 			<div className="grid grid-cols-1 gap-x-10 gap-y-10 lg:grid-cols-[1fr_380px]">
 				<div className="min-w-0 space-y-8">
-					<div className="border-b border-border-strong pb-6">
+					<div className="border-b border-border pb-6">
 						<label htmlFor="sum-edit-content" className="sr-only">
 							Content
 						</label>
 						<Textarea
 							id="sum-edit-content"
 							{...register("content")}
-							className="min-h-40 w-full resize-none border-0 bg-transparent p-0 text-[15px] leading-[1.85] text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0 lg:min-h-110"
+							className="min-h-40 w-full resize-none border-0 bg-transparent p-0 text-prose text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0 lg:min-h-110"
 						/>
 						{errors.content && (
-							<p className="text-[12px] text-destructive">Content is required.</p>
+							<p className="text-label text-destructive">Content is required.</p>
 						)}
 					</div>
 				</div>
 
 				<div>
-					<div className="border-b border-border-strong py-3">
+					<div className="border-b border-border py-3">
 						<div className="flex items-start gap-3">
-							<span className="flex w-21 shrink-0 items-center gap-1.5 pt-1 text-[12px] text-muted-foreground">
+							<span className="flex w-24 shrink-0 items-center gap-1.5 pt-1 text-caption text-muted-foreground">
 								<DescriptionIcon size={13} strokeWidth={1.5} aria-hidden />
 								Description
 							</span>
@@ -149,14 +149,14 @@ export function SummaryEditForm({
 								{...register("description")}
 								placeholder="Optional"
 								rows={2}
-								className="min-h-0 flex-1 resize-none border-0 bg-transparent p-0 text-[13.5px] leading-relaxed text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
+								className="min-h-0 flex-1 resize-none border-0 bg-transparent p-0 text-ui leading-relaxed text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
 							/>
 						</div>
 					</div>
 
-					<div className="border-b border-border-strong py-3">
+					<div className="border-b border-border py-3">
 						<div className="flex items-start gap-3">
-							<span className="flex w-21 shrink-0 items-center gap-1.5 pt-1 text-[12px] text-muted-foreground">
+							<span className="flex w-24 shrink-0 items-center gap-1.5 pt-1 text-caption text-muted-foreground">
 								<KeywordsIcon size={13} strokeWidth={1.5} aria-hidden />
 								Keywords
 							</span>
@@ -164,7 +164,7 @@ export function SummaryEditForm({
 								{keywords.map((k) => (
 									<span
 										key={k}
-										className="inline-flex h-6 items-center gap-1 rounded-md bg-secondary pl-2 pr-1 text-[12.5px] font-medium text-secondary-foreground">
+										className="inline-flex h-6 items-center gap-1 rounded-md bg-secondary pl-2 pr-1 text-caption text-secondary-foreground">
 										{k}
 										<button
 											type="button"
@@ -185,7 +185,7 @@ export function SummaryEditForm({
 									onChange={(e) => setKwInput(e.target.value)}
 									onKeyDown={addKw}
 									placeholder={keywords.length ? "Add…" : "Add keyword"}
-									className="h-auto min-w-25 flex-1 border-0 bg-transparent p-0 py-1 text-[13px] text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
+									className="h-auto min-w-25 flex-1 border-0 bg-transparent p-0 py-1 text-caption text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
 								/>
 							</div>
 						</div>

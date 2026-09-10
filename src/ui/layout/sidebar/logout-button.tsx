@@ -48,7 +48,7 @@ export const LogoutButton = ({ expanded = true }: { expanded?: boolean }) => {
 					) : (
 						<span
 							className={cn(
-								"whitespace-nowrap overflow-hidden text-left text-[13px] transition-all duration-200",
+								"whitespace-nowrap overflow-hidden text-left text-caption transition-all duration-200",
 								expanded ? "flex-1 ml-2.5 opacity-100" : "ml-0 w-0 opacity-0",
 							)}>
 							{displayName || "Account"}
