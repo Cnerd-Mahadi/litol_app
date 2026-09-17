@@ -71,6 +71,7 @@ export function NoteForm({
 		control,
 		watch,
 		setValue,
+		getValues,
 		formState: { errors },
 	} = useForm<NoteFormData>({
 		resolver: zodResolver(noteFormSchema),
@@ -96,7 +97,7 @@ export function NoteForm({
 					cues: [{ cue: "", details: "" }],
 				},
 	});
-	const { fields, append, remove } = useFieldArray({ control, name: "cues" });
+	const { fields, append, remove, update: updateCueField } = useFieldArray({ control, name: "cues" });
 	const keywords = watch("keywords");
 	const watchedCues = watch("cues");
 	const subjectId = watch("subjectId");
@@ -126,20 +127,7 @@ export function NoteForm({
 
 	const pending = create.isPending || update.isPending;
 
-	const { execute: execSuggest, isPending: suggestPending } = useAction(
-		suggestCueAction,
-		{
-			onSuccess: ({ data }) => {
-				if (suggesting !== null && data?.cue)
-					setValue(`cues.${suggesting}.cue`, data?.cue ?? "");
-				setSuggesting(null);
-			},
-			onError: ({ error: e }) => {
-				setSuggesting(null);
-				toast({ title: e.serverError, variant: "destructive" });
-			},
-		},
-	);
+	const { executeAsync: execSuggestAsync, isPending: suggestPending } = useAction(suggestCueAction);
 
 	const addKw = (e: React.KeyboardEvent) => {
 		if (e.key === "Enter" && kwInput.trim()) {
@@ -178,6 +166,7 @@ export function NoteForm({
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+			{/* Title row */}
 			<div className="grid grid-cols-1 gap-x-10 gap-y-4 lg:grid-cols-[1fr_380px]">
 				<div className="min-w-0 border-b border-border pb-4">
 					<label htmlFor="note-title" className="sr-only">
@@ -215,90 +204,22 @@ export function NoteForm({
 					</Button>
 				</div>
 			</div>
-			<div className="grid grid-cols-1 gap-x-10 gap-y-10 lg:grid-cols-[1fr_380px]">
-				{/* Main column — the note's actual content */}
-				<div className="min-w-0 space-y-8">
-					<div>
-						<label htmlFor="note-desc" className="sr-only">
-							Description
-						</label>
-						<Textarea
-							id="note-desc"
-							{...register("description")}
-							placeholder="Write your notes here…"
-							className="min-h-32 w-full resize-none border-0 bg-transparent p-0 text-prose text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0 lg:min-h-64"
-						/>
-					</div>
 
-					<div className="border-t border-border pt-8">
-						<div className="mb-3 flex h-6 items-center justify-between">
-							<h2 className="text-ui font-medium text-foreground">Cues</h2>
-							<span className="text-caption text-muted-foreground">Question and answer pairs</span>
-						</div>
-						<div className="space-y-2.5">
-							{fields.map((field, i) => (
-								<Card key={field.id} className="group/cue p-4">
-									<div className="flex items-center gap-2.5">
-										<span className="shrink-0 text-micro tabular-nums text-foreground-faint">
-											{String(i + 1).padStart(2, "0")}
-										</span>
-										<Input
-											{...register(`cues.${i}.cue`)}
-											placeholder="Question / cue"
-											className="h-auto flex-1 border-0 bg-transparent p-0 text-ui font-medium text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
-										/>
-										<Tooltip>
-											<TooltipTrigger asChild>
-												<button
-													type="button"
-													onClick={() => {
-														setSuggesting(i);
-														execSuggest({
-															detail: watchedCues[i]?.details ?? "",
-														});
-													}}
-													disabled={
-														!watchedCues[i]?.details?.trim() || suggestPending
-													}
-													aria-label="Suggest cue from details"
-													className="grid size-6 cursor-pointer place-items-center rounded-md text-foreground-faint transition-colors hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-40">
-													{suggesting === i && suggestPending ? (
-														<SpinnerIcon size={13} className="animate-spin" />
-													) : (
-														<SummaryIcon size={13} strokeWidth={1.5} />
-													)}
-												</button>
-											</TooltipTrigger>
-											<TooltipContent>
-												Suggest a cue from the answer
-											</TooltipContent>
-										</Tooltip>
-										<button
-											type="button"
-											onClick={() => fields.length > 1 && remove(i)}
-											aria-label="Remove cue"
-											className="grid size-6 place-items-center rounded-md text-foreground-faint opacity-0 transition hover:bg-danger-bg hover:text-danger-text group-hover/cue:opacity-100">
-											<CloseIcon size={13} strokeWidth={2} />
-										</button>
-									</div>
-									<Input
-										{...register(`cues.${i}.details`)}
-										placeholder="Answer / details"
-										className="mt-2 h-auto w-full border-0 bg-transparent p-0 pl-6.5 text-ui text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
-									/>
-								</Card>
-							))}
-						</div>
-						<button
-							type="button"
-							onClick={() => append({ cue: "", details: "" })}
-							className="mt-2 flex h-8 items-center gap-1.5 rounded-md px-2.5 text-caption text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
-							<AddIcon size={14} strokeWidth={1.5} /> Add cue
-						</button>
-					</div>
+			{/* Description + Rail */}
+			<div className="grid grid-cols-1 gap-x-10 gap-y-10 lg:grid-cols-[1fr_380px]">
+				<div className="min-w-0">
+					<label htmlFor="note-desc" className="sr-only">
+						Description
+					</label>
+					<Textarea
+						id="note-desc"
+						{...register("description")}
+						placeholder="Write your notes here…"
+						className="min-h-32 w-full resize-none border-0 bg-transparent p-0 text-prose text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0 lg:min-h-64"
+					/>
 				</div>
 
-				{/* Rail — properties, Notion-style inline rows */}
+				{/* Rail — subject, keywords */}
 				<div>
 					<div className="border-b border-border py-3">
 						<div className="flex items-center gap-3">
@@ -360,6 +281,95 @@ export function NoteForm({
 				</div>
 			</div>
 
+			{/* Cues — full width */}
+			<div className="border-t border-border pt-8">
+				<div className="mb-3 flex h-6 items-center justify-between">
+					<h2 className="text-ui font-medium text-foreground">Cues</h2>
+					<span className="text-caption text-muted-foreground">Question and answer pairs</span>
+				</div>
+				<div className="space-y-2.5">
+					{fields.map((field, i) => (
+						<Card key={field.id} className="group/cue overflow-hidden p-0">
+							<div className="flex flex-col sm:flex-row">
+								{/* Cue column — left on desktop, top on mobile */}
+								<div className="flex items-start gap-2 p-3 sm:w-[35%] sm:shrink-0 sm:self-stretch sm:border-r sm:border-border">
+									<span className="shrink-0 pt-0.5 text-micro tabular-nums text-foreground-faint">
+										{String(i + 1).padStart(2, "0")}
+									</span>
+									<Textarea
+										{...register(`cues.${i}.cue`)}
+										placeholder="Question / cue"
+										className="h-full min-h-16 w-full resize-none border-0 bg-transparent p-0 text-ui font-medium text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
+									/>
+									<div className="flex shrink-0 items-center gap-1">
+										<Tooltip>
+											<TooltipTrigger asChild>
+												<button
+													type="button"
+													onClick={async () => {
+														setSuggesting(i);
+														try {
+															const result = await execSuggestAsync({
+																detail: watchedCues[i]?.details ?? "",
+															});
+															if (result?.data?.cue) {
+																const current = getValues(`cues.${i}`);
+																updateCueField(i, { ...current, cue: result.data.cue });
+															} else if (result?.serverError) {
+																toast({ title: result.serverError, variant: "destructive" });
+															}
+														} catch {
+															toast({ title: "Failed to suggest cue", variant: "destructive" });
+														} finally {
+															setSuggesting(null);
+														}
+													}}
+													disabled={
+														!watchedCues[i]?.details?.trim() || suggestPending
+													}
+													aria-label="Suggest cue from details"
+													className="grid size-6 cursor-pointer place-items-center rounded-md text-foreground-faint transition-colors hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-40">
+													{suggesting === i && suggestPending ? (
+														<SpinnerIcon size={13} className="animate-spin" />
+													) : (
+														<SummaryIcon size={13} strokeWidth={1.5} />
+													)}
+												</button>
+											</TooltipTrigger>
+											<TooltipContent>
+												Suggest a cue from the answer
+											</TooltipContent>
+										</Tooltip>
+										<button
+											type="button"
+											onClick={() => fields.length > 1 && remove(i)}
+											aria-label="Remove cue"
+											className="grid size-6 place-items-center rounded-md text-foreground-faint opacity-0 transition hover:bg-danger-bg hover:text-danger-text group-hover/cue:opacity-100">
+											<CloseIcon size={13} strokeWidth={2} />
+										</button>
+									</div>
+								</div>
+								{/* Details column — right on desktop, bottom on mobile */}
+								<div className="min-w-0 flex-1 border-t border-border p-3 sm:border-t-0">
+									<Textarea
+										{...register(`cues.${i}.details`)}
+										placeholder="Answer / details"
+										className="min-h-16 w-full resize-y border-0 bg-transparent p-0 text-ui text-foreground shadow-none outline-none placeholder:text-foreground-faint focus-visible:ring-0"
+									/>
+								</div>
+							</div>
+						</Card>
+					))}
+				</div>
+				<button
+					type="button"
+					onClick={() => append({ cue: "", details: "" })}
+					className="mt-2 flex h-8 items-center gap-1.5 rounded-md px-2.5 text-caption text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground">
+					<AddIcon size={14} strokeWidth={1.5} /> Add cue
+				</button>
+			</div>
+
+			{/* Mobile save button */}
 			<div className="border-t border-border pt-6 lg:hidden">
 				<Button
 					type="submit"

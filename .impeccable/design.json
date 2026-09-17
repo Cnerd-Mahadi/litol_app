@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-10T00:00:00Z",
+  "title": "Design System: Litol",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Ember Orange", "canonical": "#fb923c", "tonalRamp": ["#1a0f00", "#4a2a0d", "#7a4413", "#a85f1c", "#d47b28", "#fb923c", "#fdba74", "#ffe4c7"] },
+      "page": { "role": "neutral", "displayName": "Page Navy", "canonical": "#0f172a", "tonalRamp": ["#050810", "#0c1220", "#0f172a", "#151f36", "#1d2940", "#334155", "#94a3b8", "#eef2f7"] },
+      "panel": { "role": "neutral", "displayName": "Panel Navy", "canonical": "#151f36", "tonalRamp": ["#0c1426", "#0f172a", "#151f36", "#1d2940", "#263349", "#334155", "#94a3b8", "#eef2f7"] },
+      "sidebar": { "role": "neutral", "displayName": "Rail Navy", "canonical": "#0c1426", "tonalRamp": ["#05070d", "#0c1426", "#0f172a", "#151f36", "#1d2940", "#334155", "#94a3b8", "#eef2f7"] },
+      "hue-blue": { "role": "functional", "displayName": "Subject Blue", "canonical": "#60a5fa" },
+      "hue-indigo": { "role": "functional", "displayName": "Subject Indigo", "canonical": "#818cf8" },
+      "hue-violet": { "role": "functional", "displayName": "Subject Violet", "canonical": "#a78bfa" },
+      "hue-emerald": { "role": "functional", "displayName": "Subject Emerald", "canonical": "#34d399" },
+      "hue-amber": { "role": "functional", "displayName": "Subject Amber", "canonical": "#fbbf24" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Reader titles and the borderless editor title input; sign-in hero line." },
+      "heading": { "displayName": "Heading", "purpose": "Page h1 in list and quiz pages." },
+      "title": { "displayName": "Title", "purpose": "Metric values, recall-card cue face, empty-state headings." },
+      "prose": { "displayName": "Prose", "purpose": "Note/summary body, recall-card answer face." },
+      "ui": { "displayName": "UI", "purpose": "Body default: buttons, nav labels, list-row titles." },
+      "caption": { "displayName": "Caption", "purpose": "Meta lines, page subtitles, tab labels, keyword chips." },
+      "label": { "displayName": "Label", "purpose": "Tooltips, field errors, recall hint line, badges." },
+      "micro": { "displayName": "Micro", "purpose": "kbd chips, mobile nav labels, dense keyword chips." }
+    },
+    "shadows": [
+      { "name": "overlay-floating", "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)", "purpose": "Dropdown menus and popovers, always paired with a hairline-strong border." },
+      { "name": "overlay-modal", "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)", "purpose": "Dialogs, submenus, toasts." }
+    ],
+    "motion": [
+      { "name": "sidebar-collapse", "value": "300ms cubic-bezier(.2,0,0,1)", "purpose": "Sidebar width transition and label fade." },
+      { "name": "recall-flip", "value": "300ms, transform-style: preserve-3d, disabled under prefers-reduced-motion", "purpose": "Recall card cue/answer flip." },
+      { "name": "progress-fill", "value": "width 300ms ease", "purpose": "Progress bar fill under recall card and quiz." }
+    ],
+    "breakpoints": [
+      { "name": "sidebar-to-mobile-nav", "value": "1024px (lg)" },
+      { "name": "sm", "value": "640px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid Ember Orange action button, 36px tall.",
+      "html": "<button class=\"ds-btn-primary\">New note</button>",
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; justify-content:center; gap:6px; height:36px; padding:0 16px; border-radius:6px; background:#fb923c; color:#1a0f00; font-size:14px; font-weight:500; border:none; transition:filter 0.15s; } .ds-btn-primary:hover { filter:brightness(1.1); } .ds-btn-primary:active { filter:brightness(0.95); } .ds-btn-primary:disabled { background:#212e46; color:#a8b7ca; } .ds-btn-primary:focus-visible { outline:2px solid #fb923c; outline-offset:2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Panel-fill secondary action button.",
+      "html": "<button class=\"ds-btn-outline\">Generate summary</button>",
+      "css": ".ds-btn-outline { display:inline-flex; align-items:center; justify-content:center; gap:6px; height:36px; padding:0 16px; border-radius:6px; background:#151f36; color:#eef2f7; font-size:14px; font-weight:500; border:1px solid color-mix(in srgb, #ffffff 8%, transparent); transition:background 0.15s; } .ds-btn-outline:hover { background:#263349; }"
+    },
+    {
+      "name": "Card / List Container",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Flat panel-surface card with hairline border, used for list rows and detail cards.",
+      "html": "<div class=\"ds-card\">Card content</div>",
+      "css": ".ds-card { background:#151f36; color:#eef2f7; border:1px solid color-mix(in srgb, #ffffff 8%, transparent); border-radius:8px; }"
+    },
+    {
+      "name": "List Row",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Signature dense row: icon, title, meta line with subject dot, tabular date right.",
+      "html": "<div class=\"ds-row\"><svg class=\"ds-row-icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><path d=\"M14 2v6h6\"/></svg><div class=\"ds-row-body\"><div class=\"ds-row-title\">Cell respiration</div><div class=\"ds-row-meta\"><span class=\"ds-row-dot\"></span>Biology <span>&middot;</span> 12 cues</div></div><span class=\"ds-row-date\">Sep 3</span></div>",
+      "css": ".ds-row { display:flex; align-items:center; gap:12px; padding:10px 16px; border-bottom:1px solid color-mix(in srgb, #ffffff 8%, transparent); transition:background 0.15s; } .ds-row:hover { background:color-mix(in srgb, #334155 50%, transparent); } .ds-row-icon { color:#a8b7ca; flex-shrink:0; } .ds-row-title { font-size:14px; font-weight:500; color:#eef2f7; } .ds-row-meta { margin-top:2px; display:flex; align-items:center; gap:8px; font-size:13px; color:#a8b7ca; } .ds-row-dot { width:6px; height:6px; border-radius:9999px; background:#60a5fa; display:inline-block; } .ds-row-date { margin-left:auto; font-size:13px; color:#a8b7ca; font-variant-numeric:tabular-nums; }"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "40px panel-fill text field with hairline-strong border and orange focus ring.",
+      "html": "<input class=\"ds-input\" placeholder=\"Title\" />",
+      "css": ".ds-input { height:40px; width:100%; border-radius:6px; background:#151f36; color:#eef2f7; border:1px solid #4c5b74; padding:8px 14px; font-size:14px; } .ds-input::placeholder { color:#a8b7ca; } .ds-input:focus-visible { outline:none; border-color:#fb923c; box-shadow:0 0 0 2px color-mix(in srgb, #fb923c 35%, transparent); }"
+    },
+    {
+      "name": "Keyword Chip",
+      "kind": "chip",
+      "refersTo": "keyword-chip",
+      "description": "Transparent hairline chip for note/summary keywords.",
+      "html": "<span class=\"ds-chip\">mitosis</span>",
+      "css": ".ds-chip { display:inline-flex; align-items:center; height:24px; padding:0 8px; border-radius:6px; border:1px solid color-mix(in srgb, #ffffff 8%, transparent); color:#a8b7ca; font-size:13px; }"
+    },
+    {
+      "name": "Sidebar Nav Item",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "32px labeled rail item; active state is a neutral accent-surface fill, never orange.",
+      "html": "<a class=\"ds-nav-item ds-nav-item-active\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\"><path d=\"M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/></svg><span>Dashboard</span></a>",
+      "css": ".ds-nav-item { display:flex; align-items:center; height:32px; padding:0 10px; border-radius:6px; gap:10px; font-size:14px; color:#a8b7ca; text-decoration:none; transition:background 0.15s, color 0.15s; } .ds-nav-item:hover { background:color-mix(in srgb, #334155 60%, transparent); color:#eef2f7; } .ds-nav-item-active { background:#263349; color:#eef2f7; font-weight:500; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Finished Workbench",
+    "overview": "Litol is a standard SaaS workspace held to the finish of Linear and Vercel. The world is a navy ground stratified by a few percent of lightness into page, sidebar, and panel; hairline borders at low alpha do the structural work; a single orange is reserved for the primary action; and Geist runs on an eight-step role scale where chrome is dense (14px) and reading is not (16px). Nothing is decorated. Depth comes from tone, hierarchy from weight and one size step, and emphasis from placement rather than color.\n\nThe build explicitly refuses the dashboard-template arrangement. There are no tinted icon tiles, no uppercase tracked kickers above sections, no grid of identical feature cards, no shadows on resting surfaces, and no accent on hover borders or selection. Subject colors exist only as 6px dots and, at most, as tinted keyword chips; they are never surfaces. The light theme exists and maps the same roles, but dark is the product default and the canonical values recorded here.",
+    "keyCharacteristics": [
+      "Three-tone navy stratification (sidebar below page, panel above) instead of boxed regions",
+      "Hairlines at 8% white; 14% white for the strong stroke on inputs, overlays, and hover",
+      "One orange, on primary buttons and the active tab underline only; selection and active nav are neutral",
+      "Eight named type roles by job (micro to display), 500 weight for labels, 600 for headings",
+      "Flat cards; shadow appears only on floating overlays (menus, dialogs, popovers, toasts)",
+      "Lists are hairline-divided rows inside one card, never a grid of cards",
+      "6px radius on controls, 8px on panels, pill on progress and dots"
+    ],
+    "rules": [
+      { "name": "The One Orange Rule", "body": "Orange appears on the primary action, the active-tab underline, progress fill, and focus. Selection, hover, active navigation, and inactive states are neutral surfaces. If a screen has more than one solid orange control, one of them is wrong.", "section": "colors" },
+      { "name": "The Dot, Not Surface Rule", "body": "Subject and category hues are 6px dots and chip tints. They never fill an icon tile, a stat card, or a section background.", "section": "colors" },
+      { "name": "The Hairline Rule", "body": "Structure is drawn with 8% white. Reach for 14% only on inputs, overlays, and interactive hover. Never use a solid gray border on a dark panel.", "section": "colors" },
+      { "name": "The Role Weight Rule", "body": "Weight belongs to the role: micro and label are 500, title/heading/display are 600, everything else 400 unless a row title or section header lifts to 500. Never set 700.", "section": "typography" },
+      { "name": "The One Step Rule", "body": "A section header is UI at 500 with its hint in caption; a list row is UI at 500 with its meta in caption. Hierarchy inside a component is one size step and one weight step, not a jump to a heading.", "section": "typography" },
+      { "name": "The Tabular Rule", "body": "Counts, dates, and positions (3 / 12) are always tabular-nums.", "section": "typography" },
+      { "name": "The Flat Panel Rule", "body": "Anything that sits in the page grid is flat. A shadow means the element floats above the page and will go away; nothing else earns one.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do stratify regions by tone: sidebar below page below panel, with a 1px hairline where two meet.",
+      "Do reserve solid Ember Orange for the one primary action per view, the active-tab underline, progress fill, and the focus ring.",
+      "Do build lists as one bordered card with hairline-divided rows: icon, UI title at 500, caption meta joined by ·, tabular date right.",
+      "Do open every page with h1 heading + caption subtitle left and actions right, primary trailing.",
+      "Do put a subject's hue in a 6px dot before its name and nowhere else.",
+      "Do use tabular-nums on every count, date, and position.",
+      "Do keep the metric strip a single bordered dl with hairline-divided cells; caption label over title-size 600 value.",
+      "Do let editor forms go borderless: display-size title, hairline rule, prose body, properties in a rail of hairline rows.",
+      "Do disable solid buttons by swapping to the muted surface, not by fading."
+    ],
+    "donts": [
+      "Don't put an uppercase, tracked micro label above a section as a kicker; section headers are UI at 500 in sentence case.",
+      "Don't wrap icons in tinted tiles or colored squares; icons are bare 16px outlines in Ink Muted.",
+      "Don't lay out features or stats as a grid of identical cards; use the metric strip or a divided list.",
+      "Don't color a hover border, a selected row, or the active nav item orange; hover is a 50-60% secondary wash and active is the accent surface.",
+      "Don't add a shadow to a card, button, input, or strip; only floating overlays cast one.",
+      "Don't use a functional hue as a surface, an icon tile, or a stat card fill.",
+      "Don't set 700 weight or jump more than one size step inside a component.",
+      "Don't replace a hairline with a solid gray or a 2px border; 8% white, 14% for strong."
+    ]
+  }
+}
